@@ -1,0 +1,412 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a13664">a13664</option>
+                                
+                                    <option value="a47048">a47048</option>
+                                
+                                    <option value="a14746">a14746</option>
+                                
+                                    <option value="a16828">a16828</option>
+                                
+                                    <option value="a17316">a17316</option>
+                                
+                                    <option value="a19321">a19321</option>
+                                
+                                    <option value="a2220">a2220</option>
+                                
+                                    <option value="a25063">a25063</option>
+                                
+                                    <option value="a28049">a28049</option>
+                                
+                                    <option value="a28716">a28716</option>
+                                
+                                    <option value="a80877">a80877</option>
+                                
+                                    <option value="a88215">a88215</option>
+                                
+                                    <option value="a5060">a5060</option>
+                                
+                                    <option value="a29246">a29246</option>
+                                
+                                    <option value="a35515">a35515</option>
+                                
+                                    <option value="a38329">a38329</option>
+                                
+                                    <option value="a41257">a41257</option>
+                                
+                                    <option value="a44476">a44476</option>
+                                
+                                    <option value="a46606">a46606</option>
+                                
+                                    <option value="a51661">a51661</option>
+                                
+                                    <option value="a58440">a58440</option>
+                                
+                                    <option value="a69304">a69304</option>
+                                
+                                    <option value="a69401">a69401</option>
+                                
+                                    <option value="a71027">a71027</option>
+                                
+                                    <option value="a48473">a48473</option>
+                                
+                                    <option value="a75824">a75824</option>
+                                
+                                    <option value="a65340">a65340</option>
+                                
+                                    <option value="a73886">a73886</option>
+                                
+                                    <option value="a9009">a9009</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 15, "id": "a13664", "label": "Answer:Zanzibar\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:During the early-to-mid 1980s, in which club in New Jersey, was this dance music style, that Robbie Rivera used in his music with Latin elements, developed?\nAnswer:Zanzibar\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a47048", "label": "Answer:islands\nPage Rank:6.42\nLabel:23", "shape": "square", "size": 32, "title": "Page Rank:6.416773803596403\nQuestion:The Dambuilders began in the only US state located in Oceania, and the only one composed entirely of what?\nAnswer:islands\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a14746", "label": "Answer:Taiwan\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:What country is the actress who starred in the 1976 biographical film about Bruce Lee\u0027s final days from?\nAnswer:Taiwan\nLevel:hard\nType:bridge"}, {"group": 15, "id": "a16828", "label": "Answer:Greenland\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:What autonomous country owns the uninhabited island Edward Island?\nAnswer:Greenland\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a17316", "label": "Answer:Hispaniola\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:The 1976 Caribbean Series were held on what island?\nAnswer:Hispaniola\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a19321", "label": "Answer:Oahu\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:On which Hawaiian island is Turtle Bay Resort, home of the SBS Open women\u0027s golf tournament?\nAnswer:Oahu\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a2220", "label": "Answer:Kyushu\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:Enola Gay was one of the bombers that targeted the largest city on what Japanese island?\nAnswer:Kyushu\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a25063", "label": "Answer:Korea\nPage Rank:0.49\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:What country considers the female artist featured in the Far East Movement\u0027s fifith studio album, Idenity, to best rapper of her sex?\nAnswer:Korea\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a28049", "label": "Answer:peninsula\nPage Rank:1.33\nLabel:23", "shape": "square", "size": 7, "title": "Page Rank:1.3256127588035478\nQuestion:What geographical landform is included in Hong Kong\u0027s Kowloon district, that plays host to the East Asian Games swimming events?\nAnswer:peninsula\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a28716", "label": "Answer:Oxbow\nPage Rank:0.77\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.7726603996915123\nQuestion:Thin Black Duke is a studio album by which San Francisco-based rock band?\nAnswer:Oxbow\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a80877", "label": "Answer:isthmus\nPage Rank:1.49\nLabel:23", "shape": "square", "size": 7, "title": "Page Rank:1.4874224583668598\nQuestion:What type of land mass was discovered in 1513 by a Spanish explorer, governor, and conquistador?\nAnswer:isthmus\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a88215", "label": "Answer:Wonderland\nPage Rank:2.75\nLabel:23", "shape": "square", "size": 14, "title": "Page Rank:2.751731547978691\nQuestion:What musical did Dan Domenech perform in that was based on a book by Jack Murphy and Gregory Boyd?\nAnswer:Wonderland\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a5060", "label": "Answer:Scandinavia\nPage Rank:0.49\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:In Norway, Pinnekj\u00f8tt, Stick Meat, is a main course dinner dish of lamb or mutton, this dish is largely associated with the celebration of Christmas, served with pur\u00e9ed swede and potatoes, beer and Akvavit, is a flavoured spirit, that has been produced since the 15th century, principally produced in which country?\nAnswer:Scandinavia\nLevel:easy\nType:bridge"}, {"group": 15, "id": "a29246", "label": "Answer:Aruba\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:The Kingdom of the Netherlands, known as the Netherlands. What Caribbean country is part of that?\nAnswer:Aruba\nLevel:hard\nType:bridge"}, {"group": 15, "id": "a35515", "label": "Answer:Java\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:What island is the Sonobudoyo library located on?\nAnswer:Java\nLevel:hard\nType:bridge"}, {"group": 15, "id": "a38329", "label": "Answer:Spitsbergen\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:Which island is the largest and only permanently populated island of the Svalbard archipelago and is also home to the Gavrilovfjellet mountain?\nAnswer:Spitsbergen\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a41257", "label": "Answer:Molokai\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:What island that Zanthoxylum hawaiiense can be found on is nicknamed\u201cThe Friendly Isle\u201d? \nAnswer:Molokai\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a44476", "label": "Answer:Bahrain\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:The character Sora Jung played in \"Mayumi\" was arrested in what country?\nAnswer:Bahrain\nLevel:hard\nType:bridge"}, {"group": 15, "id": "a46606", "label": "Answer:Shikoku\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:What is the smallest of the four main islands of Japan where the Acronicta digna moth can be found?\nAnswer:Shikoku\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a51661", "label": "Answer:Gus\nPage Rank:0.99\nLabel:15", "shape": "square", "size": 5, "title": "Page Rank:0.986809300541844\nQuestion:Which was released first, Frozen 2 or Gus?\nAnswer:Gus\nLevel:medium\nType:comparison"}, {"group": 15, "id": "a58440", "label": "Answer:Anguilla\nPage Rank:0.99\nLabel:15", "shape": "square", "size": 5, "title": "Page Rank:0.986809300541844\nQuestion:What is the name of the British overseas territory in the Caribbean which is one of the most northerly of the Leeward Islands and where Ronald Webster Park, a multi-use stadium is currently being used mostly for football matches?\nAnswer:Anguilla\nLevel:easy\nType:bridge"}, {"group": 15, "id": "a69304", "label": "Answer:Sumatra\nPage Rank:0.99\nLabel:15", "shape": "square", "size": 5, "title": "Page Rank:0.986809300541844\nQuestion:Paradise Road, starring Glenn Close and Australian Cate Blanchett, tells a World War II story about women imprisoned where?\nAnswer:Sumatra\nLevel:hard\nType:bridge"}, {"group": 15, "id": "a69401", "label": "Answer:Hokkaido\nPage Rank:0.99\nLabel:15", "shape": "square", "size": 5, "title": "Page Rank:0.986809300541844\nQuestion:Between the Hokkaido and the Taiwan Dog, which is also known as the Do-ken?\nAnswer:Hokkaido\nLevel:medium\nType:comparison"}, {"group": 15, "id": "a71027", "label": "Answer:Zealand\nPage Rank:0.99\nLabel:15", "shape": "square", "size": 5, "title": "Page Rank:0.986809300541844\nQuestion:What island in Denmark has 39% of the country\u0027s population and contains a mansion with an 8 hectare park?\nAnswer:Zealand\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a48473", "label": "Answer:Maui\nPage Rank:0.99\nLabel:15", "shape": "square", "size": 5, "title": "Page Rank:0.986809300541844\nQuestion:Jesse Richman rode a barrel wave on which Hawaiian island?\nAnswer:Maui\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a75824", "label": "Answer:Kodiak\nPage Rank:0.99\nLabel:15", "shape": "square", "size": 5, "title": "Page Rank:0.986809300541844\nQuestion:Which airport is both a public and military airport, Wrangell Airport or Kodiak Airport?\nAnswer:Kodiak\nLevel:hard\nType:comparison"}, {"group": 15, "id": "a65340", "label": "Answer:Trinidad\nPage Rank:0.99\nLabel:15", "shape": "square", "size": 5, "title": "Page Rank:0.986809300541844\nQuestion:What country does Alfred Mendes and C. L. R. James have in common?\nAnswer:Trinidad\nLevel:medium\nType:bridge"}, {"group": 15, "id": "a73886", "label": "Answer:Nantucket\nPage Rank:0.99\nLabel:15", "shape": "square", "size": 5, "title": "Page Rank:0.986809300541844\nQuestion:James H. Cromartie is an internationally renowned American artist credited with the birth of Hard-Edge Realism, a style by turns both redolent of and a departure from the Magic Realism, he has resided year-round on which island about 30 mi by ferry south from Cape Cod, in the American state of Massachusetts?\nAnswer:Nantucket\nLevel:easy\nType:bridge"}, {"group": 15, "id": "a9009", "label": "Answer:Kauai\nPage Rank:0.49\nLabel:15", "shape": "square", "size": 2, "title": "Page Rank:0.4909676884457584\nQuestion:A measurement standards laboratory called the National Institute of Standards and Technology is located on what island in the state of Hawaii?\nAnswer:Kauai\nLevel:easy\nType:bridge"}]);
+                  edges = new vis.DataSet([{"from": "a13664", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a14746", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a16828", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a17316", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a19321", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a2220", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a25063", "label": 1.0, "length": 500, "to": "a28049", "width": 1}, {"from": "a28049", "label": 0.25, "length": 500, "to": "a47048", "width": 1}, {"from": "a28049", "label": 0.25, "length": 500, "to": "a28716", "width": 1}, {"from": "a28049", "label": 0.25, "length": 500, "to": "a80877", "width": 1}, {"from": "a28049", "label": 0.25, "length": 500, "to": "a88215", "width": 1}, {"from": "a28049", "label": 1.0, "length": 500, "to": "a5060", "width": 1}, {"from": "a28716", "label": 0.3333333333333333, "length": 500, "to": "a47048", "width": 1}, {"from": "a28716", "label": 0.3333333333333333, "length": 500, "to": "a80877", "width": 1}, {"from": "a28716", "label": 0.3333333333333333, "length": 500, "to": "a88215", "width": 1}, {"from": "a29246", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a35515", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a38329", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a41257", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a44476", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a46606", "label": 1.0, "length": 500, "to": "a47048", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a51661", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a58440", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a69304", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a69401", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a71027", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a48473", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a75824", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a80877", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a65340", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a73886", "width": 1}, {"from": "a47048", "label": 0.09090909090909091, "length": 500, "to": "a88215", "width": 1}, {"from": "a47048", "label": 1.0, "length": 500, "to": "a9009", "width": 1}, {"from": "a80877", "label": 1.0, "length": 500, "to": "a88215", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

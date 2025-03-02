@@ -1,0 +1,871 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 1700px;
+                 height: 900px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="7307-0-0-5">7307-0-0-5</option>
+                                
+                                    <option value="7307-0-0-9">7307-0-0-9</option>
+                                
+                                    <option value="7307-0-0-8">7307-0-0-8</option>
+                                
+                                    <option value="7307-0-0-7">7307-0-0-7</option>
+                                
+                                    <option value="7307-0-0-6">7307-0-0-6</option>
+                                
+                                    <option value="7307-0-0-4">7307-0-0-4</option>
+                                
+                                    <option value="7307-0-0-3">7307-0-0-3</option>
+                                
+                                    <option value="7307-0-0-2">7307-0-0-2</option>
+                                
+                                    <option value="7307-0-0-11">7307-0-0-11</option>
+                                
+                                    <option value="7307-0-0-10">7307-0-0-10</option>
+                                
+                                    <option value="7307-0-0-1">7307-0-0-1</option>
+                                
+                                    <option value="7307-0-0-0">7307-0-0-0</option>
+                                
+                                    <option value="2909-5-0-9">2909-5-0-9</option>
+                                
+                                    <option value="2909-5-0-8">2909-5-0-8</option>
+                                
+                                    <option value="2909-5-0-7">2909-5-0-7</option>
+                                
+                                    <option value="2909-5-0-6">2909-5-0-6</option>
+                                
+                                    <option value="2909-5-0-5">2909-5-0-5</option>
+                                
+                                    <option value="2909-5-0-4">2909-5-0-4</option>
+                                
+                                    <option value="2909-5-0-3">2909-5-0-3</option>
+                                
+                                    <option value="2909-5-0-2">2909-5-0-2</option>
+                                
+                                    <option value="2909-5-0-12">2909-5-0-12</option>
+                                
+                                    <option value="2909-5-0-11">2909-5-0-11</option>
+                                
+                                    <option value="2909-5-0-10">2909-5-0-10</option>
+                                
+                                    <option value="2909-5-0-1">2909-5-0-1</option>
+                                
+                                    <option value="2909-5-0-0">2909-5-0-0</option>
+                                
+                                    <option value="3574-4-1-0">3574-4-1-0</option>
+                                
+                                    <option value="3574-4-1-3">3574-4-1-3</option>
+                                
+                                    <option value="3574-4-1-2">3574-4-1-2</option>
+                                
+                                    <option value="3574-4-1-1">3574-4-1-1</option>
+                                
+                                    <option value="7307-0--1-0">7307-0--1-0</option>
+                                
+                                    <option value="2700-5-1-1">2700-5-1-1</option>
+                                
+                                    <option value="2700-5-1-9">2700-5-1-9</option>
+                                
+                                    <option value="2700-5-1-8">2700-5-1-8</option>
+                                
+                                    <option value="2700-5-1-7">2700-5-1-7</option>
+                                
+                                    <option value="2700-5-1-6">2700-5-1-6</option>
+                                
+                                    <option value="2700-5-1-5">2700-5-1-5</option>
+                                
+                                    <option value="2700-5-1-4">2700-5-1-4</option>
+                                
+                                    <option value="2700-5-1-3">2700-5-1-3</option>
+                                
+                                    <option value="2700-5-1-2">2700-5-1-2</option>
+                                
+                                    <option value="2700-5-1-0">2700-5-1-0</option>
+                                
+                                    <option value="2700-5--1-1">2700-5--1-1</option>
+                                
+                                    <option value="5310-4-2-4">5310-4-2-4</option>
+                                
+                                    <option value="5310-4-2-7">5310-4-2-7</option>
+                                
+                                    <option value="5310-4-2-6">5310-4-2-6</option>
+                                
+                                    <option value="5310-4-2-5">5310-4-2-5</option>
+                                
+                                    <option value="5310-4-2-3">5310-4-2-3</option>
+                                
+                                    <option value="5310-4-2-2">5310-4-2-2</option>
+                                
+                                    <option value="5310-4-2-1">5310-4-2-1</option>
+                                
+                                    <option value="5310-4-2-0">5310-4-2-0</option>
+                                
+                                    <option value="5194-2-2-0">5194-2-2-0</option>
+                                
+                                    <option value="5194-2-2-4">5194-2-2-4</option>
+                                
+                                    <option value="5194-2-2-3">5194-2-2-3</option>
+                                
+                                    <option value="5194-2-2-2">5194-2-2-2</option>
+                                
+                                    <option value="5194-2-2-1">5194-2-2-1</option>
+                                
+                                    <option value="6937-5-0-3">6937-5-0-3</option>
+                                
+                                    <option value="6937-5-0-5">6937-5-0-5</option>
+                                
+                                    <option value="6937-5-0-4">6937-5-0-4</option>
+                                
+                                    <option value="6937-5-0-2">6937-5-0-2</option>
+                                
+                                    <option value="6937-5-0-1">6937-5-0-1</option>
+                                
+                                    <option value="6937-5-0-0">6937-5-0-0</option>
+                                
+                                    <option value="6050-8-3-2">6050-8-3-2</option>
+                                
+                                    <option value="6050-8-3-4">6050-8-3-4</option>
+                                
+                                    <option value="6050-8-3-3">6050-8-3-3</option>
+                                
+                                    <option value="6050-8-3-1">6050-8-3-1</option>
+                                
+                                    <option value="6050-8-3-0">6050-8-3-0</option>
+                                
+                                    <option value="6050-7-0-0">6050-7-0-0</option>
+                                
+                                    <option value="7307-1-0-5">7307-1-0-5</option>
+                                
+                                    <option value="7307-1-0-8">7307-1-0-8</option>
+                                
+                                    <option value="7307-1-0-7">7307-1-0-7</option>
+                                
+                                    <option value="7307-1-0-6">7307-1-0-6</option>
+                                
+                                    <option value="7307-1-0-4">7307-1-0-4</option>
+                                
+                                    <option value="7307-1-0-3">7307-1-0-3</option>
+                                
+                                    <option value="7307-1-0-2">7307-1-0-2</option>
+                                
+                                    <option value="7307-1-0-1">7307-1-0-1</option>
+                                
+                                    <option value="7307-1-0-0">7307-1-0-0</option>
+                                
+                                    <option value="2453-4-2-1">2453-4-2-1</option>
+                                
+                                    <option value="2453-4-2-3">2453-4-2-3</option>
+                                
+                                    <option value="2453-4-2-2">2453-4-2-2</option>
+                                
+                                    <option value="2453-4-2-0">2453-4-2-0</option>
+                                
+                                    <option value="6050-7-0-8">6050-7-0-8</option>
+                                
+                                    <option value="6050-7-0-7">6050-7-0-7</option>
+                                
+                                    <option value="6050-7-0-6">6050-7-0-6</option>
+                                
+                                    <option value="6050-7-0-5">6050-7-0-5</option>
+                                
+                                    <option value="6050-7-0-4">6050-7-0-4</option>
+                                
+                                    <option value="6050-7-0-3">6050-7-0-3</option>
+                                
+                                    <option value="6050-7-0-2">6050-7-0-2</option>
+                                
+                                    <option value="6050-7-0-1">6050-7-0-1</option>
+                                
+                                    <option value="6937-4-0-1">6937-4-0-1</option>
+                                
+                                    <option value="6937-4-0-8">6937-4-0-8</option>
+                                
+                                    <option value="6937-4-0-7">6937-4-0-7</option>
+                                
+                                    <option value="6937-4-0-6">6937-4-0-6</option>
+                                
+                                    <option value="6937-4-0-5">6937-4-0-5</option>
+                                
+                                    <option value="6937-4-0-4">6937-4-0-4</option>
+                                
+                                    <option value="6937-4-0-2">6937-4-0-2</option>
+                                
+                                    <option value="6937-4-0-0">6937-4-0-0</option>
+                                
+                                    <option value="6937-4--1-1">6937-4--1-1</option>
+                                
+                                    <option value="2453-4-0-5">2453-4-0-5</option>
+                                
+                                    <option value="2453-4-0-7">2453-4-0-7</option>
+                                
+                                    <option value="2453-4-0-6">2453-4-0-6</option>
+                                
+                                    <option value="2453-4-0-4">2453-4-0-4</option>
+                                
+                                    <option value="2453-4-0-3">2453-4-0-3</option>
+                                
+                                    <option value="2453-4-0-2">2453-4-0-2</option>
+                                
+                                    <option value="2453-4-0-1">2453-4-0-1</option>
+                                
+                                    <option value="2453-4-0-0">2453-4-0-0</option>
+                                
+                                    <option value="3574-4--1-0">3574-4--1-0</option>
+                                
+                                    <option value="3574-4-0-0">3574-4-0-0</option>
+                                
+                                    <option value="3359-8-0-0">3359-8-0-0</option>
+                                
+                                    <option value="3359-8-0-4">3359-8-0-4</option>
+                                
+                                    <option value="3359-8-0-2">3359-8-0-2</option>
+                                
+                                    <option value="3359-8-0-1">3359-8-0-1</option>
+                                
+                                    <option value="3359-8--1-0">3359-8--1-0</option>
+                                
+                                    <option value="2909-7-0-5">2909-7-0-5</option>
+                                
+                                    <option value="2909-5--1-1">2909-5--1-1</option>
+                                
+                                    <option value="6050-8-1-1">6050-8-1-1</option>
+                                
+                                    <option value="6050-8-1-3">6050-8-1-3</option>
+                                
+                                    <option value="6050-8-1-2">6050-8-1-2</option>
+                                
+                                    <option value="6050-8-1-0">6050-8-1-0</option>
+                                
+                                    <option value="6050-7--1-1">6050-7--1-1</option>
+                                
+                                    <option value="6039-4--1-1">6039-4--1-1</option>
+                                
+                                    <option value="5310-4--1-0">5310-4--1-0</option>
+                                
+                                    <option value="2453-4--1-1">2453-4--1-1</option>
+                                
+                                    <option value="5194-3-0-1">5194-3-0-1</option>
+                                
+                                    <option value="5194-3-0-3">5194-3-0-3</option>
+                                
+                                    <option value="5194-3-0-2">5194-3-0-2</option>
+                                
+                                    <option value="5194-3-0-0">5194-3-0-0</option>
+                                
+                                    <option value="5194-3--1-1">5194-3--1-1</option>
+                                
+                                    <option value="5310-1-0-1">5310-1-0-1</option>
+                                
+                                    <option value="5310-4-5-0">5310-4-5-0</option>
+                                
+                                    <option value="5310-4-0-1">5310-4-0-1</option>
+                                
+                                    <option value="5310-1-0-9">5310-1-0-9</option>
+                                
+                                    <option value="5310-1-0-8">5310-1-0-8</option>
+                                
+                                    <option value="5310-1-0-7">5310-1-0-7</option>
+                                
+                                    <option value="5310-1-0-6">5310-1-0-6</option>
+                                
+                                    <option value="5310-1-0-5">5310-1-0-5</option>
+                                
+                                    <option value="5310-1-0-4">5310-1-0-4</option>
+                                
+                                    <option value="5310-1-0-3">5310-1-0-3</option>
+                                
+                                    <option value="5310-1-0-2">5310-1-0-2</option>
+                                
+                                    <option value="5310-1-0-0">5310-1-0-0</option>
+                                
+                                    <option value="6050-8--1-0">6050-8--1-0</option>
+                                
+                                    <option value="6050-8-2-0">6050-8-2-0</option>
+                                
+                                    <option value="6050-8-0-0">6050-8-0-0</option>
+                                
+                                    <option value="2909-7-0-7">2909-7-0-7</option>
+                                
+                                    <option value="2909-7-0-6">2909-7-0-6</option>
+                                
+                                    <option value="2909-7-0-4">2909-7-0-4</option>
+                                
+                                    <option value="2909-7-0-3">2909-7-0-3</option>
+                                
+                                    <option value="2909-7-0-2">2909-7-0-2</option>
+                                
+                                    <option value="2909-7-0-0">2909-7-0-0</option>
+                                
+                                    <option value="2909-7--1-2">2909-7--1-2</option>
+                                
+                                    <option value="6937-5--1-1">6937-5--1-1</option>
+                                
+                                    <option value="7307-1--1-1">7307-1--1-1</option>
+                                
+                                    <option value="3574-4--1-1">3574-4--1-1</option>
+                                
+                                    <option value="3261-0--1-1">3261-0--1-1</option>
+                                
+                                    <option value="3261-0-0-1">3261-0-0-1</option>
+                                
+                                    <option value="3261-0-0-8">3261-0-0-8</option>
+                                
+                                    <option value="3261-0-0-7">3261-0-0-7</option>
+                                
+                                    <option value="3261-0-0-6">3261-0-0-6</option>
+                                
+                                    <option value="3261-0-0-5">3261-0-0-5</option>
+                                
+                                    <option value="3261-0-0-4">3261-0-0-4</option>
+                                
+                                    <option value="3261-0-0-3">3261-0-0-3</option>
+                                
+                                    <option value="3261-0-0-2">3261-0-0-2</option>
+                                
+                                    <option value="3261-0-0-0">3261-0-0-0</option>
+                                
+                                    <option value="6050-8-2-3">6050-8-2-3</option>
+                                
+                                    <option value="6050-8-2-4">6050-8-2-4</option>
+                                
+                                    <option value="6050-8-2-2">6050-8-2-2</option>
+                                
+                                    <option value="6050-8-2-1">6050-8-2-1</option>
+                                
+                                    <option value="3359-8-0-3">3359-8-0-3</option>
+                                
+                                    <option value="3574-2-1-2">3574-2-1-2</option>
+                                
+                                    <option value="3574-2-1-3">3574-2-1-3</option>
+                                
+                                    <option value="3574-2-1-1">3574-2-1-1</option>
+                                
+                                    <option value="3574-2-1-0">3574-2-1-0</option>
+                                
+                                    <option value="6050-8--1-1">6050-8--1-1</option>
+                                
+                                    <option value="2909-7-0-1">2909-7-0-1</option>
+                                
+                                    <option value="6937-4-0-3">6937-4-0-3</option>
+                                
+                                    <option value="2453-4--1-0">2453-4--1-0</option>
+                                
+                                    <option value="5310-4-3-1">5310-4-3-1</option>
+                                
+                                    <option value="5310-4-3-2">5310-4-3-2</option>
+                                
+                                    <option value="5310-4-3-0">5310-4-3-0</option>
+                                
+                                    <option value="3261-0--1-0">3261-0--1-0</option>
+                                
+                                    <option value="5310-1-1-0">5310-1-1-0</option>
+                                
+                                    <option value="5310-4-0-5">5310-4-0-5</option>
+                                
+                                    <option value="5310-4-0-3">5310-4-0-3</option>
+                                
+                                    <option value="5310-4-0-0">5310-4-0-0</option>
+                                
+                                    <option value="5310-4-5-2">5310-4-5-2</option>
+                                
+                                    <option value="5310-4-5-1">5310-4-5-1</option>
+                                
+                                    <option value="5310-4-0-4">5310-4-0-4</option>
+                                
+                                    <option value="5310-4-0-2">5310-4-0-2</option>
+                                
+                                    <option value="6050-8-0-3">6050-8-0-3</option>
+                                
+                                    <option value="6050-8-0-5">6050-8-0-5</option>
+                                
+                                    <option value="6050-8-0-4">6050-8-0-4</option>
+                                
+                                    <option value="6050-8-0-2">6050-8-0-2</option>
+                                
+                                    <option value="6050-8-0-1">6050-8-0-1</option>
+                                
+                                    <option value="6937-4--1-0">6937-4--1-0</option>
+                                
+                                    <option value="2909-7--1-1">2909-7--1-1</option>
+                                
+                                    <option value="7307-1-1-2">7307-1-1-2</option>
+                                
+                                    <option value="7307-1-1-1">7307-1-1-1</option>
+                                
+                                    <option value="7307-1-1-0">7307-1-1-0</option>
+                                
+                                    <option value="3574-4-0-1">3574-4-0-1</option>
+                                
+                                    <option value="7307-1--1-0">7307-1--1-0</option>
+                                
+                                    <option value="5194-3--1-0">5194-3--1-0</option>
+                                
+                                    <option value="4454-5--1-0">4454-5--1-0</option>
+                                
+                                    <option value="5194-3--1-2">5194-3--1-2</option>
+                                
+                                    <option value="3261-1-0-0">3261-1-0-0</option>
+                                
+                                    <option value="3261-1-0-2">3261-1-0-2</option>
+                                
+                                    <option value="3261-1-0-1">3261-1-0-1</option>
+                                
+                                    <option value="3261-1--1-0">3261-1--1-0</option>
+                                
+                                    <option value="6050-7--1-0">6050-7--1-0</option>
+                                
+                                    <option value="4454-5-3-0">4454-5-3-0</option>
+                                
+                                    <option value="4454-5-3-1">4454-5-3-1</option>
+                                
+                                    <option value="4454-5-3-2">4454-5-3-2</option>
+                                
+                                    <option value="2909-5--1-0">2909-5--1-0</option>
+                                
+                                    <option value="6937-5--1-0">6937-5--1-0</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 191, "id": "7307-0-0-5", "label": "Entity:Frederick II\nType:Sentence\nPage Rank:1.15\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Frederick II\nType:Sentence\nPage Rank:1.15\nLabel:191"}, {"group": 191, "id": "7307-0-0-9", "label": "Entity:Charlemagne\u0027s\nType:Sentence\nPage Rank:1.15\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Charlemagne\u0027s\nType:Sentence\nPage Rank:1.15\nLabel:191"}, {"group": 191, "id": "7307-0-0-8", "label": "Entity:Frederick Barbarossa\nType:Sentence\nPage Rank:1.26\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Frederick Barbarossa\nType:Sentence\nPage Rank:1.26\nLabel:191"}, {"group": 191, "id": "7307-0-0-7", "label": "Entity:Frederick II\u0027s\nType:Sentence\nPage Rank:1.15\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Frederick II\u0027s\nType:Sentence\nPage Rank:1.15\nLabel:191"}, {"group": 191, "id": "7307-0-0-6", "label": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.26\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.26\nLabel:191"}, {"group": 191, "id": "7307-0-0-4", "label": "Entity:Aachen\nType:Sentence\nPage Rank:1.22\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Aachen\nType:Sentence\nPage Rank:1.22\nLabel:191"}, {"group": 191, "id": "7307-0-0-3", "label": "Entity:Aachen Cathedral\nType:Sentence\nPage Rank:1.15\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Aachen Cathedral\nType:Sentence\nPage Rank:1.15\nLabel:191"}, {"group": 191, "id": "7307-0-0-2", "label": "Entity:Shrine of Charlemagne\nType:Sentence\nPage Rank:1.15\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Shrine of Charlemagne\nType:Sentence\nPage Rank:1.15\nLabel:191"}, {"group": 191, "id": "7307-0-0-11", "label": "Entity:Aachen\nType:Sentence\nPage Rank:1.22\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Aachen\nType:Sentence\nPage Rank:1.22\nLabel:191"}, {"group": 191, "id": "7307-0-0-10", "label": "Entity:Palatine Chapel\nType:Sentence\nPage Rank:1.15\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Palatine Chapel\nType:Sentence\nPage Rank:1.15\nLabel:191"}, {"group": 191, "id": "7307-0-0-1", "label": "Entity:English\nType:Sentence\nPage Rank:1.15\nLabel:191", "shape": "square", "size": 6, "title": "Entity:English\nType:Sentence\nPage Rank:1.15\nLabel:191"}, {"group": 191, "id": "7307-0-0-0", "label": "Entity:Karlsschrein\nType:Sentence\nPage Rank:1.26\nLabel:191", "shape": "square", "size": 6, "title": "Entity:Karlsschrein\nType:Sentence\nPage Rank:1.26\nLabel:191"}, {"group": 32, "id": "2909-5-0-9", "label": "Entity:Sicily\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Sicily\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-8", "label": "Entity:Naples\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Naples\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-7", "label": "Entity:Filipe\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Filipe\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-6", "label": "Entity:Philip\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Philip\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-5", "label": "Entity:Portugal\nType:Sentence\nPage Rank:1.22\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Portugal\nType:Sentence\nPage Rank:1.22\nLabel:32"}, {"group": 32, "id": "2909-5-0-4", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.28\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.28\nLabel:32"}, {"group": 32, "id": "2909-5-0-3", "label": "Entity:Prudente\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Prudente\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-2", "label": "Entity:Felipe II\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Felipe II\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-12", "label": "Entity:Mary\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Mary\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-11", "label": "Entity:Ireland\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Ireland\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-10", "label": "Entity:England\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:England\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-1", "label": "Entity:Spanish\nType:Sentence\nPage Rank:1.11\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Spanish\nType:Sentence\nPage Rank:1.11\nLabel:32"}, {"group": 32, "id": "2909-5-0-0", "label": "Entity:Philip II\nType:Sentence\nPage Rank:1.34\nLabel:32", "shape": "square", "size": 7, "title": "Entity:Philip II\nType:Sentence\nPage Rank:1.34\nLabel:32"}, {"group": 80, "id": "3574-4-1-0", "label": "Entity:Ottonian\nType:Sentence\nPage Rank:1.04\nLabel:80", "shape": "square", "size": 5, "title": "Entity:Ottonian\nType:Sentence\nPage Rank:1.04\nLabel:80"}, {"group": 80, "id": "3574-4-1-3", "label": "Entity:Theophanu\nType:Sentence\nPage Rank:1.04\nLabel:80", "shape": "square", "size": 5, "title": "Entity:Theophanu\nType:Sentence\nPage Rank:1.04\nLabel:80"}, {"group": 80, "id": "3574-4-1-2", "label": "Entity:Otto II\nType:Sentence\nPage Rank:1.04\nLabel:80", "shape": "square", "size": 5, "title": "Entity:Otto II\nType:Sentence\nPage Rank:1.04\nLabel:80"}, {"group": 80, "id": "3574-4-1-1", "label": "Entity:Otto III\nType:Sentence\nPage Rank:1.41\nLabel:80", "shape": "square", "size": 7, "title": "Entity:Otto III\nType:Sentence\nPage Rank:1.41\nLabel:80"}, {"group": 191, "id": "7307-0--1-0", "label": "Entity:Karlsschrein\nType:Title\nPage Rank:0.15\nLabel:191", "shape": "square", "size": 1, "title": "Entity:Karlsschrein\nType:Title\nPage Rank:0.15\nLabel:191"}, {"group": 23, "id": "2700-5-1-1", "label": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.12\nLabel:23", "shape": "square", "size": 6, "title": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.12\nLabel:23"}, {"group": 23, "id": "2700-5-1-9", "label": "Entity:Charles III\nType:Sentence\nPage Rank:1.05\nLabel:23", "shape": "square", "size": 5, "title": "Entity:Charles III\nType:Sentence\nPage Rank:1.05\nLabel:23"}, {"group": 23, "id": "2700-5-1-8", "label": "Entity:Austria\nType:Sentence\nPage Rank:1.05\nLabel:23", "shape": "square", "size": 5, "title": "Entity:Austria\nType:Sentence\nPage Rank:1.05\nLabel:23"}, {"group": 23, "id": "2700-5-1-7", "label": "Entity:Archduke\nType:Sentence\nPage Rank:1.05\nLabel:23", "shape": "square", "size": 5, "title": "Entity:Archduke\nType:Sentence\nPage Rank:1.05\nLabel:23"}, {"group": 23, "id": "2700-5-1-6", "label": "Entity:Serbia\nType:Sentence\nPage Rank:1.05\nLabel:23", "shape": "square", "size": 5, "title": "Entity:Serbia\nType:Sentence\nPage Rank:1.05\nLabel:23"}, {"group": 23, "id": "2700-5-1-5", "label": "Entity:Croatia\nType:Sentence\nPage Rank:1.05\nLabel:23", "shape": "square", "size": 5, "title": "Entity:Croatia\nType:Sentence\nPage Rank:1.05\nLabel:23"}, {"group": 23, "id": "2700-5-1-4", "label": "Entity:Hungary\nType:Sentence\nPage Rank:1.05\nLabel:23", "shape": "square", "size": 5, "title": "Entity:Hungary\nType:Sentence\nPage Rank:1.05\nLabel:23"}, {"group": 23, "id": "2700-5-1-3", "label": "Entity:Charles II\nType:Sentence\nPage Rank:1.05\nLabel:23", "shape": "square", "size": 5, "title": "Entity:Charles II\nType:Sentence\nPage Rank:1.05\nLabel:23"}, {"group": 23, "id": "2700-5-1-2", "label": "Entity:Bohemia\nType:Sentence\nPage Rank:1.05\nLabel:23", "shape": "square", "size": 5, "title": "Entity:Bohemia\nType:Sentence\nPage Rank:1.05\nLabel:23"}, {"group": 23, "id": "2700-5-1-0", "label": "Entity:Joseph I\nType:Sentence\nPage Rank:1.05\nLabel:23", "shape": "square", "size": 5, "title": "Entity:Joseph I\nType:Sentence\nPage Rank:1.05\nLabel:23"}, {"group": 14, "id": "2700-5--1-1", "label": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14", "shape": "square", "size": 2, "title": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14"}, {"group": 119, "id": "5310-4-2-4", "label": "Entity:Red Fury\nType:Sentence\nPage Rank:0.98\nLabel:119", "shape": "square", "size": 5, "title": "Entity:Red Fury\nType:Sentence\nPage Rank:0.98\nLabel:119"}, {"group": 119, "id": "5310-4-2-7", "label": "Entity:La Furia\nType:Sentence\nPage Rank:0.98\nLabel:119", "shape": "square", "size": 5, "title": "Entity:La Furia\nType:Sentence\nPage Rank:0.98\nLabel:119"}, {"group": 119, "id": "5310-4-2-6", "label": "Entity:Spanish Fury\nType:Sentence\nPage Rank:0.98\nLabel:119", "shape": "square", "size": 5, "title": "Entity:Spanish Fury\nType:Sentence\nPage Rank:0.98\nLabel:119"}, {"group": 119, "id": "5310-4-2-5", "label": "Entity:La Furia Espa\u00f1ola\nType:Sentence\nPage Rank:0.98\nLabel:119", "shape": "square", "size": 5, "title": "Entity:La Furia Espa\u00f1ola\nType:Sentence\nPage Rank:0.98\nLabel:119"}, {"group": 119, "id": "5310-4-2-3", "label": "Entity:La Furia Roja\nType:Sentence\nPage Rank:0.98\nLabel:119", "shape": "square", "size": 5, "title": "Entity:La Furia Roja\nType:Sentence\nPage Rank:0.98\nLabel:119"}, {"group": 119, "id": "5310-4-2-2", "label": "Entity:Red [One]\nType:Sentence\nPage Rank:0.98\nLabel:119", "shape": "square", "size": 5, "title": "Entity:Red [One]\nType:Sentence\nPage Rank:0.98\nLabel:119"}, {"group": 119, "id": "5310-4-2-1", "label": "Entity:La Roja\nType:Sentence\nPage Rank:0.98\nLabel:119", "shape": "square", "size": 5, "title": "Entity:La Roja\nType:Sentence\nPage Rank:0.98\nLabel:119"}, {"group": 119, "id": "5310-4-2-0", "label": "Entity:Spanish\nType:Sentence\nPage Rank:1.10\nLabel:119", "shape": "square", "size": 6, "title": "Entity:Spanish\nType:Sentence\nPage Rank:1.10\nLabel:119"}, {"group": 89, "id": "5194-2-2-0", "label": "Entity:England\nType:Sentence\nPage Rank:1.08\nLabel:89", "shape": "square", "size": 5, "title": "Entity:England\nType:Sentence\nPage Rank:1.08\nLabel:89"}, {"group": 89, "id": "5194-2-2-4", "label": "Entity:Royal Academy of Arts\nType:Sentence\nPage Rank:1.08\nLabel:89", "shape": "square", "size": 5, "title": "Entity:Royal Academy of Arts\nType:Sentence\nPage Rank:1.08\nLabel:89"}, {"group": 89, "id": "5194-2-2-3", "label": "Entity:Wales\nType:Sentence\nPage Rank:1.37\nLabel:89", "shape": "square", "size": 7, "title": "Entity:Wales\nType:Sentence\nPage Rank:1.37\nLabel:89"}, {"group": 89, "id": "5194-2-2-2", "label": "Entity:Prince\nType:Sentence\nPage Rank:1.38\nLabel:89", "shape": "square", "size": 7, "title": "Entity:Prince\nType:Sentence\nPage Rank:1.38\nLabel:89"}, {"group": 89, "id": "5194-2-2-1", "label": "Entity:Frederick\nType:Sentence\nPage Rank:1.37\nLabel:89", "shape": "square", "size": 7, "title": "Entity:Frederick\nType:Sentence\nPage Rank:1.37\nLabel:89"}, {"group": 182, "id": "6937-5-0-3", "label": "Entity:Croatia\nType:Sentence\nPage Rank:0.94\nLabel:182", "shape": "square", "size": 5, "title": "Entity:Croatia\nType:Sentence\nPage Rank:0.94\nLabel:182"}, {"group": 182, "id": "6937-5-0-5", "label": "Entity:Austria\nType:Sentence\nPage Rank:0.94\nLabel:182", "shape": "square", "size": 5, "title": "Entity:Austria\nType:Sentence\nPage Rank:0.94\nLabel:182"}, {"group": 182, "id": "6937-5-0-4", "label": "Entity:Bohemia\nType:Sentence\nPage Rank:1.08\nLabel:182", "shape": "square", "size": 5, "title": "Entity:Bohemia\nType:Sentence\nPage Rank:1.08\nLabel:182"}, {"group": 182, "id": "6937-5-0-2", "label": "Entity:Hungary\nType:Sentence\nPage Rank:1.08\nLabel:182", "shape": "square", "size": 5, "title": "Entity:Hungary\nType:Sentence\nPage Rank:1.08\nLabel:182"}, {"group": 182, "id": "6937-5-0-1", "label": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.29\nLabel:182", "shape": "square", "size": 6, "title": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.29\nLabel:182"}, {"group": 182, "id": "6937-5-0-0", "label": "Entity:Ferdinand III\nType:Sentence\nPage Rank:1.19\nLabel:182", "shape": "square", "size": 6, "title": "Entity:Ferdinand III\nType:Sentence\nPage Rank:1.19\nLabel:182"}, {"group": 164, "id": "6050-8-3-2", "label": "Entity:Philip V\nType:Sentence\nPage Rank:1.09\nLabel:164", "shape": "square", "size": 5, "title": "Entity:Philip V\nType:Sentence\nPage Rank:1.09\nLabel:164"}, {"group": 164, "id": "6050-8-3-4", "label": "Entity:Ibiza\nType:Sentence\nPage Rank:0.94\nLabel:164", "shape": "square", "size": 5, "title": "Entity:Ibiza\nType:Sentence\nPage Rank:0.94\nLabel:164"}, {"group": 164, "id": "6050-8-3-3", "label": "Entity:Nova Planta Decree of Majorca\nType:Sentence\nPage Rank:0.94\nLabel:164", "shape": "square", "size": 5, "title": "Entity:Nova Planta Decree of Majorca\nType:Sentence\nPage Rank:0.94\nLabel:164"}, {"group": 164, "id": "6050-8-3-1", "label": "Entity:Consell\nType:Sentence\nPage Rank:0.97\nLabel:164", "shape": "square", "size": 5, "title": "Entity:Consell\nType:Sentence\nPage Rank:0.97\nLabel:164"}, {"group": 164, "id": "6050-8-3-0", "label": "Entity:Gran i General Consell\nType:Sentence\nPage Rank:0.94\nLabel:164", "shape": "square", "size": 5, "title": "Entity:Gran i General Consell\nType:Sentence\nPage Rank:0.94\nLabel:164"}, {"group": 137, "id": "6050-7-0-0", "label": "Entity:Philip V\nType:Sentence\nPage Rank:1.44\nLabel:137", "shape": "square", "size": 7, "title": "Entity:Philip V\nType:Sentence\nPage Rank:1.44\nLabel:137"}, {"group": 200, "id": "7307-1-0-5", "label": "Entity:Frederick Barbarossa\nType:Sentence\nPage Rank:1.18\nLabel:200", "shape": "square", "size": 6, "title": "Entity:Frederick Barbarossa\nType:Sentence\nPage Rank:1.18\nLabel:200"}, {"group": 200, "id": "7307-1-0-8", "label": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.25\nLabel:200", "shape": "square", "size": 6, "title": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.25\nLabel:200"}, {"group": 200, "id": "7307-1-0-7", "label": "Entity:Federico Barbarossa\nType:Sentence\nPage Rank:1.08\nLabel:200", "shape": "square", "size": 5, "title": "Entity:Federico Barbarossa\nType:Sentence\nPage Rank:1.08\nLabel:200"}, {"group": 200, "id": "7307-1-0-6", "label": "Entity:Italian\nType:Sentence\nPage Rank:0.96\nLabel:200", "shape": "square", "size": 5, "title": "Entity:Italian\nType:Sentence\nPage Rank:0.96\nLabel:200"}, {"group": 200, "id": "7307-1-0-4", "label": "Entity:Federico\nType:Sentence\nPage Rank:1.08\nLabel:200", "shape": "square", "size": 5, "title": "Entity:Federico\nType:Sentence\nPage Rank:1.08\nLabel:200"}, {"group": 200, "id": "7307-1-0-3", "label": "Entity:Italian\nType:Sentence\nPage Rank:0.96\nLabel:200", "shape": "square", "size": 5, "title": "Entity:Italian\nType:Sentence\nPage Rank:0.96\nLabel:200"}, {"group": 200, "id": "7307-1-0-2", "label": "Entity:Friedrich\nType:Sentence\nPage Rank:1.08\nLabel:200", "shape": "square", "size": 5, "title": "Entity:Friedrich\nType:Sentence\nPage Rank:1.08\nLabel:200"}, {"group": 200, "id": "7307-1-0-1", "label": "Entity:German\nType:Sentence\nPage Rank:1.08\nLabel:200", "shape": "square", "size": 5, "title": "Entity:German\nType:Sentence\nPage Rank:1.08\nLabel:200"}, {"group": 200, "id": "7307-1-0-0", "label": "Entity:Frederick\nType:Sentence\nPage Rank:1.17\nLabel:200", "shape": "square", "size": 6, "title": "Entity:Frederick\nType:Sentence\nPage Rank:1.17\nLabel:200"}, {"group": 11, "id": "2453-4-2-1", "label": "Entity:El Marquesado\nType:Sentence\nPage Rank:1.08\nLabel:11", "shape": "square", "size": 5, "title": "Entity:El Marquesado\nType:Sentence\nPage Rank:1.08\nLabel:11"}, {"group": 11, "id": "2453-4-2-3", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.12\nLabel:11", "shape": "square", "size": 6, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.12\nLabel:11"}, {"group": 11, "id": "2453-4-2-2", "label": "Entity:Lecrin Valley\nType:Sentence\nPage Rank:1.08\nLabel:11", "shape": "square", "size": 5, "title": "Entity:Lecrin Valley\nType:Sentence\nPage Rank:1.08\nLabel:11"}, {"group": 11, "id": "2453-4-2-0", "label": "Entity:Alpujarra\nType:Sentence\nPage Rank:1.08\nLabel:11", "shape": "square", "size": 5, "title": "Entity:Alpujarra\nType:Sentence\nPage Rank:1.08\nLabel:11"}, {"group": 137, "id": "6050-7-0-8", "label": "Entity:Louis\nType:Sentence\nPage Rank:1.14\nLabel:137", "shape": "square", "size": 6, "title": "Entity:Louis\nType:Sentence\nPage Rank:1.14\nLabel:137"}, {"group": 137, "id": "6050-7-0-7", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.19\nLabel:137", "shape": "square", "size": 6, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.19\nLabel:137"}, {"group": 137, "id": "6050-7-0-6", "label": "Entity:Filippo\nType:Sentence\nPage Rank:1.14\nLabel:137", "shape": "square", "size": 6, "title": "Entity:Filippo\nType:Sentence\nPage Rank:1.14\nLabel:137"}, {"group": 137, "id": "6050-7-0-5", "label": "Entity:Italian\nType:Sentence\nPage Rank:1.14\nLabel:137", "shape": "square", "size": 6, "title": "Entity:Italian\nType:Sentence\nPage Rank:1.14\nLabel:137"}, {"group": 137, "id": "6050-7-0-4", "label": "Entity:Philippe\nType:Sentence\nPage Rank:1.14\nLabel:137", "shape": "square", "size": 6, "title": "Entity:Philippe\nType:Sentence\nPage Rank:1.14\nLabel:137"}, {"group": 137, "id": "6050-7-0-3", "label": "Entity:French\nType:Sentence\nPage Rank:1.14\nLabel:137", "shape": "square", "size": 6, "title": "Entity:French\nType:Sentence\nPage Rank:1.14\nLabel:137"}, {"group": 137, "id": "6050-7-0-2", "label": "Entity:Felipe V\nType:Sentence\nPage Rank:1.14\nLabel:137", "shape": "square", "size": 6, "title": "Entity:Felipe V\nType:Sentence\nPage Rank:1.14\nLabel:137"}, {"group": 137, "id": "6050-7-0-1", "label": "Entity:Spanish\nType:Sentence\nPage Rank:1.14\nLabel:137", "shape": "square", "size": 6, "title": "Entity:Spanish\nType:Sentence\nPage Rank:1.14\nLabel:137"}, {"group": 173, "id": "6937-4-0-1", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.13\nLabel:173", "shape": "square", "size": 6, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.13\nLabel:173"}, {"group": 173, "id": "6937-4-0-8", "label": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.24\nLabel:173", "shape": "square", "size": 6, "title": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.24\nLabel:173"}, {"group": 173, "id": "6937-4-0-7", "label": "Entity:Ferdinand III\nType:Sentence\nPage Rank:1.39\nLabel:173", "shape": "square", "size": 7, "title": "Entity:Ferdinand III\nType:Sentence\nPage Rank:1.39\nLabel:173"}, {"group": 173, "id": "6937-4-0-6", "label": "Entity:Bohemia\nType:Sentence\nPage Rank:1.37\nLabel:173", "shape": "square", "size": 7, "title": "Entity:Bohemia\nType:Sentence\nPage Rank:1.37\nLabel:173"}, {"group": 173, "id": "6937-4-0-5", "label": "Entity:Hungary\nType:Sentence\nPage Rank:1.37\nLabel:173", "shape": "square", "size": 7, "title": "Entity:Hungary\nType:Sentence\nPage Rank:1.37\nLabel:173"}, {"group": 173, "id": "6937-4-0-4", "label": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.24\nLabel:173", "shape": "square", "size": 6, "title": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.24\nLabel:173"}, {"group": 173, "id": "6937-4-0-2", "label": "Entity:Infanta\nType:Sentence\nPage Rank:1.22\nLabel:173", "shape": "square", "size": 6, "title": "Entity:Infanta\nType:Sentence\nPage Rank:1.22\nLabel:173"}, {"group": 173, "id": "6937-4-0-0", "label": "Entity:Maria Anna\nType:Sentence\nPage Rank:1.34\nLabel:173", "shape": "square", "size": 7, "title": "Entity:Maria Anna\nType:Sentence\nPage Rank:1.34\nLabel:173"}, {"group": 131, "id": "6937-4--1-1", "label": "Entity:Spain\nType:Title\nPage Rank:0.44\nLabel:131", "shape": "square", "size": 2, "title": "Entity:Spain\nType:Title\nPage Rank:0.44\nLabel:131"}, {"group": 8, "id": "2453-4-0-5", "label": "Entity:M\u00e1laga\nType:Sentence\nPage Rank:1.13\nLabel:8", "shape": "square", "size": 6, "title": "Entity:M\u00e1laga\nType:Sentence\nPage Rank:1.13\nLabel:8"}, {"group": 8, "id": "2453-4-0-7", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.18\nLabel:8", "shape": "square", "size": 6, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.18\nLabel:8"}, {"group": 8, "id": "2453-4-0-6", "label": "Entity:Andalusia\nType:Sentence\nPage Rank:1.13\nLabel:8", "shape": "square", "size": 6, "title": "Entity:Andalusia\nType:Sentence\nPage Rank:1.13\nLabel:8"}, {"group": 8, "id": "2453-4-0-4", "label": "Entity:Almer\u00eda\nType:Sentence\nPage Rank:1.13\nLabel:8", "shape": "square", "size": 6, "title": "Entity:Almer\u00eda\nType:Sentence\nPage Rank:1.13\nLabel:8"}, {"group": 8, "id": "2453-4-0-3", "label": "Entity:Granada\nType:Sentence\nPage Rank:1.13\nLabel:8", "shape": "square", "size": 6, "title": "Entity:Granada\nType:Sentence\nPage Rank:1.13\nLabel:8"}, {"group": 8, "id": "2453-4-0-2", "label": "Entity:English\nType:Sentence\nPage Rank:1.13\nLabel:8", "shape": "square", "size": 6, "title": "Entity:English\nType:Sentence\nPage Rank:1.13\nLabel:8"}, {"group": 8, "id": "2453-4-0-1", "label": "Entity:Sierra Nevada National Park\nType:Sentence\nPage Rank:1.24\nLabel:8", "shape": "square", "size": 6, "title": "Entity:Sierra Nevada National Park\nType:Sentence\nPage Rank:1.24\nLabel:8"}, {"group": 8, "id": "2453-4-0-0", "label": "Entity:Parque Nacional de Sierra Nevada\nType:Sentence\nPage Rank:1.13\nLabel:8", "shape": "square", "size": 6, "title": "Entity:Parque Nacional de Sierra Nevada\nType:Sentence\nPage Rank:1.13\nLabel:8"}, {"group": 80, "id": "3574-4--1-0", "label": "Entity:Otto III\nType:Title\nPage Rank:0.15\nLabel:80", "shape": "square", "size": 1, "title": "Entity:Otto III\nType:Title\nPage Rank:0.15\nLabel:80"}, {"group": 77, "id": "3574-4-0-0", "label": "Entity:Otto III\nType:Sentence\nPage Rank:1.13\nLabel:77", "shape": "square", "size": 6, "title": "Entity:Otto III\nType:Sentence\nPage Rank:1.13\nLabel:77"}, {"group": 68, "id": "3359-8-0-0", "label": "Entity:Wales\nType:Sentence\nPage Rank:1.04\nLabel:68", "shape": "square", "size": 5, "title": "Entity:Wales\nType:Sentence\nPage Rank:1.04\nLabel:68"}, {"group": 68, "id": "3359-8-0-4", "label": "Entity:Edward VII\nType:Sentence\nPage Rank:1.28\nLabel:68", "shape": "square", "size": 6, "title": "Entity:Edward VII\nType:Sentence\nPage Rank:1.28\nLabel:68"}, {"group": 68, "id": "3359-8-0-2", "label": "Entity:Prince\nType:Sentence\nPage Rank:1.28\nLabel:68", "shape": "square", "size": 6, "title": "Entity:Prince\nType:Sentence\nPage Rank:1.28\nLabel:68"}, {"group": 68, "id": "3359-8-0-1", "label": "Entity:Albert Edward\nType:Sentence\nPage Rank:1.28\nLabel:68", "shape": "square", "size": 6, "title": "Entity:Albert Edward\nType:Sentence\nPage Rank:1.28\nLabel:68"}, {"group": 68, "id": "3359-8--1-0", "label": "Entity:Wales\nType:Title\nPage Rank:0.24\nLabel:68", "shape": "square", "size": 1, "title": "Entity:Wales\nType:Title\nPage Rank:0.24\nLabel:68"}, {"group": 44, "id": "2909-7-0-5", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.10\nLabel:44", "shape": "square", "size": 5, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.10\nLabel:44"}, {"group": 110, "id": "2909-5--1-1", "label": "Entity:Spain\nType:Title\nPage Rank:0.43\nLabel:110", "shape": "square", "size": 2, "title": "Entity:Spain\nType:Title\nPage Rank:0.43\nLabel:110"}, {"group": 151, "id": "6050-8-1-1", "label": "Entity:Majorca\nType:Sentence\nPage Rank:1.11\nLabel:151", "shape": "square", "size": 6, "title": "Entity:Majorca\nType:Sentence\nPage Rank:1.11\nLabel:151"}, {"group": 154, "id": "6050-8-1-3", "label": "Entity:Consell\nType:Sentence\nPage Rank:1.13\nLabel:154", "shape": "square", "size": 6, "title": "Entity:Consell\nType:Sentence\nPage Rank:1.13\nLabel:154"}, {"group": 154, "id": "6050-8-1-2", "label": "Entity:Gran\nType:Sentence\nPage Rank:1.14\nLabel:154", "shape": "square", "size": 6, "title": "Entity:Gran\nType:Sentence\nPage Rank:1.14\nLabel:154"}, {"group": 151, "id": "6050-8-1-0", "label": "Entity:Kingdom\nType:Sentence\nPage Rank:1.11\nLabel:151", "shape": "square", "size": 6, "title": "Entity:Kingdom\nType:Sentence\nPage Rank:1.11\nLabel:151"}, {"group": 110, "id": "6050-7--1-1", "label": "Entity:Spain\nType:Title\nPage Rank:0.43\nLabel:110", "shape": "square", "size": 2, "title": "Entity:Spain\nType:Title\nPage Rank:0.43\nLabel:110"}, {"group": 131, "id": "6039-4--1-1", "label": "Entity:Spain\nType:Title\nPage Rank:0.42\nLabel:131", "shape": "square", "size": 2, "title": "Entity:Spain\nType:Title\nPage Rank:0.42\nLabel:131"}, {"group": 110, "id": "5310-4--1-0", "label": "Entity:Spain\nType:Title\nPage Rank:0.45\nLabel:110", "shape": "square", "size": 2, "title": "Entity:Spain\nType:Title\nPage Rank:0.45\nLabel:110"}, {"group": 131, "id": "2453-4--1-1", "label": "Entity:Spain\nType:Title\nPage Rank:0.44\nLabel:131", "shape": "square", "size": 2, "title": "Entity:Spain\nType:Title\nPage Rank:0.44\nLabel:131"}, {"group": 95, "id": "5194-3-0-1", "label": "Entity:Prince\nType:Sentence\nPage Rank:1.45\nLabel:95", "shape": "square", "size": 7, "title": "Entity:Prince\nType:Sentence\nPage Rank:1.45\nLabel:95"}, {"group": 95, "id": "5194-3-0-3", "label": "Entity:British\nType:Sentence\nPage Rank:1.04\nLabel:95", "shape": "square", "size": 5, "title": "Entity:British\nType:Sentence\nPage Rank:1.04\nLabel:95"}, {"group": 95, "id": "5194-3-0-2", "label": "Entity:Wales\nType:Sentence\nPage Rank:1.37\nLabel:95", "shape": "square", "size": 7, "title": "Entity:Wales\nType:Sentence\nPage Rank:1.37\nLabel:95"}, {"group": 95, "id": "5194-3-0-0", "label": "Entity:Frederick\nType:Sentence\nPage Rank:1.37\nLabel:95", "shape": "square", "size": 7, "title": "Entity:Frederick\nType:Sentence\nPage Rank:1.37\nLabel:95"}, {"group": 93, "id": "5194-3--1-1", "label": "Entity:Prince\nType:Title\nPage Rank:0.43\nLabel:93", "shape": "square", "size": 2, "title": "Entity:Prince\nType:Title\nPage Rank:0.43\nLabel:93"}, {"group": 101, "id": "5310-1-0-1", "label": "Entity:Spanish\nType:Sentence\nPage Rank:1.65\nLabel:101", "shape": "square", "size": 8, "title": "Entity:Spanish\nType:Sentence\nPage Rank:1.65\nLabel:101"}, {"group": 128, "id": "5310-4-5-0", "label": "Entity:Spanish\nType:Sentence\nPage Rank:0.84\nLabel:128", "shape": "square", "size": 4, "title": "Entity:Spanish\nType:Sentence\nPage Rank:0.84\nLabel:128"}, {"group": 113, "id": "5310-4-0-1", "label": "Entity:Spanish\nType:Sentence\nPage Rank:1.10\nLabel:113", "shape": "square", "size": 6, "title": "Entity:Spanish\nType:Sentence\nPage Rank:1.10\nLabel:113"}, {"group": 101, "id": "5310-1-0-9", "label": "Entity:France\nType:Sentence\nPage Rank:1.15\nLabel:101", "shape": "square", "size": 6, "title": "Entity:France\nType:Sentence\nPage Rank:1.15\nLabel:101"}, {"group": 101, "id": "5310-1-0-8", "label": "Entity:Troyes AC\nType:Sentence\nPage Rank:1.15\nLabel:101", "shape": "square", "size": 6, "title": "Entity:Troyes AC\nType:Sentence\nPage Rank:1.15\nLabel:101"}, {"group": 101, "id": "5310-1-0-7", "label": "Entity:FC S\u00e8te\nType:Sentence\nPage Rank:1.15\nLabel:101", "shape": "square", "size": 6, "title": "Entity:FC S\u00e8te\nType:Sentence\nPage Rank:1.15\nLabel:101"}, {"group": 101, "id": "5310-1-0-6", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.86\nLabel:101", "shape": "square", "size": 9, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.86\nLabel:101"}, {"group": 101, "id": "5310-1-0-5", "label": "Entity:FC Barcelona\nType:Sentence\nPage Rank:1.15\nLabel:101", "shape": "square", "size": 6, "title": "Entity:FC Barcelona\nType:Sentence\nPage Rank:1.15\nLabel:101"}, {"group": 101, "id": "5310-1-0-4", "label": "Entity:CE J\u00fapiter\nType:Sentence\nPage Rank:1.15\nLabel:101", "shape": "square", "size": 6, "title": "Entity:CE J\u00fapiter\nType:Sentence\nPage Rank:1.15\nLabel:101"}, {"group": 101, "id": "5310-1-0-3", "label": "Entity:Joventut FC\nType:Sentence\nPage Rank:1.15\nLabel:101", "shape": "square", "size": 6, "title": "Entity:Joventut FC\nType:Sentence\nPage Rank:1.15\nLabel:101"}, {"group": 101, "id": "5310-1-0-2", "label": "Entity:Catalan\nType:Sentence\nPage Rank:1.15\nLabel:101", "shape": "square", "size": 6, "title": "Entity:Catalan\nType:Sentence\nPage Rank:1.15\nLabel:101"}, {"group": 101, "id": "5310-1-0-0", "label": "Entity:Josep Raich Garriga\nType:Sentence\nPage Rank:1.15\nLabel:101", "shape": "square", "size": 6, "title": "Entity:Josep Raich Garriga\nType:Sentence\nPage Rank:1.15\nLabel:101"}, {"group": 149, "id": "6050-8--1-0", "label": "Entity:Gran\nType:Title\nPage Rank:0.15\nLabel:149", "shape": "square", "size": 1, "title": "Entity:Gran\nType:Title\nPage Rank:0.15\nLabel:149"}, {"group": 158, "id": "6050-8-2-0", "label": "Entity:Gran\nType:Sentence\nPage Rank:1.12\nLabel:158", "shape": "square", "size": 6, "title": "Entity:Gran\nType:Sentence\nPage Rank:1.12\nLabel:158"}, {"group": 149, "id": "6050-8-0-0", "label": "Entity:Gran\nType:Sentence\nPage Rank:1.11\nLabel:149", "shape": "square", "size": 6, "title": "Entity:Gran\nType:Sentence\nPage Rank:1.11\nLabel:149"}, {"group": 44, "id": "2909-7-0-7", "label": "Entity:Austria\nType:Sentence\nPage Rank:0.88\nLabel:44", "shape": "square", "size": 4, "title": "Entity:Austria\nType:Sentence\nPage Rank:0.88\nLabel:44"}, {"group": 44, "id": "2909-7-0-6", "label": "Entity:Anna\nType:Sentence\nPage Rank:1.01\nLabel:44", "shape": "square", "size": 5, "title": "Entity:Anna\nType:Sentence\nPage Rank:1.01\nLabel:44"}, {"group": 44, "id": "2909-7-0-4", "label": "Entity:Philip II\nType:Sentence\nPage Rank:1.10\nLabel:44", "shape": "square", "size": 6, "title": "Entity:Philip II\nType:Sentence\nPage Rank:1.10\nLabel:44"}, {"group": 44, "id": "2909-7-0-3", "label": "Entity:Portugal\nType:Sentence\nPage Rank:1.09\nLabel:44", "shape": "square", "size": 5, "title": "Entity:Portugal\nType:Sentence\nPage Rank:1.09\nLabel:44"}, {"group": 44, "id": "2909-7-0-2", "label": "Entity:Asturias\nType:Sentence\nPage Rank:1.12\nLabel:44", "shape": "square", "size": 6, "title": "Entity:Asturias\nType:Sentence\nPage Rank:1.12\nLabel:44"}, {"group": 44, "id": "2909-7-0-0", "label": "Entity:Diego F\u00e9lix\nType:Sentence\nPage Rank:1.01\nLabel:44", "shape": "square", "size": 5, "title": "Entity:Diego F\u00e9lix\nType:Sentence\nPage Rank:1.01\nLabel:44"}, {"group": 44, "id": "2909-7--1-2", "label": "Entity:Asturias\nType:Title\nPage Rank:0.15\nLabel:44", "shape": "square", "size": 1, "title": "Entity:Asturias\nType:Title\nPage Rank:0.15\nLabel:44"}, {"group": 14, "id": "6937-5--1-1", "label": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14", "shape": "square", "size": 2, "title": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14"}, {"group": 14, "id": "7307-1--1-1", "label": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14", "shape": "square", "size": 2, "title": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14"}, {"group": 14, "id": "3574-4--1-1", "label": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14", "shape": "square", "size": 2, "title": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14"}, {"group": 14, "id": "3261-0--1-1", "label": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14", "shape": "square", "size": 2, "title": "Entity:Holy Roman\nType:Title\nPage Rank:0.47\nLabel:14"}, {"group": 59, "id": "3261-0-0-1", "label": "Entity:Sicilian\nType:Sentence\nPage Rank:1.21\nLabel:59", "shape": "square", "size": 6, "title": "Entity:Sicilian\nType:Sentence\nPage Rank:1.21\nLabel:59"}, {"group": 59, "id": "3261-0-0-8", "label": "Entity:House of Hohenstaufen\nType:Sentence\nPage Rank:1.21\nLabel:59", "shape": "square", "size": 6, "title": "Entity:House of Hohenstaufen\nType:Sentence\nPage Rank:1.21\nLabel:59"}, {"group": 59, "id": "3261-0-0-7", "label": "Entity:Middle Ages\nType:Sentence\nPage Rank:1.21\nLabel:59", "shape": "square", "size": 6, "title": "Entity:Middle Ages\nType:Sentence\nPage Rank:1.21\nLabel:59"}, {"group": 59, "id": "3261-0-0-6", "label": "Entity:Sicily\nType:Sentence\nPage Rank:1.21\nLabel:59", "shape": "square", "size": 6, "title": "Entity:Sicily\nType:Sentence\nPage Rank:1.21\nLabel:59"}, {"group": 59, "id": "3261-0-0-5", "label": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.28\nLabel:59", "shape": "square", "size": 6, "title": "Entity:Holy Roman\nType:Sentence\nPage Rank:1.28\nLabel:59"}, {"group": 59, "id": "3261-0-0-4", "label": "Entity:Friedrich II\nType:Sentence\nPage Rank:1.21\nLabel:59", "shape": "square", "size": 6, "title": "Entity:Friedrich II\nType:Sentence\nPage Rank:1.21\nLabel:59"}, {"group": 59, "id": "3261-0-0-3", "label": "Entity:German\nType:Sentence\nPage Rank:1.21\nLabel:59", "shape": "square", "size": 6, "title": "Entity:German\nType:Sentence\nPage Rank:1.21\nLabel:59"}, {"group": 59, "id": "3261-0-0-2", "label": "Entity:Fidiricu II\nType:Sentence\nPage Rank:1.21\nLabel:59", "shape": "square", "size": 6, "title": "Entity:Fidiricu II\nType:Sentence\nPage Rank:1.21\nLabel:59"}, {"group": 59, "id": "3261-0-0-0", "label": "Entity:Frederick II\nType:Sentence\nPage Rank:1.62\nLabel:59", "shape": "square", "size": 8, "title": "Entity:Frederick II\nType:Sentence\nPage Rank:1.62\nLabel:59"}, {"group": 158, "id": "6050-8-2-3", "label": "Entity:City of Majorca\nType:Sentence\nPage Rank:1.09\nLabel:158", "shape": "square", "size": 5, "title": "Entity:City of Majorca\nType:Sentence\nPage Rank:1.09\nLabel:158"}, {"group": 158, "id": "6050-8-2-4", "label": "Entity:Palma de Mallorca\nType:Sentence\nPage Rank:1.09\nLabel:158", "shape": "square", "size": 5, "title": "Entity:Palma de Mallorca\nType:Sentence\nPage Rank:1.09\nLabel:158"}, {"group": 158, "id": "6050-8-2-2", "label": "Entity:Catalan\nType:Sentence\nPage Rank:1.09\nLabel:158", "shape": "square", "size": 5, "title": "Entity:Catalan\nType:Sentence\nPage Rank:1.09\nLabel:158"}, {"group": 158, "id": "6050-8-2-1", "label": "Entity:Consell\nType:Sentence\nPage Rank:1.11\nLabel:158", "shape": "square", "size": 6, "title": "Entity:Consell\nType:Sentence\nPage Rank:1.11\nLabel:158"}, {"group": 68, "id": "3359-8-0-3", "label": "Entity:Wales\nType:Sentence\nPage Rank:1.04\nLabel:68", "shape": "square", "size": 5, "title": "Entity:Wales\nType:Sentence\nPage Rank:1.04\nLabel:68"}, {"group": 74, "id": "3574-2-1-2", "label": "Entity:Poland\nType:Sentence\nPage Rank:1.07\nLabel:74", "shape": "square", "size": 5, "title": "Entity:Poland\nType:Sentence\nPage Rank:1.07\nLabel:74"}, {"group": 74, "id": "3574-2-1-3", "label": "Entity:Rhenish\nType:Sentence\nPage Rank:1.07\nLabel:74", "shape": "square", "size": 5, "title": "Entity:Rhenish\nType:Sentence\nPage Rank:1.07\nLabel:74"}, {"group": 74, "id": "3574-2-1-1", "label": "Entity:Richeza\nType:Sentence\nPage Rank:1.07\nLabel:74", "shape": "square", "size": 5, "title": "Entity:Richeza\nType:Sentence\nPage Rank:1.07\nLabel:74"}, {"group": 74, "id": "3574-2-1-0", "label": "Entity:Otto III\nType:Sentence\nPage Rank:1.83\nLabel:74", "shape": "square", "size": 9, "title": "Entity:Otto III\nType:Sentence\nPage Rank:1.83\nLabel:74"}, {"group": 158, "id": "6050-8--1-1", "label": "Entity:Consell\nType:Title\nPage Rank:0.15\nLabel:158", "shape": "square", "size": 1, "title": "Entity:Consell\nType:Title\nPage Rank:0.15\nLabel:158"}, {"group": 44, "id": "2909-7-0-1", "label": "Entity:Austria\nType:Sentence\nPage Rank:0.88\nLabel:44", "shape": "square", "size": 4, "title": "Entity:Austria\nType:Sentence\nPage Rank:0.88\nLabel:44"}, {"group": 173, "id": "6937-4-0-3", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.13\nLabel:173", "shape": "square", "size": 6, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.13\nLabel:173"}, {"group": 8, "id": "2453-4--1-0", "label": "Entity:Sierra Nevada National Park\nType:Title\nPage Rank:0.15\nLabel:8", "shape": "square", "size": 1, "title": "Entity:Sierra Nevada National Park\nType:Title\nPage Rank:0.15\nLabel:8"}, {"group": 125, "id": "5310-4-3-1", "label": "Entity:FIFA\nType:Sentence\nPage Rank:0.65\nLabel:125", "shape": "square", "size": 3, "title": "Entity:FIFA\nType:Sentence\nPage Rank:0.65\nLabel:125"}, {"group": 125, "id": "5310-4-3-2", "label": "Entity:Spanish Football Federation\nType:Sentence\nPage Rank:0.65\nLabel:125", "shape": "square", "size": 3, "title": "Entity:Spanish Football Federation\nType:Sentence\nPage Rank:0.65\nLabel:125"}, {"group": 125, "id": "5310-4-3-0", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.05\nLabel:125", "shape": "square", "size": 5, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.05\nLabel:125"}, {"group": 59, "id": "3261-0--1-0", "label": "Entity:Frederick II\nType:Title\nPage Rank:0.15\nLabel:59", "shape": "square", "size": 1, "title": "Entity:Frederick II\nType:Title\nPage Rank:0.15\nLabel:59"}, {"group": 113, "id": "5310-1-1-0", "label": "Entity:Spain\nType:Sentence\nPage Rank:0.88\nLabel:113", "shape": "square", "size": 4, "title": "Entity:Spain\nType:Sentence\nPage Rank:0.88\nLabel:113"}, {"group": 113, "id": "5310-4-0-5", "label": "Entity:Spain\nType:Sentence\nPage Rank:0.99\nLabel:113", "shape": "square", "size": 5, "title": "Entity:Spain\nType:Sentence\nPage Rank:0.99\nLabel:113"}, {"group": 113, "id": "5310-4-0-3", "label": "Entity:Spain\nType:Sentence\nPage Rank:0.99\nLabel:113", "shape": "square", "size": 5, "title": "Entity:Spain\nType:Sentence\nPage Rank:0.99\nLabel:113"}, {"group": 113, "id": "5310-4-0-0", "label": "Entity:Spain\nType:Sentence\nPage Rank:0.99\nLabel:113", "shape": "square", "size": 5, "title": "Entity:Spain\nType:Sentence\nPage Rank:0.99\nLabel:113"}, {"group": 128, "id": "5310-4-5-2", "label": "Entity:UEFA European Championships\nType:Sentence\nPage Rank:0.68\nLabel:128", "shape": "square", "size": 3, "title": "Entity:UEFA European Championships\nType:Sentence\nPage Rank:0.68\nLabel:128"}, {"group": 128, "id": "5310-4-5-1", "label": "Entity:FIFA World Cups\nType:Sentence\nPage Rank:0.68\nLabel:128", "shape": "square", "size": 3, "title": "Entity:FIFA World Cups\nType:Sentence\nPage Rank:0.68\nLabel:128"}, {"group": 113, "id": "5310-4-0-4", "label": "Entity:Royal Spanish Football Federation\nType:Sentence\nPage Rank:0.98\nLabel:113", "shape": "square", "size": 5, "title": "Entity:Royal Spanish Football Federation\nType:Sentence\nPage Rank:0.98\nLabel:113"}, {"group": 113, "id": "5310-4-0-2", "label": "Entity:Selecci\u00f3n de f\u00fatbol de Espa\u00f1a\nType:Sentence\nPage Rank:0.98\nLabel:113", "shape": "square", "size": 5, "title": "Entity:Selecci\u00f3n de f\u00fatbol de Espa\u00f1a\nType:Sentence\nPage Rank:0.98\nLabel:113"}, {"group": 149, "id": "6050-8-0-3", "label": "Entity:Great and General Council\nType:Sentence\nPage Rank:1.07\nLabel:149", "shape": "square", "size": 5, "title": "Entity:Great and General Council\nType:Sentence\nPage Rank:1.07\nLabel:149"}, {"group": 149, "id": "6050-8-0-5", "label": "Entity:Majorca\nType:Sentence\nPage Rank:1.07\nLabel:149", "shape": "square", "size": 5, "title": "Entity:Majorca\nType:Sentence\nPage Rank:1.07\nLabel:149"}, {"group": 149, "id": "6050-8-0-4", "label": "Entity:Kingdom\nType:Sentence\nPage Rank:1.07\nLabel:149", "shape": "square", "size": 5, "title": "Entity:Kingdom\nType:Sentence\nPage Rank:1.07\nLabel:149"}, {"group": 149, "id": "6050-8-0-2", "label": "Entity:Catalan\nType:Sentence\nPage Rank:1.07\nLabel:149", "shape": "square", "size": 5, "title": "Entity:Catalan\nType:Sentence\nPage Rank:1.07\nLabel:149"}, {"group": 149, "id": "6050-8-0-1", "label": "Entity:Consell\nType:Sentence\nPage Rank:1.10\nLabel:149", "shape": "square", "size": 5, "title": "Entity:Consell\nType:Sentence\nPage Rank:1.10\nLabel:149"}, {"group": 173, "id": "6937-4--1-0", "label": "Entity:Maria Anna\nType:Title\nPage Rank:0.15\nLabel:173", "shape": "square", "size": 1, "title": "Entity:Maria Anna\nType:Title\nPage Rank:0.15\nLabel:173"}, {"group": 40, "id": "2909-7--1-1", "label": "Entity:Prince\nType:Title\nPage Rank:0.33\nLabel:40", "shape": "square", "size": 2, "title": "Entity:Prince\nType:Title\nPage Rank:0.33\nLabel:40"}, {"group": 191, "id": "7307-1-1-2", "label": "Entity:Aachen\nType:Sentence\nPage Rank:0.82\nLabel:191", "shape": "square", "size": 4, "title": "Entity:Aachen\nType:Sentence\nPage Rank:0.82\nLabel:191"}, {"group": 191, "id": "7307-1-1-1", "label": "Entity:Frankfurt\nType:Sentence\nPage Rank:0.56\nLabel:191", "shape": "square", "size": 3, "title": "Entity:Frankfurt\nType:Sentence\nPage Rank:0.56\nLabel:191"}, {"group": 191, "id": "7307-1-1-0", "label": "Entity:Germany\nType:Sentence\nPage Rank:0.56\nLabel:191", "shape": "square", "size": 3, "title": "Entity:Germany\nType:Sentence\nPage Rank:0.56\nLabel:191"}, {"group": 74, "id": "3574-4-0-1", "label": "Entity:Holy Roman\nType:Sentence\nPage Rank:0.71\nLabel:74", "shape": "square", "size": 4, "title": "Entity:Holy Roman\nType:Sentence\nPage Rank:0.71\nLabel:74"}, {"group": 83, "id": "7307-1--1-0", "label": "Entity:Frederick\nType:Title\nPage Rank:0.35\nLabel:83", "shape": "square", "size": 2, "title": "Entity:Frederick\nType:Title\nPage Rank:0.35\nLabel:83"}, {"group": 92, "id": "5194-3--1-0", "label": "Entity:Frederick\nType:Title\nPage Rank:0.35\nLabel:92", "shape": "square", "size": 2, "title": "Entity:Frederick\nType:Title\nPage Rank:0.35\nLabel:92"}, {"group": 83, "id": "4454-5--1-0", "label": "Entity:Frederick\nType:Title\nPage Rank:0.35\nLabel:83", "shape": "square", "size": 2, "title": "Entity:Frederick\nType:Title\nPage Rank:0.35\nLabel:83"}, {"group": 68, "id": "5194-3--1-2", "label": "Entity:Wales\nType:Title\nPage Rank:0.22\nLabel:68", "shape": "square", "size": 1, "title": "Entity:Wales\nType:Title\nPage Rank:0.22\nLabel:68"}, {"group": 62, "id": "3261-1-0-0", "label": "Entity:Tile Kolup\nType:Sentence\nPage Rank:0.94\nLabel:62", "shape": "square", "size": 5, "title": "Entity:Tile Kolup\nType:Sentence\nPage Rank:0.94\nLabel:62"}, {"group": 62, "id": "3261-1-0-2", "label": "Entity:Frederick II\nType:Sentence\nPage Rank:1.06\nLabel:62", "shape": "square", "size": 5, "title": "Entity:Frederick II\nType:Sentence\nPage Rank:1.06\nLabel:62"}, {"group": 62, "id": "3261-1-0-1", "label": "Entity:Dietrich Holzschuh\nType:Sentence\nPage Rank:0.85\nLabel:62", "shape": "square", "size": 4, "title": "Entity:Dietrich Holzschuh\nType:Sentence\nPage Rank:0.85\nLabel:62"}, {"group": 62, "id": "3261-1--1-0", "label": "Entity:Tile Kolup\nType:Title\nPage Rank:0.15\nLabel:62", "shape": "square", "size": 1, "title": "Entity:Tile Kolup\nType:Title\nPage Rank:0.15\nLabel:62"}, {"group": 137, "id": "6050-7--1-0", "label": "Entity:Philip V\nType:Title\nPage Rank:0.15\nLabel:137", "shape": "square", "size": 1, "title": "Entity:Philip V\nType:Title\nPage Rank:0.15\nLabel:137"}, {"group": 86, "id": "4454-5-3-0", "label": "Entity:Norway\nType:Sentence\nPage Rank:0.92\nLabel:86", "shape": "square", "size": 5, "title": "Entity:Norway\nType:Sentence\nPage Rank:0.92\nLabel:86"}, {"group": 85, "id": "4454-5-3-1", "label": "Entity:Frederick\nType:Sentence\nPage Rank:1.81\nLabel:85", "shape": "square", "size": 9, "title": "Entity:Frederick\nType:Sentence\nPage Rank:1.81\nLabel:85"}, {"group": 86, "id": "4454-5-3-2", "label": "Entity:Norway\nType:Sentence\nPage Rank:0.92\nLabel:86", "shape": "square", "size": 5, "title": "Entity:Norway\nType:Sentence\nPage Rank:0.92\nLabel:86"}, {"group": 32, "id": "2909-5--1-0", "label": "Entity:Philip II\nType:Title\nPage Rank:0.15\nLabel:32", "shape": "square", "size": 1, "title": "Entity:Philip II\nType:Title\nPage Rank:0.15\nLabel:32"}, {"group": 182, "id": "6937-5--1-0", "label": "Entity:Ferdinand III\nType:Title\nPage Rank:0.15\nLabel:182", "shape": "square", "size": 1, "title": "Entity:Ferdinand III\nType:Title\nPage Rank:0.15\nLabel:182"}]);
+                  edges = new vis.DataSet([{"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-8", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-7", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-6", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-4", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-3", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-2", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-11", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-10", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-1", "width": 1}, {"from": "7307-0-0-5", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-8", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-7", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-6", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-4", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-3", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-2", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-12", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-10", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-1", "width": 1}, {"from": "2909-5-0-9", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "3574-4-1-0", "label": 0.3333333333333333, "length": 500, "to": "3574-4-1-3", "width": 1}, {"from": "3574-4-1-0", "label": 0.3333333333333333, "length": 500, "to": "3574-4-1-2", "width": 1}, {"from": "3574-4-1-0", "label": 0.3333333333333333, "length": 500, "to": "3574-4-1-1", "width": 1}, {"from": "7307-0--1-0", "label": 1.0, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "2700-5-1-1", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-9", "width": 1}, {"from": "2700-5-1-1", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-8", "width": 1}, {"from": "2700-5-1-1", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-7", "width": 1}, {"from": "2700-5-1-1", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-6", "width": 1}, {"from": "2700-5-1-1", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-5", "width": 1}, {"from": "2700-5-1-1", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-4", "width": 1}, {"from": "2700-5-1-1", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-3", "width": 1}, {"from": "2700-5-1-1", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-2", "width": 1}, {"from": "2700-5-1-1", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-0", "width": 1}, {"from": "2700-5-1-1", "label": 0.2, "length": 500, "to": "2700-5--1-1", "width": 1}, {"from": "5310-4-2-4", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-7", "width": 1}, {"from": "5310-4-2-4", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-6", "width": 1}, {"from": "5310-4-2-4", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-5", "width": 1}, {"from": "5310-4-2-4", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-3", "width": 1}, {"from": "5310-4-2-4", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-2", "width": 1}, {"from": "5310-4-2-4", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-1", "width": 1}, {"from": "5310-4-2-4", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-0", "width": 1}, {"from": "5194-2-2-0", "label": 0.25, "length": 500, "to": "5194-2-2-4", "width": 1}, {"from": "5194-2-2-0", "label": 0.25, "length": 500, "to": "5194-2-2-3", "width": 1}, {"from": "5194-2-2-0", "label": 0.25, "length": 500, "to": "5194-2-2-2", "width": 1}, {"from": "5194-2-2-0", "label": 0.25, "length": 500, "to": "5194-2-2-1", "width": 1}, {"from": "6937-5-0-3", "label": 0.2, "length": 500, "to": "6937-5-0-5", "width": 1}, {"from": "6937-5-0-3", "label": 0.2, "length": 500, "to": "6937-5-0-4", "width": 1}, {"from": "6937-5-0-3", "label": 0.2, "length": 500, "to": "6937-5-0-2", "width": 1}, {"from": "6937-5-0-3", "label": 0.2, "length": 500, "to": "6937-5-0-1", "width": 1}, {"from": "6937-5-0-3", "label": 0.2, "length": 500, "to": "6937-5-0-0", "width": 1}, {"from": "6050-8-3-2", "label": 0.2, "length": 500, "to": "6050-8-3-4", "width": 1}, {"from": "6050-8-3-2", "label": 0.2, "length": 500, "to": "6050-8-3-3", "width": 1}, {"from": "6050-8-3-2", "label": 0.2, "length": 500, "to": "6050-8-3-1", "width": 1}, {"from": "6050-8-3-2", "label": 0.2, "length": 500, "to": "6050-8-3-0", "width": 1}, {"from": "6050-8-3-2", "label": 0.2, "length": 500, "to": "6050-7-0-0", "width": 1}, {"from": "7307-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-8", "width": 1}, {"from": "7307-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-7", "width": 1}, {"from": "7307-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-6", "width": 1}, {"from": "7307-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-4", "width": 1}, {"from": "7307-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-3", "width": 1}, {"from": "7307-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-2", "width": 1}, {"from": "7307-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-1", "width": 1}, {"from": "7307-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-0", "width": 1}, {"from": "7307-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "7307-0-0-8", "width": 1}, {"from": "2453-4-2-1", "label": 0.3333333333333333, "length": 500, "to": "2453-4-2-3", "width": 1}, {"from": "2453-4-2-1", "label": 0.3333333333333333, "length": 500, "to": "2453-4-2-2", "width": 1}, {"from": "2453-4-2-1", "label": 0.3333333333333333, "length": 500, "to": "2453-4-2-0", "width": 1}, {"from": "5310-4-2-7", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-6", "width": 1}, {"from": "5310-4-2-7", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-5", "width": 1}, {"from": "5310-4-2-7", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-3", "width": 1}, {"from": "5310-4-2-7", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-2", "width": 1}, {"from": "5310-4-2-7", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-1", "width": 1}, {"from": "5310-4-2-7", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-0", "width": 1}, {"from": "6050-7-0-8", "label": 0.125, "length": 500, "to": "6050-7-0-7", "width": 1}, {"from": "6050-7-0-8", "label": 0.125, "length": 500, "to": "6050-7-0-6", "width": 1}, {"from": "6050-7-0-8", "label": 0.125, "length": 500, "to": "6050-7-0-5", "width": 1}, {"from": "6050-7-0-8", "label": 0.125, "length": 500, "to": "6050-7-0-4", "width": 1}, {"from": "6050-7-0-8", "label": 0.125, "length": 500, "to": "6050-7-0-3", "width": 1}, {"from": "6050-7-0-8", "label": 0.125, "length": 500, "to": "6050-7-0-2", "width": 1}, {"from": "6050-7-0-8", "label": 0.125, "length": 500, "to": "6050-7-0-1", "width": 1}, {"from": "6050-7-0-8", "label": 0.125, "length": 500, "to": "6050-7-0-0", "width": 1}, {"from": "6937-4-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-8", "width": 1}, {"from": "6937-4-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-7", "width": 1}, {"from": "6937-4-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-6", "width": 1}, {"from": "6937-4-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-5", "width": 1}, {"from": "6937-4-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-4", "width": 1}, {"from": "6937-4-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-2", "width": 1}, {"from": "6937-4-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-0", "width": 1}, {"from": "6937-4-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4--1-1", "width": 1}, {"from": "7307-1-0-2", "label": 0.125, "length": 500, "to": "7307-1-0-8", "width": 1}, {"from": "7307-1-0-2", "label": 0.125, "length": 500, "to": "7307-1-0-7", "width": 1}, {"from": "7307-1-0-2", "label": 0.125, "length": 500, "to": "7307-1-0-6", "width": 1}, {"from": "7307-1-0-2", "label": 0.125, "length": 500, "to": "7307-1-0-4", "width": 1}, {"from": "7307-1-0-2", "label": 0.125, "length": 500, "to": "7307-1-0-3", "width": 1}, {"from": "7307-1-0-2", "label": 0.125, "length": 500, "to": "7307-1-0-1", "width": 1}, {"from": "7307-1-0-2", "label": 0.125, "length": 500, "to": "7307-1-0-0", "width": 1}, {"from": "2453-4-0-5", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-7", "width": 1}, {"from": "2453-4-0-5", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-6", "width": 1}, {"from": "2453-4-0-5", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-4", "width": 1}, {"from": "2453-4-0-5", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-3", "width": 1}, {"from": "2453-4-0-5", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-2", "width": 1}, {"from": "2453-4-0-5", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-1", "width": 1}, {"from": "2453-4-0-5", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-0", "width": 1}, {"from": "3574-4--1-0", "label": 0.5, "length": 500, "to": "3574-4-0-0", "width": 1}, {"from": "3574-4--1-0", "label": 0.5, "length": 500, "to": "3574-4-1-1", "width": 1}, {"from": "2453-4-2-2", "label": 0.3333333333333333, "length": 500, "to": "2453-4-2-3", "width": 1}, {"from": "2453-4-2-2", "label": 0.3333333333333333, "length": 500, "to": "2453-4-2-0", "width": 1}, {"from": "7307-1-0-3", "label": 0.14285714285714285, "length": 500, "to": "7307-1-0-8", "width": 1}, {"from": "7307-1-0-3", "label": 0.14285714285714285, "length": 500, "to": "7307-1-0-7", "width": 1}, {"from": "7307-1-0-3", "label": 0.14285714285714285, "length": 500, "to": "7307-1-0-4", "width": 1}, {"from": "7307-1-0-3", "label": 0.14285714285714285, "length": 500, "to": "7307-1-0-1", "width": 1}, {"from": "7307-1-0-3", "label": 0.14285714285714285, "length": 500, "to": "7307-1-0-0", "width": 1}, {"from": "3359-8-0-0", "label": 0.3333333333333333, "length": 500, "to": "3359-8-0-4", "width": 1}, {"from": "3359-8-0-0", "label": 0.3333333333333333, "length": 500, "to": "3359-8-0-2", "width": 1}, {"from": "3359-8-0-0", "label": 0.3333333333333333, "length": 500, "to": "3359-8-0-1", "width": 1}, {"from": "3359-8-0-0", "label": 0.3333333333333333, "length": 500, "to": "3359-8--1-0", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-7-0-5", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-8", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-7", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-6", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-3", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-2", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-12", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-10", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-1", "width": 1}, {"from": "2909-5-0-4", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "2909-5-0-4", "label": 0.16666666666666666, "length": 500, "to": "2909-5--1-1", "width": 1}, {"from": "6050-8-1-1", "label": 0.3333333333333333, "length": 500, "to": "6050-8-1-3", "width": 1}, {"from": "6050-8-1-1", "label": 0.3333333333333333, "length": 500, "to": "6050-8-1-2", "width": 1}, {"from": "6050-8-1-1", "label": 0.3333333333333333, "length": 500, "to": "6050-8-1-0", "width": 1}, {"from": "2909-5--1-1", "label": 0.16666666666666666, "length": 500, "to": "6937-4--1-1", "width": 1}, {"from": "2909-5--1-1", "label": 0.16666666666666666, "length": 500, "to": "6050-7--1-1", "width": 1}, {"from": "2909-5--1-1", "label": 0.16666666666666666, "length": 500, "to": "6039-4--1-1", "width": 1}, {"from": "2909-5--1-1", "label": 0.16666666666666666, "length": 500, "to": "5310-4--1-0", "width": 1}, {"from": "2909-5--1-1", "label": 0.16666666666666666, "length": 500, "to": "2453-4--1-1", "width": 1}, {"from": "5194-3-0-1", "label": 0.25, "length": 500, "to": "5194-3-0-3", "width": 1}, {"from": "5194-3-0-1", "label": 0.25, "length": 500, "to": "5194-3-0-2", "width": 1}, {"from": "5194-3-0-1", "label": 0.25, "length": 500, "to": "5194-3-0-0", "width": 1}, {"from": "5194-3-0-1", "label": 0.5, "length": 500, "to": "5194-3--1-1", "width": 1}, {"from": "5194-3-0-1", "label": 0.25, "length": 500, "to": "5194-2-2-2", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-4-5-0", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-4-2-0", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-4-0-1", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-1-0-9", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-1-0-8", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-1-0-7", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-1-0-6", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-1-0-5", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-1-0-4", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-1-0-3", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-1-0-2", "width": 1}, {"from": "5310-1-0-1", "label": 0.08333333333333333, "length": 500, "to": "5310-1-0-0", "width": 1}, {"from": "2453-4-0-3", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-7", "width": 1}, {"from": "2453-4-0-3", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-6", "width": 1}, {"from": "2453-4-0-3", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-4", "width": 1}, {"from": "2453-4-0-3", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-2", "width": 1}, {"from": "2453-4-0-3", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-1", "width": 1}, {"from": "2453-4-0-3", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-0", "width": 1}, {"from": "6050-8--1-0", "label": 0.3333333333333333, "length": 500, "to": "6050-8-2-0", "width": 1}, {"from": "6050-8--1-0", "label": 0.3333333333333333, "length": 500, "to": "6050-8-1-2", "width": 1}, {"from": "6050-8--1-0", "label": 0.3333333333333333, "length": 500, "to": "6050-8-0-0", "width": 1}, {"from": "2700-5-1-6", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-9", "width": 1}, {"from": "2700-5-1-6", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-8", "width": 1}, {"from": "2700-5-1-6", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-7", "width": 1}, {"from": "2700-5-1-6", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-5", "width": 1}, {"from": "2700-5-1-6", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-4", "width": 1}, {"from": "2700-5-1-6", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-3", "width": 1}, {"from": "2700-5-1-6", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-2", "width": 1}, {"from": "2700-5-1-6", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-0", "width": 1}, {"from": "2909-7-0-7", "label": 0.16666666666666666, "length": 500, "to": "2909-7-0-6", "width": 1}, {"from": "2909-7-0-7", "label": 0.16666666666666666, "length": 500, "to": "2909-7-0-5", "width": 1}, {"from": "2909-7-0-7", "label": 0.16666666666666666, "length": 500, "to": "2909-7-0-4", "width": 1}, {"from": "2909-7-0-7", "label": 0.16666666666666666, "length": 500, "to": "2909-7-0-3", "width": 1}, {"from": "2909-7-0-7", "label": 0.16666666666666666, "length": 500, "to": "2909-7-0-2", "width": 1}, {"from": "2909-7-0-7", "label": 0.16666666666666666, "length": 500, "to": "2909-7-0-0", "width": 1}, {"from": "7307-1-0-1", "label": 0.125, "length": 500, "to": "7307-1-0-8", "width": 1}, {"from": "7307-1-0-1", "label": 0.125, "length": 500, "to": "7307-1-0-7", "width": 1}, {"from": "7307-1-0-1", "label": 0.125, "length": 500, "to": "7307-1-0-6", "width": 1}, {"from": "7307-1-0-1", "label": 0.125, "length": 500, "to": "7307-1-0-4", "width": 1}, {"from": "7307-1-0-1", "label": 0.125, "length": 500, "to": "7307-1-0-0", "width": 1}, {"from": "2909-7--1-2", "label": 1.0, "length": 500, "to": "2909-7-0-2", "width": 1}, {"from": "6937-5-0-4", "label": 0.16666666666666666, "length": 500, "to": "6937-5-0-5", "width": 1}, {"from": "6937-5-0-4", "label": 0.16666666666666666, "length": 500, "to": "6937-5-0-2", "width": 1}, {"from": "6937-5-0-4", "label": 0.16666666666666666, "length": 500, "to": "6937-5-0-1", "width": 1}, {"from": "6937-5-0-4", "label": 0.16666666666666666, "length": 500, "to": "6937-5-0-0", "width": 1}, {"from": "6937-5-0-4", "label": 0.16666666666666666, "length": 500, "to": "6937-4-0-6", "width": 1}, {"from": "6937-5--1-1", "label": 0.2, "length": 500, "to": "7307-1--1-1", "width": 1}, {"from": "6937-5--1-1", "label": 0.2, "length": 500, "to": "3574-4--1-1", "width": 1}, {"from": "6937-5--1-1", "label": 0.2, "length": 500, "to": "3261-0--1-1", "width": 1}, {"from": "6937-5--1-1", "label": 0.2, "length": 500, "to": "2700-5--1-1", "width": 1}, {"from": "6937-5--1-1", "label": 0.2, "length": 500, "to": "6937-5-0-1", "width": 1}, {"from": "3261-0-0-1", "label": 0.125, "length": 500, "to": "3261-0-0-8", "width": 1}, {"from": "3261-0-0-1", "label": 0.125, "length": 500, "to": "3261-0-0-7", "width": 1}, {"from": "3261-0-0-1", "label": 0.125, "length": 500, "to": "3261-0-0-6", "width": 1}, {"from": "3261-0-0-1", "label": 0.125, "length": 500, "to": "3261-0-0-5", "width": 1}, {"from": "3261-0-0-1", "label": 0.125, "length": 500, "to": "3261-0-0-4", "width": 1}, {"from": "3261-0-0-1", "label": 0.125, "length": 500, "to": "3261-0-0-3", "width": 1}, {"from": "3261-0-0-1", "label": 0.125, "length": 500, "to": "3261-0-0-2", "width": 1}, {"from": "3261-0-0-1", "label": 0.125, "length": 500, "to": "3261-0-0-0", "width": 1}, {"from": "3261-0-0-7", "label": 0.125, "length": 500, "to": "3261-0-0-8", "width": 1}, {"from": "3261-0-0-7", "label": 0.125, "length": 500, "to": "3261-0-0-6", "width": 1}, {"from": "3261-0-0-7", "label": 0.125, "length": 500, "to": "3261-0-0-5", "width": 1}, {"from": "3261-0-0-7", "label": 0.125, "length": 500, "to": "3261-0-0-4", "width": 1}, {"from": "3261-0-0-7", "label": 0.125, "length": 500, "to": "3261-0-0-3", "width": 1}, {"from": "3261-0-0-7", "label": 0.125, "length": 500, "to": "3261-0-0-2", "width": 1}, {"from": "3261-0-0-7", "label": 0.125, "length": 500, "to": "3261-0-0-0", "width": 1}, {"from": "2700-5-1-4", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-9", "width": 1}, {"from": "2700-5-1-4", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-8", "width": 1}, {"from": "2700-5-1-4", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-7", "width": 1}, {"from": "2700-5-1-4", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-5", "width": 1}, {"from": "2700-5-1-4", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-3", "width": 1}, {"from": "2700-5-1-4", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-2", "width": 1}, {"from": "2700-5-1-4", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-0", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-8", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-7", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-6", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-3", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-12", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-10", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-1", "width": 1}, {"from": "2909-5-0-2", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "5310-1-0-7", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-9", "width": 1}, {"from": "5310-1-0-7", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-8", "width": 1}, {"from": "5310-1-0-7", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-6", "width": 1}, {"from": "5310-1-0-7", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-5", "width": 1}, {"from": "5310-1-0-7", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-4", "width": 1}, {"from": "5310-1-0-7", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-3", "width": 1}, {"from": "5310-1-0-7", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-2", "width": 1}, {"from": "5310-1-0-7", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-0", "width": 1}, {"from": "6050-8-2-3", "label": 0.25, "length": 500, "to": "6050-8-2-4", "width": 1}, {"from": "6050-8-2-3", "label": 0.25, "length": 500, "to": "6050-8-2-2", "width": 1}, {"from": "6050-8-2-3", "label": 0.25, "length": 500, "to": "6050-8-2-1", "width": 1}, {"from": "6050-8-2-3", "label": 0.25, "length": 500, "to": "6050-8-2-0", "width": 1}, {"from": "2453-4--1-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4--1-1", "width": 1}, {"from": "2453-4--1-1", "label": 0.14285714285714285, "length": 500, "to": "6050-7--1-1", "width": 1}, {"from": "2453-4--1-1", "label": 0.14285714285714285, "length": 500, "to": "6039-4--1-1", "width": 1}, {"from": "2453-4--1-1", "label": 0.14285714285714285, "length": 500, "to": "5310-4--1-0", "width": 1}, {"from": "2453-4--1-1", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-7", "width": 1}, {"from": "2453-4--1-1", "label": 0.14285714285714285, "length": 500, "to": "2453-4-2-3", "width": 1}, {"from": "3359-8-0-2", "label": 0.25, "length": 500, "to": "3359-8-0-4", "width": 1}, {"from": "3359-8-0-2", "label": 0.25, "length": 500, "to": "3359-8-0-3", "width": 1}, {"from": "3359-8-0-2", "label": 0.25, "length": 500, "to": "3359-8-0-1", "width": 1}, {"from": "3574-2-1-2", "label": 0.3333333333333333, "length": 500, "to": "3574-2-1-3", "width": 1}, {"from": "3574-2-1-2", "label": 0.3333333333333333, "length": 500, "to": "3574-2-1-1", "width": 1}, {"from": "3574-2-1-2", "label": 0.3333333333333333, "length": 500, "to": "3574-2-1-0", "width": 1}, {"from": "3574-2-1-3", "label": 0.3333333333333333, "length": 500, "to": "3574-2-1-1", "width": 1}, {"from": "3574-2-1-3", "label": 0.3333333333333333, "length": 500, "to": "3574-2-1-0", "width": 1}, {"from": "6050-8-3-1", "label": 0.25, "length": 500, "to": "6050-8-3-4", "width": 1}, {"from": "6050-8-3-1", "label": 0.25, "length": 500, "to": "6050-8-3-3", "width": 1}, {"from": "6050-8-3-1", "label": 0.25, "length": 500, "to": "6050-8-3-0", "width": 1}, {"from": "6050-8-3-1", "label": 0.25, "length": 500, "to": "6050-8--1-1", "width": 1}, {"from": "5310-1-0-8", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-9", "width": 1}, {"from": "5310-1-0-8", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-6", "width": 1}, {"from": "5310-1-0-8", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-5", "width": 1}, {"from": "5310-1-0-8", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-4", "width": 1}, {"from": "5310-1-0-8", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-3", "width": 1}, {"from": "5310-1-0-8", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-2", "width": 1}, {"from": "5310-1-0-8", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-0", "width": 1}, {"from": "6050-8-2-0", "label": 0.25, "length": 500, "to": "6050-8-2-4", "width": 1}, {"from": "6050-8-2-0", "label": 0.25, "length": 500, "to": "6050-8-2-2", "width": 1}, {"from": "6050-8-2-0", "label": 0.25, "length": 500, "to": "6050-8-2-1", "width": 1}, {"from": "3261-0-0-4", "label": 0.125, "length": 500, "to": "3261-0-0-8", "width": 1}, {"from": "3261-0-0-4", "label": 0.125, "length": 500, "to": "3261-0-0-6", "width": 1}, {"from": "3261-0-0-4", "label": 0.125, "length": 500, "to": "3261-0-0-5", "width": 1}, {"from": "3261-0-0-4", "label": 0.125, "length": 500, "to": "3261-0-0-3", "width": 1}, {"from": "3261-0-0-4", "label": 0.125, "length": 500, "to": "3261-0-0-2", "width": 1}, {"from": "3261-0-0-4", "label": 0.125, "length": 500, "to": "3261-0-0-0", "width": 1}, {"from": "6050-8-1-2", "label": 0.3333333333333333, "length": 500, "to": "6050-8-1-3", "width": 1}, {"from": "6050-8-1-2", "label": 0.3333333333333333, "length": 500, "to": "6050-8-1-0", "width": 1}, {"from": "2700-5-1-5", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-9", "width": 1}, {"from": "2700-5-1-5", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-8", "width": 1}, {"from": "2700-5-1-5", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-7", "width": 1}, {"from": "2700-5-1-5", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-3", "width": 1}, {"from": "2700-5-1-5", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-2", "width": 1}, {"from": "2700-5-1-5", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-0", "width": 1}, {"from": "2909-7-0-2", "label": 0.14285714285714285, "length": 500, "to": "2909-7-0-6", "width": 1}, {"from": "2909-7-0-2", "label": 0.14285714285714285, "length": 500, "to": "2909-7-0-5", "width": 1}, {"from": "2909-7-0-2", "label": 0.14285714285714285, "length": 500, "to": "2909-7-0-4", "width": 1}, {"from": "2909-7-0-2", "label": 0.14285714285714285, "length": 500, "to": "2909-7-0-3", "width": 1}, {"from": "2909-7-0-2", "label": 0.14285714285714285, "length": 500, "to": "2909-7-0-1", "width": 1}, {"from": "2909-7-0-2", "label": 0.14285714285714285, "length": 500, "to": "2909-7-0-0", "width": 1}, {"from": "6937-4-0-6", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-8", "width": 1}, {"from": "6937-4-0-6", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-7", "width": 1}, {"from": "6937-4-0-6", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-5", "width": 1}, {"from": "6937-4-0-6", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-4", "width": 1}, {"from": "6937-4-0-6", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-3", "width": 1}, {"from": "6937-4-0-6", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-2", "width": 1}, {"from": "6937-4-0-6", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-0", "width": 1}, {"from": "3359-8-0-3", "label": 0.3333333333333333, "length": 500, "to": "3359-8-0-4", "width": 1}, {"from": "3359-8-0-3", "label": 0.3333333333333333, "length": 500, "to": "3359-8-0-1", "width": 1}, {"from": "3359-8-0-3", "label": 0.3333333333333333, "length": 500, "to": "3359-8--1-0", "width": 1}, {"from": "6050-7-0-6", "label": 0.125, "length": 500, "to": "6050-7-0-7", "width": 1}, {"from": "6050-7-0-6", "label": 0.125, "length": 500, "to": "6050-7-0-5", "width": 1}, {"from": "6050-7-0-6", "label": 0.125, "length": 500, "to": "6050-7-0-4", "width": 1}, {"from": "6050-7-0-6", "label": 0.125, "length": 500, "to": "6050-7-0-3", "width": 1}, {"from": "6050-7-0-6", "label": 0.125, "length": 500, "to": "6050-7-0-2", "width": 1}, {"from": "6050-7-0-6", "label": 0.125, "length": 500, "to": "6050-7-0-1", "width": 1}, {"from": "6050-7-0-6", "label": 0.125, "length": 500, "to": "6050-7-0-0", "width": 1}, {"from": "6937-4-0-2", "label": 0.125, "length": 500, "to": "6937-4-0-8", "width": 1}, {"from": "6937-4-0-2", "label": 0.125, "length": 500, "to": "6937-4-0-7", "width": 1}, {"from": "6937-4-0-2", "label": 0.125, "length": 500, "to": "6937-4-0-5", "width": 1}, {"from": "6937-4-0-2", "label": 0.125, "length": 500, "to": "6937-4-0-4", "width": 1}, {"from": "6937-4-0-2", "label": 0.125, "length": 500, "to": "6937-4-0-3", "width": 1}, {"from": "6937-4-0-2", "label": 0.125, "length": 500, "to": "6937-4-0-0", "width": 1}, {"from": "6050-8-3-3", "label": 0.25, "length": 500, "to": "6050-8-3-4", "width": 1}, {"from": "6050-8-3-3", "label": 0.25, "length": 500, "to": "6050-8-3-0", "width": 1}, {"from": "7307-1--1-1", "label": 0.2, "length": 500, "to": "3574-4--1-1", "width": 1}, {"from": "7307-1--1-1", "label": 0.2, "length": 500, "to": "3261-0--1-1", "width": 1}, {"from": "7307-1--1-1", "label": 0.2, "length": 500, "to": "2700-5--1-1", "width": 1}, {"from": "7307-1--1-1", "label": 0.2, "length": 500, "to": "7307-1-0-8", "width": 1}, {"from": "2453-4--1-0", "label": 1.0, "length": 500, "to": "2453-4-0-1", "width": 1}, {"from": "5310-4-3-1", "label": 0.5, "length": 500, "to": "5310-4-3-2", "width": 1}, {"from": "5310-4-3-1", "label": 0.5, "length": 500, "to": "5310-4-3-0", "width": 1}, {"from": "3261-0--1-0", "label": 1.0, "length": 500, "to": "3261-0-0-0", "width": 1}, {"from": "5310-1-1-0", "label": 0.25, "length": 500, "to": "5310-4-3-0", "width": 1}, {"from": "5310-1-1-0", "label": 0.25, "length": 500, "to": "5310-4-0-5", "width": 1}, {"from": "5310-1-1-0", "label": 0.25, "length": 500, "to": "5310-4-0-3", "width": 1}, {"from": "5310-1-1-0", "label": 0.25, "length": 500, "to": "5310-4-0-0", "width": 1}, {"from": "7307-1-0-6", "label": 0.14285714285714285, "length": 500, "to": "7307-1-0-8", "width": 1}, {"from": "7307-1-0-6", "label": 0.14285714285714285, "length": 500, "to": "7307-1-0-7", "width": 1}, {"from": "7307-1-0-6", "label": 0.14285714285714285, "length": 500, "to": "7307-1-0-4", "width": 1}, {"from": "7307-1-0-6", "label": 0.14285714285714285, "length": 500, "to": "7307-1-0-0", "width": 1}, {"from": "5310-4-5-0", "label": 0.3333333333333333, "length": 500, "to": "5310-4-5-2", "width": 1}, {"from": "5310-4-5-0", "label": 0.3333333333333333, "length": 500, "to": "5310-4-5-1", "width": 1}, {"from": "2909-5-0-1", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-8", "width": 1}, {"from": "2909-5-0-1", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-7", "width": 1}, {"from": "2909-5-0-1", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-6", "width": 1}, {"from": "2909-5-0-1", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-1", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-3", "width": 1}, {"from": "2909-5-0-1", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-12", "width": 1}, {"from": "2909-5-0-1", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-1", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-10", "width": 1}, {"from": "2909-5-0-1", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "5310-4-0-1", "label": 0.16666666666666666, "length": 500, "to": "5310-4-0-5", "width": 1}, {"from": "5310-4-0-1", "label": 0.16666666666666666, "length": 500, "to": "5310-4-0-4", "width": 1}, {"from": "5310-4-0-1", "label": 0.16666666666666666, "length": 500, "to": "5310-4-0-3", "width": 1}, {"from": "5310-4-0-1", "label": 0.16666666666666666, "length": 500, "to": "5310-4-0-2", "width": 1}, {"from": "5310-4-0-1", "label": 0.16666666666666666, "length": 500, "to": "5310-4-0-0", "width": 1}, {"from": "5310-1-0-3", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-9", "width": 1}, {"from": "5310-1-0-3", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-6", "width": 1}, {"from": "5310-1-0-3", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-5", "width": 1}, {"from": "5310-1-0-3", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-4", "width": 1}, {"from": "5310-1-0-3", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-2", "width": 1}, {"from": "5310-1-0-3", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-0", "width": 1}, {"from": "6050-8-0-3", "label": 0.2, "length": 500, "to": "6050-8-0-5", "width": 1}, {"from": "6050-8-0-3", "label": 0.2, "length": 500, "to": "6050-8-0-4", "width": 1}, {"from": "6050-8-0-3", "label": 0.2, "length": 500, "to": "6050-8-0-2", "width": 1}, {"from": "6050-8-0-3", "label": 0.2, "length": 500, "to": "6050-8-0-1", "width": 1}, {"from": "6050-8-0-3", "label": 0.2, "length": 500, "to": "6050-8-0-0", "width": 1}, {"from": "3574-2-1-0", "label": 0.2, "length": 500, "to": "3574-4-1-1", "width": 1}, {"from": "3574-2-1-0", "label": 0.2, "length": 500, "to": "3574-4-0-0", "width": 1}, {"from": "3574-2-1-0", "label": 0.2, "length": 500, "to": "3574-2-1-1", "width": 1}, {"from": "5194-2-2-3", "label": 0.2, "length": 500, "to": "5194-3-0-2", "width": 1}, {"from": "5194-2-2-3", "label": 0.2, "length": 500, "to": "5194-2-2-4", "width": 1}, {"from": "5194-2-2-3", "label": 0.2, "length": 500, "to": "5194-2-2-2", "width": 1}, {"from": "5194-2-2-3", "label": 0.2, "length": 500, "to": "5194-2-2-1", "width": 1}, {"from": "5310-4-0-3", "label": 0.2, "length": 500, "to": "5310-4-0-4", "width": 1}, {"from": "5310-4-0-3", "label": 0.2, "length": 500, "to": "5310-4-0-2", "width": 1}, {"from": "5310-4-0-3", "label": 0.1111111111111111, "length": 500, "to": "5310-4--1-0", "width": 1}, {"from": "5310-4-0-3", "label": 0.2, "length": 500, "to": "5310-1-0-6", "width": 1}, {"from": "5310-4-2-0", "label": 0.125, "length": 500, "to": "5310-4-2-6", "width": 1}, {"from": "5310-4-2-0", "label": 0.125, "length": 500, "to": "5310-4-2-5", "width": 1}, {"from": "5310-4-2-0", "label": 0.125, "length": 500, "to": "5310-4-2-3", "width": 1}, {"from": "5310-4-2-0", "label": 0.125, "length": 500, "to": "5310-4-2-2", "width": 1}, {"from": "5310-4-2-0", "label": 0.125, "length": 500, "to": "5310-4-2-1", "width": 1}, {"from": "6937-4--1-0", "label": 1.0, "length": 500, "to": "6937-4-0-0", "width": 1}, {"from": "5194-3--1-1", "label": 0.5, "length": 500, "to": "2909-7--1-1", "width": 1}, {"from": "7307-1-1-2", "label": 0.25, "length": 500, "to": "7307-1-1-1", "width": 1}, {"from": "7307-1-1-2", "label": 0.25, "length": 500, "to": "7307-1-1-0", "width": 1}, {"from": "7307-1-1-2", "label": 0.25, "length": 500, "to": "7307-0-0-4", "width": 1}, {"from": "7307-1-1-2", "label": 0.25, "length": 500, "to": "7307-0-0-11", "width": 1}, {"from": "6937-5-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-5-0-5", "width": 1}, {"from": "6937-5-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-5-0-2", "width": 1}, {"from": "6937-5-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-5-0-0", "width": 1}, {"from": "6937-5-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-8", "width": 1}, {"from": "6937-5-0-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-4", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-7", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-6", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-4", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-3", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-2", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-11", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-10", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-1", "width": 1}, {"from": "7307-0-0-8", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "7307-1-1-0", "label": 0.5, "length": 500, "to": "7307-1-1-1", "width": 1}, {"from": "2909-7-0-5", "label": 0.125, "length": 500, "to": "2909-7-0-6", "width": 1}, {"from": "2909-7-0-5", "label": 0.125, "length": 500, "to": "2909-7-0-4", "width": 1}, {"from": "2909-7-0-5", "label": 0.125, "length": 500, "to": "2909-7-0-3", "width": 1}, {"from": "2909-7-0-5", "label": 0.125, "length": 500, "to": "2909-7-0-1", "width": 1}, {"from": "2909-7-0-5", "label": 0.125, "length": 500, "to": "2909-7-0-0", "width": 1}, {"from": "6050-8-0-1", "label": 0.2, "length": 500, "to": "6050-8-0-5", "width": 1}, {"from": "6050-8-0-1", "label": 0.2, "length": 500, "to": "6050-8-0-4", "width": 1}, {"from": "6050-8-0-1", "label": 0.2, "length": 500, "to": "6050-8-0-2", "width": 1}, {"from": "6050-8-0-1", "label": 0.2, "length": 500, "to": "6050-8-0-0", "width": 1}, {"from": "6050-8-0-1", "label": 0.25, "length": 500, "to": "6050-8--1-1", "width": 1}, {"from": "3574-4--1-1", "label": 0.2, "length": 500, "to": "3261-0--1-1", "width": 1}, {"from": "3574-4--1-1", "label": 0.2, "length": 500, "to": "2700-5--1-1", "width": 1}, {"from": "3574-4--1-1", "label": 0.2, "length": 500, "to": "3574-4-0-1", "width": 1}, {"from": "5310-4-2-3", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-6", "width": 1}, {"from": "5310-4-2-3", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-5", "width": 1}, {"from": "5310-4-2-3", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-2", "width": 1}, {"from": "5310-4-2-3", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-1", "width": 1}, {"from": "6937-5-0-5", "label": 0.2, "length": 500, "to": "6937-5-0-2", "width": 1}, {"from": "6937-5-0-5", "label": 0.2, "length": 500, "to": "6937-5-0-0", "width": 1}, {"from": "6050-8-0-4", "label": 0.2, "length": 500, "to": "6050-8-0-5", "width": 1}, {"from": "6050-8-0-4", "label": 0.2, "length": 500, "to": "6050-8-0-2", "width": 1}, {"from": "6050-8-0-4", "label": 0.2, "length": 500, "to": "6050-8-0-0", "width": 1}, {"from": "3359-8-0-1", "label": 0.25, "length": 500, "to": "3359-8-0-4", "width": 1}, {"from": "2700-5-1-9", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-8", "width": 1}, {"from": "2700-5-1-9", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-7", "width": 1}, {"from": "2700-5-1-9", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-3", "width": 1}, {"from": "2700-5-1-9", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-2", "width": 1}, {"from": "2700-5-1-9", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-0", "width": 1}, {"from": "6050-7-0-3", "label": 0.125, "length": 500, "to": "6050-7-0-7", "width": 1}, {"from": "6050-7-0-3", "label": 0.125, "length": 500, "to": "6050-7-0-5", "width": 1}, {"from": "6050-7-0-3", "label": 0.125, "length": 500, "to": "6050-7-0-4", "width": 1}, {"from": "6050-7-0-3", "label": 0.125, "length": 500, "to": "6050-7-0-2", "width": 1}, {"from": "6050-7-0-3", "label": 0.125, "length": 500, "to": "6050-7-0-1", "width": 1}, {"from": "6050-7-0-3", "label": 0.125, "length": 500, "to": "6050-7-0-0", "width": 1}, {"from": "2909-7-0-3", "label": 0.125, "length": 500, "to": "2909-7-0-6", "width": 1}, {"from": "2909-7-0-3", "label": 0.125, "length": 500, "to": "2909-7-0-4", "width": 1}, {"from": "2909-7-0-3", "label": 0.125, "length": 500, "to": "2909-7-0-1", "width": 1}, {"from": "2909-7-0-3", "label": 0.125, "length": 500, "to": "2909-7-0-0", "width": 1}, {"from": "2909-7-0-3", "label": 0.125, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "5310-4-2-5", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-6", "width": 1}, {"from": "5310-4-2-5", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-2", "width": 1}, {"from": "5310-4-2-5", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-1", "width": 1}, {"from": "2909-5-0-7", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-8", "width": 1}, {"from": "2909-5-0-7", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-6", "width": 1}, {"from": "2909-5-0-7", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-7", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-3", "width": 1}, {"from": "2909-5-0-7", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-12", "width": 1}, {"from": "2909-5-0-7", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-7", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-10", "width": 1}, {"from": "2909-5-0-7", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "7307-1--1-0", "label": 0.3333333333333333, "length": 500, "to": "5194-3--1-0", "width": 1}, {"from": "7307-1--1-0", "label": 0.3333333333333333, "length": 500, "to": "4454-5--1-0", "width": 1}, {"from": "7307-1--1-0", "label": 0.3333333333333333, "length": 500, "to": "7307-1-0-0", "width": 1}, {"from": "6039-4--1-1", "label": 0.2, "length": 500, "to": "6937-4--1-1", "width": 1}, {"from": "6039-4--1-1", "label": 0.2, "length": 500, "to": "6050-7--1-1", "width": 1}, {"from": "6039-4--1-1", "label": 0.2, "length": 500, "to": "5310-4--1-0", "width": 1}, {"from": "6937-4--1-1", "label": 0.14285714285714285, "length": 500, "to": "6050-7--1-1", "width": 1}, {"from": "6937-4--1-1", "label": 0.14285714285714285, "length": 500, "to": "5310-4--1-0", "width": 1}, {"from": "6937-4--1-1", "label": 0.14285714285714285, "length": 500, "to": "6937-4-0-3", "width": 1}, {"from": "5194-3-0-0", "label": 0.25, "length": 500, "to": "5194-3-0-3", "width": 1}, {"from": "5194-3-0-0", "label": 0.25, "length": 500, "to": "5194-3-0-2", "width": 1}, {"from": "5194-3-0-0", "label": 0.3333333333333333, "length": 500, "to": "5194-3--1-0", "width": 1}, {"from": "5194-3-0-0", "label": 0.25, "length": 500, "to": "5194-2-2-1", "width": 1}, {"from": "3359-8--1-0", "label": 0.3333333333333333, "length": 500, "to": "5194-3--1-2", "width": 1}, {"from": "6937-4-0-5", "label": 0.1111111111111111, "length": 500, "to": "6937-5-0-2", "width": 1}, {"from": "6937-4-0-5", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-8", "width": 1}, {"from": "6937-4-0-5", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-7", "width": 1}, {"from": "6937-4-0-5", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-4", "width": 1}, {"from": "6937-4-0-5", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-3", "width": 1}, {"from": "6937-4-0-5", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-0", "width": 1}, {"from": "2909-7-0-4", "label": 0.125, "length": 500, "to": "2909-7-0-6", "width": 1}, {"from": "2909-7-0-4", "label": 0.125, "length": 500, "to": "2909-7-0-1", "width": 1}, {"from": "2909-7-0-4", "label": 0.125, "length": 500, "to": "2909-7-0-0", "width": 1}, {"from": "2909-7-0-4", "label": 0.125, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "6050-8-2-1", "label": 0.25, "length": 500, "to": "6050-8-2-4", "width": 1}, {"from": "6050-8-2-1", "label": 0.25, "length": 500, "to": "6050-8-2-2", "width": 1}, {"from": "6050-8-2-1", "label": 0.25, "length": 500, "to": "6050-8--1-1", "width": 1}, {"from": "6050-8-1-3", "label": 0.3333333333333333, "length": 500, "to": "6050-8-1-0", "width": 1}, {"from": "6050-8-1-3", "label": 0.25, "length": 500, "to": "6050-8--1-1", "width": 1}, {"from": "3261-1-0-0", "label": 0.5, "length": 500, "to": "3261-1-0-2", "width": 1}, {"from": "3261-1-0-0", "label": 0.5, "length": 500, "to": "3261-1-0-1", "width": 1}, {"from": "3261-1-0-0", "label": 1.0, "length": 500, "to": "3261-1--1-0", "width": 1}, {"from": "5310-4-0-4", "label": 0.2, "length": 500, "to": "5310-4-0-5", "width": 1}, {"from": "5310-4-0-4", "label": 0.2, "length": 500, "to": "5310-4-0-2", "width": 1}, {"from": "5310-4-0-4", "label": 0.2, "length": 500, "to": "5310-4-0-0", "width": 1}, {"from": "5310-4-2-6", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-2", "width": 1}, {"from": "5310-4-2-6", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-1", "width": 1}, {"from": "6050-8-3-0", "label": 0.25, "length": 500, "to": "6050-8-3-4", "width": 1}, {"from": "2453-4-0-2", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-7", "width": 1}, {"from": "2453-4-0-2", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-6", "width": 1}, {"from": "2453-4-0-2", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-4", "width": 1}, {"from": "2453-4-0-2", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-1", "width": 1}, {"from": "2453-4-0-2", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-0", "width": 1}, {"from": "5310-4-0-2", "label": 0.2, "length": 500, "to": "5310-4-0-5", "width": 1}, {"from": "5310-4-0-2", "label": 0.2, "length": 500, "to": "5310-4-0-0", "width": 1}, {"from": "2909-7-0-6", "label": 0.14285714285714285, "length": 500, "to": "2909-7-0-1", "width": 1}, {"from": "2909-7-0-6", "label": 0.14285714285714285, "length": 500, "to": "2909-7-0-0", "width": 1}, {"from": "7307-0-0-7", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-7", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-6", "width": 1}, {"from": "7307-0-0-7", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-4", "width": 1}, {"from": "7307-0-0-7", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-3", "width": 1}, {"from": "7307-0-0-7", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-2", "width": 1}, {"from": "7307-0-0-7", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-11", "width": 1}, {"from": "7307-0-0-7", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-10", "width": 1}, {"from": "7307-0-0-7", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-1", "width": 1}, {"from": "7307-0-0-7", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "3574-4-1-3", "label": 0.3333333333333333, "length": 500, "to": "3574-4-1-2", "width": 1}, {"from": "3574-4-1-3", "label": 0.3333333333333333, "length": 500, "to": "3574-4-1-1", "width": 1}, {"from": "5310-1-0-4", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-9", "width": 1}, {"from": "5310-1-0-4", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-6", "width": 1}, {"from": "5310-1-0-4", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-5", "width": 1}, {"from": "5310-1-0-4", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-2", "width": 1}, {"from": "5310-1-0-4", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-0", "width": 1}, {"from": "5310-1-0-6", "label": 0.07692307692307693, "length": 500, "to": "5310-4-3-0", "width": 1}, {"from": "5310-1-0-6", "label": 0.07692307692307693, "length": 500, "to": "5310-4-0-5", "width": 1}, {"from": "5310-1-0-6", "label": 0.07692307692307693, "length": 500, "to": "5310-4-0-0", "width": 1}, {"from": "5310-1-0-6", "label": 0.07692307692307693, "length": 500, "to": "5310-1-0-9", "width": 1}, {"from": "5310-1-0-6", "label": 0.07692307692307693, "length": 500, "to": "5310-1-0-5", "width": 1}, {"from": "5310-1-0-6", "label": 0.07692307692307693, "length": 500, "to": "5310-1-0-2", "width": 1}, {"from": "5310-1-0-6", "label": 0.07692307692307693, "length": 500, "to": "5310-1-0-0", "width": 1}, {"from": "7307-0-0-10", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-10", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-6", "width": 1}, {"from": "7307-0-0-10", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-4", "width": 1}, {"from": "7307-0-0-10", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-3", "width": 1}, {"from": "7307-0-0-10", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-2", "width": 1}, {"from": "7307-0-0-10", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-11", "width": 1}, {"from": "7307-0-0-10", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-1", "width": 1}, {"from": "7307-0-0-10", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "7307-0-0-11", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-11", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-6", "width": 1}, {"from": "7307-0-0-11", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-3", "width": 1}, {"from": "7307-0-0-11", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-2", "width": 1}, {"from": "7307-0-0-11", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-1", "width": 1}, {"from": "7307-0-0-11", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "7307-0-0-4", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-4", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-6", "width": 1}, {"from": "7307-0-0-4", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-3", "width": 1}, {"from": "7307-0-0-4", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-2", "width": 1}, {"from": "7307-0-0-4", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-1", "width": 1}, {"from": "7307-0-0-4", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "7307-0-0-2", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-2", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-6", "width": 1}, {"from": "7307-0-0-2", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-3", "width": 1}, {"from": "7307-0-0-2", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-1", "width": 1}, {"from": "7307-0-0-2", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "2700-5-1-7", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-8", "width": 1}, {"from": "2700-5-1-7", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-3", "width": 1}, {"from": "2700-5-1-7", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-2", "width": 1}, {"from": "2700-5-1-7", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-0", "width": 1}, {"from": "2909-5-0-3", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-8", "width": 1}, {"from": "2909-5-0-3", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-6", "width": 1}, {"from": "2909-5-0-3", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-3", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-12", "width": 1}, {"from": "2909-5-0-3", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-3", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-10", "width": 1}, {"from": "2909-5-0-3", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "3261-0-0-3", "label": 0.125, "length": 500, "to": "3261-0-0-8", "width": 1}, {"from": "3261-0-0-3", "label": 0.125, "length": 500, "to": "3261-0-0-6", "width": 1}, {"from": "3261-0-0-3", "label": 0.125, "length": 500, "to": "3261-0-0-5", "width": 1}, {"from": "3261-0-0-3", "label": 0.125, "length": 500, "to": "3261-0-0-2", "width": 1}, {"from": "3261-0-0-3", "label": 0.125, "length": 500, "to": "3261-0-0-0", "width": 1}, {"from": "3261-1-0-2", "label": 0.3333333333333333, "length": 500, "to": "3261-1-0-1", "width": 1}, {"from": "3261-1-0-2", "label": 0.3333333333333333, "length": 500, "to": "3261-0-0-0", "width": 1}, {"from": "6050-7--1-0", "label": 1.0, "length": 500, "to": "6050-7-0-0", "width": 1}, {"from": "6937-5-0-2", "label": 0.16666666666666666, "length": 500, "to": "6937-5-0-0", "width": 1}, {"from": "5194-2-2-2", "label": 0.2, "length": 500, "to": "5194-2-2-4", "width": 1}, {"from": "5194-2-2-2", "label": 0.2, "length": 500, "to": "5194-2-2-1", "width": 1}, {"from": "6937-4-0-4", "label": 0.125, "length": 500, "to": "6937-4-0-7", "width": 1}, {"from": "6937-4-0-4", "label": 0.125, "length": 500, "to": "6937-4-0-3", "width": 1}, {"from": "6937-4-0-4", "label": 0.125, "length": 500, "to": "6937-4-0-0", "width": 1}, {"from": "7307-0-0-3", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-3", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-6", "width": 1}, {"from": "7307-0-0-3", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-1", "width": 1}, {"from": "7307-0-0-3", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "7307-0-0-6", "label": 0.08333333333333333, "length": 500, "to": "7307-1-0-8", "width": 1}, {"from": "7307-0-0-6", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-6", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-1", "width": 1}, {"from": "7307-0-0-6", "label": 0.08333333333333333, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "2453-4-0-6", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-7", "width": 1}, {"from": "2453-4-0-6", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-4", "width": 1}, {"from": "2453-4-0-6", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-1", "width": 1}, {"from": "2453-4-0-6", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-0", "width": 1}, {"from": "6050-7-0-7", "label": 0.125, "length": 500, "to": "6050-7-0-5", "width": 1}, {"from": "6050-7-0-7", "label": 0.125, "length": 500, "to": "6050-7-0-4", "width": 1}, {"from": "6050-7-0-7", "label": 0.125, "length": 500, "to": "6050-7-0-2", "width": 1}, {"from": "6050-7-0-7", "label": 0.125, "length": 500, "to": "6050-7-0-1", "width": 1}, {"from": "6050-7-0-7", "label": 0.125, "length": 500, "to": "6050-7-0-0", "width": 1}, {"from": "6050-7-0-7", "label": 0.16666666666666666, "length": 500, "to": "6050-7--1-1", "width": 1}, {"from": "2453-4-0-7", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-4", "width": 1}, {"from": "2453-4-0-7", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-1", "width": 1}, {"from": "2453-4-0-7", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-0", "width": 1}, {"from": "3261-0-0-6", "label": 0.125, "length": 500, "to": "3261-0-0-8", "width": 1}, {"from": "3261-0-0-6", "label": 0.125, "length": 500, "to": "3261-0-0-5", "width": 1}, {"from": "3261-0-0-6", "label": 0.125, "length": 500, "to": "3261-0-0-2", "width": 1}, {"from": "3261-0-0-6", "label": 0.125, "length": 500, "to": "3261-0-0-0", "width": 1}, {"from": "4454-5-3-0", "label": 1.0, "length": 500, "to": "4454-5-3-1", "width": 1}, {"from": "4454-5-3-2", "label": 1.0, "length": 500, "to": "4454-5-3-1", "width": 1}, {"from": "6937-4-0-7", "label": 0.1111111111111111, "length": 500, "to": "6937-5-0-0", "width": 1}, {"from": "6937-4-0-7", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-8", "width": 1}, {"from": "6937-4-0-7", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-3", "width": 1}, {"from": "6937-4-0-7", "label": 0.1111111111111111, "length": 500, "to": "6937-4-0-0", "width": 1}, {"from": "3574-4-1-2", "label": 0.3333333333333333, "length": 500, "to": "3574-4-1-1", "width": 1}, {"from": "6937-4-0-0", "label": 0.125, "length": 500, "to": "6937-4-0-8", "width": 1}, {"from": "6937-4-0-0", "label": 0.125, "length": 500, "to": "6937-4-0-3", "width": 1}, {"from": "3261-0-0-8", "label": 0.125, "length": 500, "to": "3261-0-0-5", "width": 1}, {"from": "3261-0-0-8", "label": 0.125, "length": 500, "to": "3261-0-0-2", "width": 1}, {"from": "3261-0-0-8", "label": 0.125, "length": 500, "to": "3261-0-0-0", "width": 1}, {"from": "6050-8-0-5", "label": 0.2, "length": 500, "to": "6050-8-0-2", "width": 1}, {"from": "6050-8-0-5", "label": 0.2, "length": 500, "to": "6050-8-0-0", "width": 1}, {"from": "5310-1-0-2", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-9", "width": 1}, {"from": "5310-1-0-2", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-5", "width": 1}, {"from": "5310-1-0-2", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-0", "width": 1}, {"from": "5310-4-2-1", "label": 0.14285714285714285, "length": 500, "to": "5310-4-2-2", "width": 1}, {"from": "2909-5--1-0", "label": 1.0, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "2909-5-0-6", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-8", "width": 1}, {"from": "2909-5-0-6", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-6", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-12", "width": 1}, {"from": "2909-5-0-6", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-6", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-10", "width": 1}, {"from": "2909-5-0-6", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "5310-4-5-1", "label": 0.5, "length": 500, "to": "5310-4-5-2", "width": 1}, {"from": "5310-4-0-0", "label": 0.1111111111111111, "length": 500, "to": "5310-4--1-0", "width": 1}, {"from": "2909-5-0-12", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-8", "width": 1}, {"from": "2909-5-0-12", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-12", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-12", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-10", "width": 1}, {"from": "2909-5-0-12", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "5310-1-0-9", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-5", "width": 1}, {"from": "5310-1-0-9", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-0", "width": 1}, {"from": "6050-8-2-2", "label": 0.25, "length": 500, "to": "6050-8-2-4", "width": 1}, {"from": "4454-5--1-0", "label": 0.3333333333333333, "length": 500, "to": "5194-3--1-0", "width": 1}, {"from": "4454-5--1-0", "label": 0.3333333333333333, "length": 500, "to": "4454-5-3-1", "width": 1}, {"from": "5310-1-0-5", "label": 0.1111111111111111, "length": 500, "to": "5310-1-0-0", "width": 1}, {"from": "3261-0-0-2", "label": 0.125, "length": 500, "to": "3261-0-0-5", "width": 1}, {"from": "3261-0-0-2", "label": 0.125, "length": 500, "to": "3261-0-0-0", "width": 1}, {"from": "7307-0-0-1", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-9", "width": 1}, {"from": "7307-0-0-1", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "7307-0-0-9", "label": 0.09090909090909091, "length": 500, "to": "7307-0-0-0", "width": 1}, {"from": "7307-1-0-0", "label": 0.125, "length": 500, "to": "7307-1-0-8", "width": 1}, {"from": "7307-1-0-0", "label": 0.125, "length": 500, "to": "7307-1-0-7", "width": 1}, {"from": "7307-1-0-0", "label": 0.125, "length": 500, "to": "7307-1-0-4", "width": 1}, {"from": "2909-7-0-0", "label": 0.14285714285714285, "length": 500, "to": "2909-7-0-1", "width": 1}, {"from": "6050-8-0-0", "label": 0.2, "length": 500, "to": "6050-8-0-2", "width": 1}, {"from": "6937-4-0-8", "label": 0.125, "length": 500, "to": "6937-4-0-3", "width": 1}, {"from": "7307-1-0-8", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-7", "width": 1}, {"from": "7307-1-0-8", "label": 0.1111111111111111, "length": 500, "to": "7307-1-0-4", "width": 1}, {"from": "2700-5-1-2", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-8", "width": 1}, {"from": "2700-5-1-2", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-3", "width": 1}, {"from": "2700-5-1-2", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-0", "width": 1}, {"from": "6050-7-0-4", "label": 0.125, "length": 500, "to": "6050-7-0-5", "width": 1}, {"from": "6050-7-0-4", "label": 0.125, "length": 500, "to": "6050-7-0-2", "width": 1}, {"from": "6050-7-0-4", "label": 0.125, "length": 500, "to": "6050-7-0-1", "width": 1}, {"from": "6050-7-0-4", "label": 0.125, "length": 500, "to": "6050-7-0-0", "width": 1}, {"from": "2909-5-0-10", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-8", "width": 1}, {"from": "2909-5-0-10", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-10", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-10", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "6050-7--1-1", "label": 0.16666666666666666, "length": 500, "to": "5310-4--1-0", "width": 1}, {"from": "5310-4-3-2", "label": 0.5, "length": 500, "to": "5310-4-3-0", "width": 1}, {"from": "2700-5-1-8", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-3", "width": 1}, {"from": "2700-5-1-8", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-0", "width": 1}, {"from": "5194-3-0-3", "label": 0.3333333333333333, "length": 500, "to": "5194-3-0-2", "width": 1}, {"from": "3574-4-0-0", "label": 0.5, "length": 500, "to": "3574-4-0-1", "width": 1}, {"from": "7307-1-0-4", "label": 0.125, "length": 500, "to": "7307-1-0-7", "width": 1}, {"from": "2453-4-0-4", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-1", "width": 1}, {"from": "2453-4-0-4", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-0", "width": 1}, {"from": "2909-5-0-8", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-5", "width": 1}, {"from": "2909-5-0-8", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-8", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "3261-0-0-0", "label": 0.1111111111111111, "length": 500, "to": "3261-0-0-5", "width": 1}, {"from": "6050-7-0-2", "label": 0.125, "length": 500, "to": "6050-7-0-5", "width": 1}, {"from": "6050-7-0-2", "label": 0.125, "length": 500, "to": "6050-7-0-1", "width": 1}, {"from": "6050-7-0-2", "label": 0.125, "length": 500, "to": "6050-7-0-0", "width": 1}, {"from": "5310-4--1-0", "label": 0.1111111111111111, "length": 500, "to": "5310-4-0-5", "width": 1}, {"from": "5310-4--1-0", "label": 0.1111111111111111, "length": 500, "to": "5310-4-3-0", "width": 1}, {"from": "2909-5-0-5", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-11", "width": 1}, {"from": "2909-5-0-5", "label": 0.07692307692307693, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "3261-0-0-5", "label": 0.2, "length": 500, "to": "3261-0--1-1", "width": 1}, {"from": "2909-5-0-11", "label": 0.08333333333333333, "length": 500, "to": "2909-5-0-0", "width": 1}, {"from": "2453-4-0-1", "label": 0.14285714285714285, "length": 500, "to": "2453-4-0-0", "width": 1}, {"from": "2453-4-2-3", "label": 0.3333333333333333, "length": 500, "to": "2453-4-2-0", "width": 1}, {"from": "6050-7-0-5", "label": 0.125, "length": 500, "to": "6050-7-0-1", "width": 1}, {"from": "6050-7-0-5", "label": 0.125, "length": 500, "to": "6050-7-0-0", "width": 1}, {"from": "6937-5-0-0", "label": 1.0, "length": 500, "to": "6937-5--1-0", "width": 1}, {"from": "2700-5-1-3", "label": 0.1111111111111111, "length": 500, "to": "2700-5-1-0", "width": 1}, {"from": "6050-7-0-0", "label": 0.1111111111111111, "length": 500, "to": "6050-7-0-1", "width": 1}, {"from": "2700-5--1-1", "label": 0.2, "length": 500, "to": "3261-0--1-1", "width": 1}, {"from": "5194-2-2-1", "label": 0.2, "length": 500, "to": "5194-2-2-4", "width": 1}, {"from": "5194-3--1-2", "label": 0.5, "length": 500, "to": "5194-3-0-2", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

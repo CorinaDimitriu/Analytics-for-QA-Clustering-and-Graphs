@@ -1,0 +1,404 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a1028">a1028</option>
+                                
+                                    <option value="a627">a627</option>
+                                
+                                    <option value="a10606">a10606</option>
+                                
+                                    <option value="a12140">a12140</option>
+                                
+                                    <option value="a13642">a13642</option>
+                                
+                                    <option value="a15865">a15865</option>
+                                
+                                    <option value="a16150">a16150</option>
+                                
+                                    <option value="a16670">a16670</option>
+                                
+                                    <option value="a23782">a23782</option>
+                                
+                                    <option value="a30924">a30924</option>
+                                
+                                    <option value="a31290">a31290</option>
+                                
+                                    <option value="a37673">a37673</option>
+                                
+                                    <option value="a3850">a3850</option>
+                                
+                                    <option value="a4793">a4793</option>
+                                
+                                    <option value="a48166">a48166</option>
+                                
+                                    <option value="a5098">a5098</option>
+                                
+                                    <option value="a6068">a6068</option>
+                                
+                                    <option value="a84765">a84765</option>
+                                
+                                    <option value="a85266">a85266</option>
+                                
+                                    <option value="a86877">a86877</option>
+                                
+                                    <option value="a9006">a9006</option>
+                                
+                                    <option value="a9349">a9349</option>
+                                
+                                    <option value="a13532">a13532</option>
+                                
+                                    <option value="a43183">a43183</option>
+                                
+                                    <option value="a33495">a33495</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 23, "id": "a1028", "label": "Answer:Slovenian\nPage Rank:0.37\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.3722894836225114\nQuestion:ND \u010crnu\u010de was managed in the mid-90s by the football coach of what nationality?\nAnswer:Slovenian\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a627", "label": "Answer:Austrian\nPage Rank:0.36\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.3578068263648851\nQuestion:Nikolaas Tinbergen shared the 1973 Nobel in Medicine with the zoologist who was of what nationality?\nAnswer:Austrian\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a10606", "label": "Answer:Belgian\nPage Rank:0.52\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5229492330492557\nQuestion:Non-Stop Mix Best is by a pair of producers who are of what heritage?\nAnswer:Belgian\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a12140", "label": "Answer:Dutchman\nPage Rank:0.56\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5571420675178608\nQuestion:Which play, written by a professor of several universities including State University of New York at Buffalo and the State University of New York at Stony Brook, shared the title of Obie award for Distinguished play?\nAnswer:Dutchman\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a13642", "label": "Answer:Danes\nPage Rank:0.60\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5966062973003758\nQuestion:Strut-Harald was a king who ruled over what North Germanic tribe of southern Scandinavia?\nAnswer:Danes\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a15865", "label": "Answer:Lithuanian\nPage Rank:0.64\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.6427076930008595\nQuestion:What is the native language of Rolandas Kazlas\u0027 homeland?\nAnswer:Lithuanian\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a16150", "label": "Answer:Welsh\nPage Rank:0.70\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.6973378469059325\nQuestion:What ethnicity was the actor that played Reg Cattermole in the movie rendition of J. K. Rowling\u0027s seventh novel of the Harry Potter series?\nAnswer:Welsh\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a16670", "label": "Answer:Romanian\nPage Rank:0.76\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.7631975324470484\nQuestion: Dan Balan, along with O-Zone, produced a hit single that was sung in what language?\nAnswer:Romanian\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a23782", "label": "Answer:Saxon\nPage Rank:0.84\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.8442872702695474\nQuestion:The concept of treason can be dated back to the early Roman republic, but was defined by nebulous criteria, it would be the common laws of this time period which would most directly influence those customary in the court of King Arthur, a legendary British leader who, according to medieval histories and romances, led the defence of Britain against which invaders in the late 5th and early 6th centuries AD?\nAnswer:Saxon\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a30924", "label": "Answer:Dalmatian\nPage Rank:0.95\nLabel:23", "shape": "square", "size": 5, "title": "Page Rank:0.9468078673737066\nQuestion:Which breed of dog would be larger, Dalmatian or Bedlington Terrier?\nAnswer:Dalmatian\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a31290", "label": "Answer:Gibraltarian\nPage Rank:1.08\nLabel:23", "shape": "square", "size": 5, "title": "Page Rank:1.080938981918315\nQuestion:What is the nationality of the man who wrote \"When I Need You\"?\nAnswer:Gibraltarian\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a37673", "label": "Answer:Franks\nPage Rank:1.57\nLabel:23", "shape": "square", "size": 8, "title": "Page Rank:1.568834411254581\nQuestion:Chagnoald, was a bishop of Laon during the 7th century, from which collection of Germanic peoples that originated in the lands between the Lower and Middle Rhine in the 3rd century AD and eventually formed a large empire dominating much of western and central Europe during the Middle Ages?\nAnswer:Franks\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a3850", "label": "Answer:German\nPage Rank:0.39\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.3881117866764681\nQuestion:What was the nationality of the man with whom Hans Loewald studied philosophy? \nAnswer:German\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a4793", "label": "Answer:European\nPage Rank:0.41\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4054746823962049\nQuestion:Ghosts comes from a slang term that applies to what type of ethnicities?\nAnswer:European\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a48166", "label": "Answer:Bulgarian\nPage Rank:1.60\nLabel:23", "shape": "square", "size": 8, "title": "Page Rank:1.5980759212360272\nQuestion:Roman Kapitonenko lost his semifinal bout at the 2008 European Championships to a boxer of what nationality?\nAnswer:Bulgarian\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a5098", "label": "Answer:Czech\nPage Rank:0.42\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4246220979538034\nQuestion:What was Bill Dvorak\u0027s fifth cousin\u0027s nationality?\nAnswer:Czech\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a6068", "label": "Answer:Hungarian\nPage Rank:0.45\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4458532028514936\nQuestion: Hunnenschlacht was created by a composer who was of what nationality?\nAnswer:Hungarian\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a84765", "label": "Answer:Finn\nPage Rank:2.05\nLabel:23", "shape": "square", "size": 10, "title": "Page Rank:2.0508640989195683\nQuestion:What role did Hans Morten Hansen played in the form of \"found footage\" mockumentary?\nAnswer:Finn\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a85266", "label": "Answer:Latvian\nPage Rank:2.92\nLabel:23", "shape": "square", "size": 15, "title": "Page Rank:2.922481340960384\nQuestion:What country is Kristaps Porzi\u0146\u0123is, the the current champion of the New York Knicks, from?\nAnswer:Latvian\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a86877", "label": "Answer:Cypriot\nPage Rank:5.41\nLabel:23", "shape": "square", "size": 27, "title": "Page Rank:5.4065904807767105\nQuestion:What is the nationality of the cinematographer famous for his work on the fourth film in the Marvel Comics Universe?\nAnswer:Cypriot\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a9006", "label": "Answer:Italian\nPage Rank:0.47\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4695391542529792\nQuestion:What was the nationality of the director of the film Paprika?\nAnswer:Italian\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a9349", "label": "Answer:Norwegian\nPage Rank:0.49\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.49301611196562817\nQuestion:John Balliol became the King of Scotland after the princess from what country passed away?\nAnswer:Norwegian\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a13532", "label": "Answer:Sardinian\nPage Rank:0.38\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.3812837840775341\nQuestion:Casu modde, casu cund\u00eddu and casu fr\u00e0zigu , translated to English means \"rotten/putrid cheese\", is what  primary indigenous Romance language spoken on most of the island of Sardinia ?\nAnswer:Sardinian\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a43183", "label": "Answer:Roman\nPage Rank:0.71\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.7053750005434379\nQuestion:What city of origin does Ermine Street and Lindum Colonia have in common?\nAnswer:Roman\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a33495", "label": "Answer:Salian\nPage Rank:0.36\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.3578068263648851\nQuestion:In the Battle of G\u0142og\u00f3w  the Imperial forces were under command of Holy Roman Emperor and the fourth and last ruler of the what dynasty?\nAnswer:Salian\nLevel:hard\nType:bridge"}]);
+                  edges = new vis.DataSet([{"from": "a1028", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a10606", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a12140", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a13642", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a15865", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a16150", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a16670", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a23782", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a30924", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a31290", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a37673", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a3850", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a4793", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a48166", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a5098", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a6068", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a84765", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a85266", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a86877", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a9006", "width": 1}, {"from": "a1028", "label": 0.05, "length": 500, "to": "a9349", "width": 1}, {"from": "a10606", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a10606", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a10606", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a10606", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a10606", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a10606", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a10606", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a12140", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a13642", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a15865", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a16150", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a16670", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a23782", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a30924", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a31290", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a37673", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a48166", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a84765", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a85266", "width": 1}, {"from": "a10606", "label": 0.07692307692307693, "length": 500, "to": "a86877", "width": 1}, {"from": "a12140", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a12140", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a12140", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a12140", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a12140", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a12140", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a12140", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a13642", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a15865", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a16150", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a16670", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a23782", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a30924", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a31290", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a37673", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a48166", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a84765", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a85266", "width": 1}, {"from": "a12140", "label": 0.08333333333333333, "length": 500, "to": "a86877", "width": 1}, {"from": "a13532", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a13532", "label": 1.0, "length": 500, "to": "a43183", "width": 1}, {"from": "a13642", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a13642", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a13642", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a13642", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a13642", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a13642", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a13642", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a15865", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a16150", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a16670", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a23782", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a30924", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a31290", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a37673", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a48166", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a84765", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a85266", "width": 1}, {"from": "a13642", "label": 0.09090909090909091, "length": 500, "to": "a86877", "width": 1}, {"from": "a15865", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a15865", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a15865", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a15865", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a15865", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a15865", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a15865", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a16150", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a16670", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a23782", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a30924", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a31290", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a37673", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a48166", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a84765", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a85266", "width": 1}, {"from": "a15865", "label": 0.1, "length": 500, "to": "a86877", "width": 1}, {"from": "a16150", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a16150", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a16150", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a16150", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a16150", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a16150", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a16150", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a16150", "label": 0.1111111111111111, "length": 500, "to": "a16670", "width": 1}, {"from": "a16150", "label": 0.1111111111111111, "length": 500, "to": "a23782", "width": 1}, {"from": "a16150", "label": 0.1111111111111111, "length": 500, "to": "a30924", "width": 1}, {"from": "a16150", "label": 0.1111111111111111, "length": 500, "to": "a31290", "width": 1}, {"from": "a16150", "label": 0.1111111111111111, "length": 500, "to": "a37673", "width": 1}, {"from": "a16150", "label": 0.1111111111111111, "length": 500, "to": "a48166", "width": 1}, {"from": "a16150", "label": 0.1111111111111111, "length": 500, "to": "a84765", "width": 1}, {"from": "a16150", "label": 0.1111111111111111, "length": 500, "to": "a85266", "width": 1}, {"from": "a16150", "label": 0.1111111111111111, "length": 500, "to": "a86877", "width": 1}, {"from": "a16670", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a16670", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a16670", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a16670", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a16670", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a16670", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a16670", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a16670", "label": 0.125, "length": 500, "to": "a23782", "width": 1}, {"from": "a16670", "label": 0.125, "length": 500, "to": "a30924", "width": 1}, {"from": "a16670", "label": 0.125, "length": 500, "to": "a31290", "width": 1}, {"from": "a16670", "label": 0.125, "length": 500, "to": "a37673", "width": 1}, {"from": "a16670", "label": 0.125, "length": 500, "to": "a48166", "width": 1}, {"from": "a16670", "label": 0.125, "length": 500, "to": "a84765", "width": 1}, {"from": "a16670", "label": 0.125, "length": 500, "to": "a85266", "width": 1}, {"from": "a16670", "label": 0.125, "length": 500, "to": "a86877", "width": 1}, {"from": "a23782", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a23782", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a23782", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a23782", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a23782", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a23782", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a23782", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a23782", "label": 0.14285714285714285, "length": 500, "to": "a30924", "width": 1}, {"from": "a23782", "label": 0.14285714285714285, "length": 500, "to": "a31290", "width": 1}, {"from": "a23782", "label": 0.14285714285714285, "length": 500, "to": "a37673", "width": 1}, {"from": "a23782", "label": 0.14285714285714285, "length": 500, "to": "a48166", "width": 1}, {"from": "a23782", "label": 0.14285714285714285, "length": 500, "to": "a84765", "width": 1}, {"from": "a23782", "label": 0.14285714285714285, "length": 500, "to": "a85266", "width": 1}, {"from": "a23782", "label": 0.14285714285714285, "length": 500, "to": "a86877", "width": 1}, {"from": "a30924", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a30924", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a30924", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a30924", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a30924", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a30924", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a30924", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a30924", "label": 0.16666666666666666, "length": 500, "to": "a31290", "width": 1}, {"from": "a30924", "label": 0.16666666666666666, "length": 500, "to": "a37673", "width": 1}, {"from": "a30924", "label": 0.16666666666666666, "length": 500, "to": "a48166", "width": 1}, {"from": "a30924", "label": 0.16666666666666666, "length": 500, "to": "a84765", "width": 1}, {"from": "a30924", "label": 0.16666666666666666, "length": 500, "to": "a85266", "width": 1}, {"from": "a30924", "label": 0.16666666666666666, "length": 500, "to": "a86877", "width": 1}, {"from": "a31290", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a31290", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a31290", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a31290", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a31290", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a31290", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a31290", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a31290", "label": 0.2, "length": 500, "to": "a37673", "width": 1}, {"from": "a31290", "label": 0.2, "length": 500, "to": "a48166", "width": 1}, {"from": "a31290", "label": 0.2, "length": 500, "to": "a84765", "width": 1}, {"from": "a31290", "label": 0.2, "length": 500, "to": "a85266", "width": 1}, {"from": "a31290", "label": 0.2, "length": 500, "to": "a86877", "width": 1}, {"from": "a33495", "label": 1.0, "length": 500, "to": "a37673", "width": 1}, {"from": "a37673", "label": 0.05263157894736842, "length": 500, "to": "a3850", "width": 1}, {"from": "a37673", "label": 0.05555555555555555, "length": 500, "to": "a4793", "width": 1}, {"from": "a37673", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a37673", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a37673", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a37673", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a37673", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a37673", "label": 0.25, "length": 500, "to": "a48166", "width": 1}, {"from": "a37673", "label": 0.25, "length": 500, "to": "a84765", "width": 1}, {"from": "a37673", "label": 0.25, "length": 500, "to": "a85266", "width": 1}, {"from": "a37673", "label": 0.25, "length": 500, "to": "a86877", "width": 1}, {"from": "a3850", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a3850", "label": 0.05263157894736842, "length": 500, "to": "a4793", "width": 1}, {"from": "a3850", "label": 0.05263157894736842, "length": 500, "to": "a48166", "width": 1}, {"from": "a3850", "label": 0.05263157894736842, "length": 500, "to": "a5098", "width": 1}, {"from": "a3850", "label": 0.05263157894736842, "length": 500, "to": "a6068", "width": 1}, {"from": "a3850", "label": 0.05263157894736842, "length": 500, "to": "a84765", "width": 1}, {"from": "a3850", "label": 0.05263157894736842, "length": 500, "to": "a85266", "width": 1}, {"from": "a3850", "label": 0.05263157894736842, "length": 500, "to": "a86877", "width": 1}, {"from": "a3850", "label": 0.05263157894736842, "length": 500, "to": "a9006", "width": 1}, {"from": "a3850", "label": 0.05263157894736842, "length": 500, "to": "a9349", "width": 1}, {"from": "a43183", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a4793", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a4793", "label": 0.05555555555555555, "length": 500, "to": "a48166", "width": 1}, {"from": "a4793", "label": 0.05555555555555555, "length": 500, "to": "a5098", "width": 1}, {"from": "a4793", "label": 0.05555555555555555, "length": 500, "to": "a6068", "width": 1}, {"from": "a4793", "label": 0.05555555555555555, "length": 500, "to": "a84765", "width": 1}, {"from": "a4793", "label": 0.05555555555555555, "length": 500, "to": "a85266", "width": 1}, {"from": "a4793", "label": 0.05555555555555555, "length": 500, "to": "a86877", "width": 1}, {"from": "a4793", "label": 0.05555555555555555, "length": 500, "to": "a9006", "width": 1}, {"from": "a4793", "label": 0.05555555555555555, "length": 500, "to": "a9349", "width": 1}, {"from": "a48166", "label": 0.058823529411764705, "length": 500, "to": "a5098", "width": 1}, {"from": "a48166", "label": 0.0625, "length": 500, "to": "a6068", "width": 1}, {"from": "a48166", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a48166", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a48166", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a48166", "label": 0.3333333333333333, "length": 500, "to": "a84765", "width": 1}, {"from": "a48166", "label": 0.3333333333333333, "length": 500, "to": "a85266", "width": 1}, {"from": "a48166", "label": 0.3333333333333333, "length": 500, "to": "a86877", "width": 1}, {"from": "a5098", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a5098", "label": 0.058823529411764705, "length": 500, "to": "a6068", "width": 1}, {"from": "a5098", "label": 0.058823529411764705, "length": 500, "to": "a84765", "width": 1}, {"from": "a5098", "label": 0.058823529411764705, "length": 500, "to": "a85266", "width": 1}, {"from": "a5098", "label": 0.058823529411764705, "length": 500, "to": "a86877", "width": 1}, {"from": "a5098", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a5098", "label": 0.058823529411764705, "length": 500, "to": "a9349", "width": 1}, {"from": "a6068", "label": 0.047619047619047616, "length": 500, "to": "a627", "width": 1}, {"from": "a6068", "label": 0.0625, "length": 500, "to": "a84765", "width": 1}, {"from": "a6068", "label": 0.0625, "length": 500, "to": "a85266", "width": 1}, {"from": "a6068", "label": 0.0625, "length": 500, "to": "a86877", "width": 1}, {"from": "a6068", "label": 0.0625, "length": 500, "to": "a9006", "width": 1}, {"from": "a6068", "label": 0.0625, "length": 500, "to": "a9349", "width": 1}, {"from": "a627", "label": 0.047619047619047616, "length": 500, "to": "a84765", "width": 1}, {"from": "a627", "label": 0.047619047619047616, "length": 500, "to": "a85266", "width": 1}, {"from": "a627", "label": 0.047619047619047616, "length": 500, "to": "a86877", "width": 1}, {"from": "a627", "label": 0.047619047619047616, "length": 500, "to": "a9006", "width": 1}, {"from": "a627", "label": 0.047619047619047616, "length": 500, "to": "a9349", "width": 1}, {"from": "a84765", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a84765", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a84765", "label": 0.5, "length": 500, "to": "a85266", "width": 1}, {"from": "a84765", "label": 0.5, "length": 500, "to": "a86877", "width": 1}, {"from": "a85266", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a85266", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a85266", "label": 1.0, "length": 500, "to": "a86877", "width": 1}, {"from": "a86877", "label": 0.058823529411764705, "length": 500, "to": "a9006", "width": 1}, {"from": "a86877", "label": 0.07142857142857142, "length": 500, "to": "a9349", "width": 1}, {"from": "a9006", "label": 0.058823529411764705, "length": 500, "to": "a9349", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

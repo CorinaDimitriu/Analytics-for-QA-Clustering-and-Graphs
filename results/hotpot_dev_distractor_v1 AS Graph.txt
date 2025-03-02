@@ -1,0 +1,9 @@
+No valid questions: 25
+
+No questions: 7405
+No nodes: 2
+Total no edges: 1
+No edges from similarity >= 0.9 : 1 (1.00 %)
+
+Max no nodes in a component: 2
+Min no nodes in a component: 2

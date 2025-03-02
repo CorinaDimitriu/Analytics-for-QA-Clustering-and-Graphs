@@ -1,0 +1,707 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 1700px;
+                 height: 900px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a72724">a72724</option>
+                                
+                                    <option value="a60820">a60820</option>
+                                
+                                    <option value="a46315">a46315</option>
+                                
+                                    <option value="a29927">a29927</option>
+                                
+                                    <option value="a25791">a25791</option>
+                                
+                                    <option value="a24872">a24872</option>
+                                
+                                    <option value="a227">a227</option>
+                                
+                                    <option value="a21012">a21012</option>
+                                
+                                    <option value="a74978">a74978</option>
+                                
+                                    <option value="a8891">a8891</option>
+                                
+                                    <option value="a2392">a2392</option>
+                                
+                                    <option value="a1438">a1438</option>
+                                
+                                    <option value="a50298">a50298</option>
+                                
+                                    <option value="a7848">a7848</option>
+                                
+                                    <option value="a37845">a37845</option>
+                                
+                                    <option value="a27001">a27001</option>
+                                
+                                    <option value="a21069">a21069</option>
+                                
+                                    <option value="a18521">a18521</option>
+                                
+                                    <option value="a18471">a18471</option>
+                                
+                                    <option value="a11730">a11730</option>
+                                
+                                    <option value="a71896">a71896</option>
+                                
+                                    <option value="a76245">a76245</option>
+                                
+                                    <option value="a67503">a67503</option>
+                                
+                                    <option value="a72637">a72637</option>
+                                
+                                    <option value="a61873">a61873</option>
+                                
+                                    <option value="a58671">a58671</option>
+                                
+                                    <option value="a26415">a26415</option>
+                                
+                                    <option value="a19794">a19794</option>
+                                
+                                    <option value="a73990">a73990</option>
+                                
+                                    <option value="a54735">a54735</option>
+                                
+                                    <option value="a8146">a8146</option>
+                                
+                                    <option value="a49926">a49926</option>
+                                
+                                    <option value="a49189">a49189</option>
+                                
+                                    <option value="a45084">a45084</option>
+                                
+                                    <option value="a24573">a24573</option>
+                                
+                                    <option value="a13613">a13613</option>
+                                
+                                    <option value="a11367">a11367</option>
+                                
+                                    <option value="a10236">a10236</option>
+                                
+                                    <option value="a56807">a56807</option>
+                                
+                                    <option value="a71916">a71916</option>
+                                
+                                    <option value="a67025">a67025</option>
+                                
+                                    <option value="a42511">a42511</option>
+                                
+                                    <option value="a54936">a54936</option>
+                                
+                                    <option value="a6596">a6596</option>
+                                
+                                    <option value="a51043">a51043</option>
+                                
+                                    <option value="a46843">a46843</option>
+                                
+                                    <option value="a34331">a34331</option>
+                                
+                                    <option value="a1976">a1976</option>
+                                
+                                    <option value="a1720">a1720</option>
+                                
+                                    <option value="a24160">a24160</option>
+                                
+                                    <option value="a4163">a4163</option>
+                                
+                                    <option value="a14376">a14376</option>
+                                
+                                    <option value="a11809">a11809</option>
+                                
+                                    <option value="a10359">a10359</option>
+                                
+                                    <option value="a80144">a80144</option>
+                                
+                                    <option value="a28570">a28570</option>
+                                
+                                    <option value="a60670">a60670</option>
+                                
+                                    <option value="a45012">a45012</option>
+                                
+                                    <option value="a30028">a30028</option>
+                                
+                                    <option value="a68335">a68335</option>
+                                
+                                    <option value="a77375">a77375</option>
+                                
+                                    <option value="a62076">a62076</option>
+                                
+                                    <option value="a26220">a26220</option>
+                                
+                                    <option value="a12096">a12096</option>
+                                
+                                    <option value="a784">a784</option>
+                                
+                                    <option value="a23305">a23305</option>
+                                
+                                    <option value="a67696">a67696</option>
+                                
+                                    <option value="a9091">a9091</option>
+                                
+                                    <option value="a8342">a8342</option>
+                                
+                                    <option value="a7262">a7262</option>
+                                
+                                    <option value="a14318">a14318</option>
+                                
+                                    <option value="a12582">a12582</option>
+                                
+                                    <option value="a25355">a25355</option>
+                                
+                                    <option value="a62065">a62065</option>
+                                
+                                    <option value="a76110">a76110</option>
+                                
+                                    <option value="a50984">a50984</option>
+                                
+                                    <option value="a29584">a29584</option>
+                                
+                                    <option value="a85086">a85086</option>
+                                
+                                    <option value="a88943">a88943</option>
+                                
+                                    <option value="a59880">a59880</option>
+                                
+                                    <option value="a21500">a21500</option>
+                                
+                                    <option value="a8554">a8554</option>
+                                
+                                    <option value="a2583">a2583</option>
+                                
+                                    <option value="a25140">a25140</option>
+                                
+                                    <option value="a25113">a25113</option>
+                                
+                                    <option value="a86424">a86424</option>
+                                
+                                    <option value="a44577">a44577</option>
+                                
+                                    <option value="a32234">a32234</option>
+                                
+                                    <option value="a58651">a58651</option>
+                                
+                                    <option value="a5821">a5821</option>
+                                
+                                    <option value="a30893">a30893</option>
+                                
+                                    <option value="a29368">a29368</option>
+                                
+                                    <option value="a28652">a28652</option>
+                                
+                                    <option value="a1597">a1597</option>
+                                
+                                    <option value="a81295">a81295</option>
+                                
+                                    <option value="a46711">a46711</option>
+                                
+                                    <option value="a813">a813</option>
+                                
+                                    <option value="a25594">a25594</option>
+                                
+                                    <option value="a8493">a8493</option>
+                                
+                                    <option value="a84159">a84159</option>
+                                
+                                    <option value="a59281">a59281</option>
+                                
+                                    <option value="a7548">a7548</option>
+                                
+                                    <option value="a67487">a67487</option>
+                                
+                                    <option value="a30489">a30489</option>
+                                
+                                    <option value="a80540">a80540</option>
+                                
+                                    <option value="a64075">a64075</option>
+                                
+                                    <option value="a8633">a8633</option>
+                                
+                                    <option value="a37580">a37580</option>
+                                
+                                    <option value="a75134">a75134</option>
+                                
+                                    <option value="a53336">a53336</option>
+                                
+                                    <option value="a1408">a1408</option>
+                                
+                                    <option value="a68182">a68182</option>
+                                
+                                    <option value="a11767">a11767</option>
+                                
+                                    <option value="a5731">a5731</option>
+                                
+                                    <option value="a82649">a82649</option>
+                                
+                                    <option value="a33715">a33715</option>
+                                
+                                    <option value="a3276">a3276</option>
+                                
+                                    <option value="a70721">a70721</option>
+                                
+                                    <option value="a53258">a53258</option>
+                                
+                                    <option value="a41728">a41728</option>
+                                
+                                    <option value="a61373">a61373</option>
+                                
+                                    <option value="a67269">a67269</option>
+                                
+                                    <option value="a55739">a55739</option>
+                                
+                                    <option value="a3439">a3439</option>
+                                
+                                    <option value="a49469">a49469</option>
+                                
+                                    <option value="a88965">a88965</option>
+                                
+                                    <option value="a1602">a1602</option>
+                                
+                                    <option value="a38750">a38750</option>
+                                
+                                    <option value="a2285">a2285</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 83, "id": "a72724", "label": "Answer:Euripides\nPage Rank:2.20\nLabel:83", "shape": "square", "size": 11, "title": "Page Rank:2.2000999589064487\nQuestion:Who was born first, Arthur Woollgar Verral or Euripides?\nAnswer:Euripides\nLevel:hard\nType:bridge"}, {"group": 83, "id": "a60820", "label": "Answer:Aristophanes\nPage Rank:1.54\nLabel:83", "shape": "square", "size": 8, "title": "Page Rank:1.5439297957238236\nQuestion:Who wrote the plays \"The Birds\" and \"Lysistrata\"?\nAnswer:Aristophanes\nLevel:medium\nType:bridge"}, {"group": 83, "id": "a46315", "label": "Answer:Middleton\nPage Rank:1.20\nLabel:83", "shape": "square", "size": 6, "title": "Page Rank:1.2030621784860962\nQuestion:Kenny Clements was from which town in the Borough of Rochdale?\nAnswer:Middleton\nLevel:medium\nType:bridge"}, {"group": 83, "id": "a29927", "label": "Answer:Sheridan\nPage Rank:0.99\nLabel:83", "shape": "square", "size": 5, "title": "Page Rank:0.9922162296792547\nQuestion:This city is known as the \"heart of the Ruby Valley\" and contains Gordon Peak which has an elevation of 8478ft?\nAnswer:Sheridan\nLevel:hard\nType:bridge"}, {"group": 83, "id": "a25791", "label": "Answer:dramatist\nPage Rank:1.26\nLabel:83", "shape": "square", "size": 6, "title": "Page Rank:1.2555440489572547\nQuestion:What job do both Ram\u00f3n del Valle-Incl\u00e1n and Friedrich D\u00fcrrenmatt have in common?\nAnswer:dramatist\nLevel:medium\nType:comparison"}, {"group": 83, "id": "a24872", "label": "Answer:Eliot\nPage Rank:1.54\nLabel:83", "shape": "square", "size": 8, "title": "Page Rank:1.5449467327081494\nQuestion:The Portsmouth Herald covers what area that had a population of 6,204 at the 2010 census?\nAnswer:Eliot\nLevel:medium\nType:bridge"}, {"group": 83, "id": "a227", "label": "Answer:playwright\nPage Rank:0.48\nLabel:83", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:What profession do K\u014db\u014d Abe and Agatha Christie share?\nAnswer:playwright\nLevel:easy\nType:comparison"}, {"group": 83, "id": "a21012", "label": "Answer:Sophocles\nPage Rank:0.53\nLabel:83", "shape": "square", "size": 3, "title": "Page Rank:0.5271606963941049\nQuestion:A work of what one of the three ancient Greek tragedians was discovered by Grenfell and Hunt?\nAnswer:Sophocles\nLevel:medium\nType:bridge"}, {"group": 83, "id": "a74978", "label": "Answer:Aeschylus\nPage Rank:4.07\nLabel:83", "shape": "square", "size": 20, "title": "Page Rank:4.07018492397693\nQuestion:Tony Harrison created renditions of the ancient Greek dramatic work Oresteia written by which author?\nAnswer:Aeschylus\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a8891", "label": "Answer:Stoker\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Lucas Danial Till appeared in what 2013 British-American psychological thriller-drama film written by Wentworth Miller?\nAnswer:Stoker\nLevel:medium\nType:bridge"}, {"group": 95, "id": "a2392", "label": "Answer:author\nPage Rank:0.50\nLabel:95", "shape": "square", "size": 2, "title": "Page Rank:0.4953169792007554\nQuestion:The recording of a musical released as an album on April 2 starred an English actress, singer, and what?\nAnswer:author\nLevel:medium\nType:bridge"}, {"group": 95, "id": "a1438", "label": "Answer:writer\nPage Rank:0.48\nLabel:95", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:Paul Auster and Jodi Picoult, have which occupation in common?\nAnswer:writer\nLevel:easy\nType:comparison"}, {"group": 101, "id": "a50298", "label": "Answer:Realist\nPage Rank:1.11\nLabel:101", "shape": "square", "size": 6, "title": "Page Rank:1.1090918575502453\nQuestion:The Black Riders and Other Lines was written by the poet who wrote in what tradition?\nAnswer:Realist\nLevel:medium\nType:bridge"}, {"group": 101, "id": "a7848", "label": "Answer:philosopher\nPage Rank:0.48\nLabel:101", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:Who is Ronald Dworkin?\nAnswer:philosopher\nLevel:easy\nType:bridge"}, {"group": 101, "id": "a37845", "label": "Answer:Hypatia\nPage Rank:1.52\nLabel:101", "shape": "square", "size": 8, "title": "Page Rank:1.5202052624773104\nQuestion:Who was an inventor and philospher and had her death predicted by Orestes?\nAnswer:Hypatia\nLevel:medium\nType:bridge"}, {"group": 101, "id": "a27001", "label": "Answer:Plato\nPage Rank:0.78\nLabel:101", "shape": "square", "size": 4, "title": "Page Rank:0.7828287112694537\nQuestion:Atlantica Online is a MORPG set in the mythical land of Atlantis, which was first described by what western philosopher?\nAnswer:Plato\nLevel:medium\nType:bridge"}, {"group": 101, "id": "a21069", "label": "Answer:Whitehead\nPage Rank:0.87\nLabel:101", "shape": "square", "size": 4, "title": "Page Rank:0.8669166505808086\nQuestion:What was the maiden name of the designer of the sign requested by Ted Rogich?\nAnswer:Whitehead\nLevel:medium\nType:bridge"}, {"group": 101, "id": "a18521", "label": "Answer:Aristotle\nPage Rank:0.61\nLabel:101", "shape": "square", "size": 3, "title": "Page Rank:0.6124838516083924\nQuestion:Giulio Pace de Beriga, was a well-known Italian scholar, of which ancient Greek philosopher and scientist born in the city of Stagira, Chalkidice, on the northern periphery of Classical Greece, and jurist?\nAnswer:Aristotle\nLevel:easy\nType:bridge"}, {"group": 101, "id": "a18471", "label": "Answer:Stoic\nPage Rank:0.56\nLabel:101", "shape": "square", "size": 3, "title": "Page Rank:0.5596299151751809\nQuestion:Diodorus of Alexandria was a pupil of the philosopher in what tradition?\nAnswer:Stoic\nLevel:hard\nType:bridge"}, {"group": 101, "id": "a11730", "label": "Answer:Democritus\nPage Rank:0.52\nLabel:101", "shape": "square", "size": 3, "title": "Page Rank:0.515787940253623\nQuestion:Which one for the first thinkers to form Free will in antiquity was also well-known for formulation of an atomic theory of the universe?\nAnswer:Democritus\nLevel:medium\nType:bridge"}, {"group": 101, "id": "a71896", "label": "Answer:Perry\nPage Rank:1.76\nLabel:101", "shape": "square", "size": 9, "title": "Page Rank:1.7636644373377646\nQuestion:What Canada US border town is located in the third-least populous Maine county and houses a population of 889 people?\nAnswer:Perry\nLevel:medium\nType:bridge"}, {"group": 101, "id": "a76245", "label": "Answer:transcendentalist\nPage Rank:4.65\nLabel:101", "shape": "square", "size": 23, "title": "Page Rank:4.6494603729316815\nQuestion:Which movement was lead by the poet who is included among those David S. Reynolds is an expert on?\nAnswer:transcendentalist\nLevel:hard\nType:bridge"}, {"group": 101, "id": "a67503", "label": "Answer:Anaximander\nPage Rank:1.97\nLabel:101", "shape": "square", "size": 10, "title": "Page Rank:1.9712496943910227\nQuestion:The Ionian school produced which scholar who was a pre-Socratic Greek philosopher who lived in Miletus?\nAnswer:Anaximander\nLevel:medium\nType:bridge"}, {"group": 101, "id": "a72637", "label": "Answer:Socrates\nPage Rank:2.51\nLabel:101", "shape": "square", "size": 13, "title": "Page Rank:2.513221823206315\nQuestion:During which time was Callixeinus alive for during 400 BCE?\nAnswer:Socrates\nLevel:medium\nType:bridge"}, {"group": 110, "id": "a61873", "label": "Answer:Mencken\nPage Rank:1.30\nLabel:110", "shape": "square", "size": 6, "title": "Page Rank:1.2967876682895707\nQuestion:Which writer was born earliest, Mary Gordon or H. L. Mencken? \nAnswer:Mencken\nLevel:hard\nType:comparison"}, {"group": 110, "id": "a58671", "label": "Answer:Brooks\nPage Rank:0.61\nLabel:110", "shape": "square", "size": 3, "title": "Page Rank:0.6056051150290089\nQuestion:Which writer is American, Michel Leiris or Gwendolyn Brooks?\nAnswer:Brooks\nLevel:medium\nType:comparison"}, {"group": 26, "id": "a26415", "label": "Answer:journalist\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:What profession does H. L. Mencken and Arturo Uslar Pietri have in common?\nAnswer:journalist\nLevel:medium\nType:comparison"}, {"group": 110, "id": "a19794", "label": "Answer:Arnold\nPage Rank:0.87\nLabel:110", "shape": "square", "size": 4, "title": "Page Rank:0.8748384225658723\nQuestion:What Solid Angle application did Anthony Hemingway use in his feature film directorial debut?\nAnswer:Arnold\nLevel:medium\nType:bridge"}, {"group": 110, "id": "a73990", "label": "Answer:critic\nPage Rank:1.97\nLabel:110", "shape": "square", "size": 10, "title": "Page Rank:1.965256806962473\nQuestion:Guillermo Cabrera Infante and George S. Kaufman were both what?\nAnswer:critic\nLevel:medium\nType:comparison"}, {"group": 116, "id": "a54735", "label": "Answer:Sherman\nPage Rank:1.23\nLabel:116", "shape": "square", "size": 6, "title": "Page Rank:1.2290626016808337\nQuestion:What is the last name of the brothers who wrote a song sung by one of Mowgli\u0027s mentors in The Jungle Book?\nAnswer:Sherman\nLevel:hard\nType:bridge"}, {"group": 116, "id": "a8146", "label": "Answer:Cumberland\nPage Rank:0.48\nLabel:116", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:Richard Hewes was a politician from a town in what Maine county?\nAnswer:Cumberland\nLevel:medium\nType:bridge"}, {"group": 116, "id": "a49926", "label": "Answer:Stilwell\nPage Rank:1.01\nLabel:116", "shape": "square", "size": 5, "title": "Page Rank:1.0136598776749144\nQuestion:Which community is part of the county in Kansas whose most populous city is Overland Park?\nAnswer:Stilwell\nLevel:medium\nType:bridge"}, {"group": 116, "id": "a49189", "label": "Answer:Eisenhower\nPage Rank:1.44\nLabel:116", "shape": "square", "size": 7, "title": "Page Rank:1.4430070545968137\nQuestion:Which president-elect did the French international cabaret singer \u00c9dith Piaf sing for in 1952, performing \"Simply a Waltz\"?\nAnswer:Eisenhower\nLevel:hard\nType:bridge"}, {"group": 116, "id": "a45084", "label": "Answer:Hannibal\nPage Rank:0.73\nLabel:116", "shape": "square", "size": 4, "title": "Page Rank:0.7343978912179908\nQuestion:What television series developed by Bryan Fuller has David Slade directed for?\nAnswer:Hannibal\nLevel:medium\nType:bridge"}, {"group": 116, "id": "a24573", "label": "Answer:Napoleon\nPage Rank:0.65\nLabel:116", "shape": "square", "size": 3, "title": "Page Rank:0.6548771004491638\nQuestion:John Fox Burgoyne served under the duke who defeated whom at Waterloo?\nAnswer:Napoleon\nLevel:medium\nType:bridge"}, {"group": 59, "id": "a13613", "label": "Answer:Wellington\nPage Rank:0.73\nLabel:59", "shape": "square", "size": 4, "title": "Page Rank:0.7286609475554156\nQuestion:What is the seat of the county that includes Belle Plaine, Kansas?\nAnswer:Wellington\nLevel:medium\nType:bridge"}, {"group": 116, "id": "a11367", "label": "Answer:Demetrius\nPage Rank:0.56\nLabel:116", "shape": "square", "size": 3, "title": "Page Rank:0.5629952171058417\nQuestion:Which character did British actor Christian Bale play in the 1999 film A Midsummer Night\u0027s Dream?\nAnswer:Demetrius\nLevel:medium\nType:bridge"}, {"group": 116, "id": "a10236", "label": "Answer:general\nPage Rank:0.52\nLabel:116", "shape": "square", "size": 3, "title": "Page Rank:0.5188896010192089\nQuestion:What was the position in the Wehrmacht of the deputy head of the counter-espionage bureau in the Abwehr who worked with Otto Armster?\nAnswer:general\nLevel:medium\nType:bridge"}, {"group": 59, "id": "a56807", "label": "Answer:Pompey\nPage Rank:2.20\nLabel:59", "shape": "square", "size": 11, "title": "Page Rank:2.2047031153345915\nQuestion:Which important Roman figure did Matthias Gelzer write a biography for, besides Julius Caesar and Cicero?\nAnswer:Pompey\nLevel:medium\nType:bridge"}, {"group": 116, "id": "a71916", "label": "Answer:Eugene\nPage Rank:2.81\nLabel:116", "shape": "square", "size": 14, "title": "Page Rank:2.8051853921560608\nQuestion:What was the middle name of the player who broke Babe Ruth\u0027s 34-year-old single-season record for home runs?\nAnswer:Eugene\nLevel:medium\nType:bridge"}, {"group": 59, "id": "a67025", "label": "Answer:Caesar\nPage Rank:3.01\nLabel:59", "shape": "square", "size": 15, "title": "Page Rank:3.0109018484427414\nQuestion:The Woodstock Opera House is a historical venue for performing arts and receptions located in Woodstock, Illinois, perhaps the most notable performer to grace the stage was Orson Welles, he was an American actor, director, writer, and producer who worked in theatre, radio, and film, and is remembered for his innovative work in most notably, which 1937 Broadway adaptation of William Shakespeare\u0027s \"Julius Caesar\"?\nAnswer:Caesar\nLevel:easy\nType:bridge"}, {"group": 26, "id": "a42511", "label": "Answer:Montgomery\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:What is the middle name of the composer of the \"American Beauty: Original Motion Picture Score\"?\nAnswer:Montgomery\nLevel:medium\nType:bridge"}, {"group": 50, "id": "a54936", "label": "Answer:inventor\nPage Rank:2.59\nLabel:50", "shape": "square", "size": 13, "title": "Page Rank:2.587363903132763\nQuestion:how is Guglielmo Marconi and Karl Ferdinand Braun connected?\nAnswer:inventor\nLevel:easy\nType:bridge"}, {"group": 73, "id": "a6596", "label": "Answer:choreographer\nPage Rank:0.48\nLabel:73", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:Alex Joseph \"AJ\" Pritchard reached the simi-finals of \"Britain\u0027s Got Talent\" with his partner a 1995 born dancer and what?\nAnswer:choreographer\nLevel:medium\nType:bridge"}, {"group": 73, "id": "a51043", "label": "Answer:Stanley\nPage Rank:0.48\nLabel:73", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:What is the name of the capital of the island on which Wickham Heights are located ?\nAnswer:Stanley\nLevel:medium\nType:bridge"}, {"group": 73, "id": "a46843", "label": "Answer:Goodyear\nPage Rank:0.48\nLabel:73", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:Of the four largest tire manufacturers in the world, which one was founded in 1898 by Frank Seiberling and is based in Akron, Ohio?\nAnswer:Goodyear\nLevel:easy\nType:bridge"}, {"group": 35, "id": "a34331", "label": "Answer:Heron\nPage Rank:0.67\nLabel:35", "shape": "square", "size": 3, "title": "Page Rank:0.6710260615712016\nQuestion:Rogers Pass  is traversed by a highway that begins near what Montana city?\nAnswer:Heron\nLevel:hard\nType:bridge"}, {"group": 119, "id": "a1976", "label": "Answer:Gillette\nPage Rank:0.48\nLabel:119", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:Henry Wilbur Palmer was a Republican member of the U.S. House of Representatives from Pennsylvania, he was the father of Bradley Palmer, a Boston lawyer known for his involvement with which brand of men\u0027s and women\u0027s safety razors, and other personal care products?\nAnswer:Gillette\nLevel:easy\nType:bridge"}, {"group": 73, "id": "a1720", "label": "Answer:Talbots\nPage Rank:0.48\nLabel:73", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:What retailer of women\u0027s clothing, shoes and fashion accessories is located in an open-air shopping center which opened in September 2007?\nAnswer:Talbots\nLevel:medium\nType:bridge"}, {"group": 59, "id": "a24160", "label": "Answer:Gandhi\nPage Rank:0.69\nLabel:59", "shape": "square", "size": 3, "title": "Page Rank:0.6926451538299431\nQuestion:Which film starring Ben Kingsley gained Tom Smith his 1982 Academy Award nomination?\nAnswer:Gandhi\nLevel:hard\nType:bridge"}, {"group": 59, "id": "a4163", "label": "Answer:Suharto\nPage Rank:0.48\nLabel:59", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:Which president of Indonesia created a series of extrajudicial government executions between 1983 and 1985?\nAnswer:Suharto\nLevel:medium\nType:bridge"}, {"group": 59, "id": "a14376", "label": "Answer:Smith\nPage Rank:0.63\nLabel:59", "shape": "square", "size": 3, "title": "Page Rank:0.6328737446161917\nQuestion:What was the middle name of the General who commanded the US forces at the Battle of Fort Driant ? \nAnswer:Smith\nLevel:medium\nType:bridge"}, {"group": 59, "id": "a11809", "label": "Answer:statesman\nPage Rank:0.55\nLabel:59", "shape": "square", "size": 3, "title": "Page Rank:0.5515442995401193\nQuestion:What type of political leader does George Goschen, 1st Viscount Goschen and Lord Randolph Churchill have in common?\nAnswer:statesman\nLevel:medium\nType:bridge"}, {"group": 59, "id": "a10359", "label": "Answer:More\nPage Rank:0.54\nLabel:59", "shape": "square", "size": 3, "title": "Page Rank:0.541847173733102\nQuestion:Which magazine has been published in more countries, More or My Weekly?\nAnswer:More\nLevel:medium\nType:comparison"}, {"group": 59, "id": "a80144", "label": "Answer:Brutus\nPage Rank:5.19\nLabel:59", "shape": "square", "size": 26, "title": "Page Rank:5.19308594666202\nQuestion:Which role did Tom Powers play in the Orson Welles\u0027s 1937 adaptation of William Shakespeare\u0027s \"Julius Caesar\"?\nAnswer:Brutus\nLevel:medium\nType:bridge"}, {"group": 59, "id": "a28570", "label": "Answer:Bismarck\nPage Rank:0.77\nLabel:59", "shape": "square", "size": 4, "title": "Page Rank:0.7662387014243746\nQuestion:The Imperator-class ocean liners were a series of three ocean liners designed for the Hamburg America Line, which included the RMS Majestic, originally launched in 1914 as the SS what?\nAnswer:Bismarck\nLevel:easy\nType:bridge"}, {"group": 59, "id": "a60670", "label": "Answer:Themistocles\nPage Rank:1.52\nLabel:59", "shape": "square", "size": 8, "title": "Page Rank:1.5225854241221268\nQuestion:Who was a populist politician and the effective ruler of Athens when Admetus was King of the Molossians?\nAnswer:Themistocles\nLevel:medium\nType:bridge"}, {"group": 59, "id": "a45012", "label": "Answer:Augustus\nPage Rank:0.98\nLabel:59", "shape": "square", "size": 5, "title": "Page Rank:0.9810135850557662\nQuestion:What was the middle name of the aviator featured in \"The Smithsonian Institution\"?\nAnswer:Augustus\nLevel:hard\nType:bridge"}, {"group": 59, "id": "a30028", "label": "Answer:Warwick\nPage Rank:0.86\nLabel:59", "shape": "square", "size": 4, "title": "Page Rank:0.85928197231162\nQuestion:George William John Reston was a member of both St Albans and than for who\nAnswer:Warwick\nLevel:easy\nType:bridge"}, {"group": 59, "id": "a68335", "label": "Answer:Sukarno\nPage Rank:2.81\nLabel:59", "shape": "square", "size": 14, "title": "Page Rank:2.8070734846821734\nQuestion:Bukit Jalil National Stadium is the second largest stadium in Southeast Asia behind the stadium named after which first President of Indonesia?\nAnswer:Sukarno\nLevel:medium\nType:bridge"}, {"group": 119, "id": "a77375", "label": "Answer:Villard\nPage Rank:1.64\nLabel:119", "shape": "square", "size": 8, "title": "Page Rank:1.640821848512478\nQuestion:What is the publisher for the autobiography of the executive producer for \"The Howard Stern Show\"?\nAnswer:Villard\nLevel:medium\nType:bridge"}, {"group": 119, "id": "a62076", "label": "Answer:Woolworths\nPage Rank:0.89\nLabel:119", "shape": "square", "size": 4, "title": "Page Rank:0.8869307289256637\nQuestion:What was one of the British companies was housed in the Alhambra Shopping Centre?\nAnswer:Woolworths\nLevel:medium\nType:bridge"}, {"group": 119, "id": "a26220", "label": "Answer:Stanford\nPage Rank:0.62\nLabel:119", "shape": "square", "size": 3, "title": "Page Rank:0.6224075290706412\nQuestion:Andrew Luck played for the 2014 Indianapolis Colts and what college team?\nAnswer:Stanford\nLevel:easy\nType:bridge"}, {"group": 119, "id": "a12096", "label": "Answer:businessman\nPage Rank:0.99\nLabel:119", "shape": "square", "size": 5, "title": "Page Rank:0.993443698153865\nQuestion:The South Side Writers Group was a circle of African-American writers and poets formed in the 1930s which included an an American journalist, poet, political and labor movement activist and what? \nAnswer:businessman\nLevel:hard\nType:bridge"}, {"group": 110, "id": "a784", "label": "Answer:poet\nPage Rank:0.48\nLabel:110", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:A Suitable Girl is an upcoming novel by Vikram Seth, which is a sequel to his 1993 book \"A Suitable Boy\", Vikram Seth ( born June 20, 1952) is an Indian novelist and what ?\nAnswer:poet\nLevel:easy\nType:bridge"}, {"group": 110, "id": "a23305", "label": "Answer:Poet\nPage Rank:1.03\nLabel:110", "shape": "square", "size": 5, "title": "Page Rank:1.0274575814284481\nQuestion:What profession did Karl Shapiro and Brendan Behan have in common?\nAnswer:Poet\nLevel:hard\nType:comparison"}, {"group": 110, "id": "a67696", "label": "Answer:Ovid\nPage Rank:1.62\nLabel:110", "shape": "square", "size": 8, "title": "Page Rank:1.623044012555784\nQuestion:Who wrote a Latin narrative poem of history from the cosmogonic myth to Caesar?\nAnswer:Ovid\nLevel:medium\nType:bridge"}, {"group": 110, "id": "a9091", "label": "Answer:Herricks\nPage Rank:0.72\nLabel:110", "shape": "square", "size": 4, "title": "Page Rank:0.7215162247965956\nQuestion:A school district located in western Nassau County on Long Island, in New York State serves what hamlet with a population of 4,295 at the 2010 census?\nAnswer:Herricks\nLevel:easy\nType:bridge"}, {"group": 110, "id": "a8342", "label": "Answer:Dante\nPage Rank:0.62\nLabel:110", "shape": "square", "size": 3, "title": "Page Rank:0.6166805340141842\nQuestion:The 2012\u201313 FC Bayern Munich season was the 114th season in the club\u0027s history and the 48th consecutive season in the top flight of German football, the Bundesliga, since the promotion of the team from the Regionalliga S\u00fcd in 1965, before the start of the season, Bayern signed which Brazilian professional footballer who plays for French Ligue 1 club Nice, commonly known as who?\nAnswer:Dante\nLevel:easy\nType:bridge"}, {"group": 110, "id": "a7262", "label": "Answer:Whitman\nPage Rank:0.54\nLabel:110", "shape": "square", "size": 3, "title": "Page Rank:0.5401581319832272\nQuestion:State Road 922 (SR 922) is a 5.548 mi east\u2013west road built in 1951, passing through the cities of North Miami, Bay Harbor Islands, and Bal Harbour, Florida, with stores lining much of the route, including the Bal Harbour Shops, is an upscale, open-air shopping mall in Bal Harbour, a wealthy suburb of Miami Beach, Florida, known internationally for its luxury retail, and is owned by which family?\nAnswer:Whitman\nLevel:easy\nType:bridge"}, {"group": 86, "id": "a14318", "label": "Answer:Erasmus\nPage Rank:0.69\nLabel:86", "shape": "square", "size": 3, "title": "Page Rank:0.6863792823608523\nQuestion: Christoph Hegendorff, of Leipzig, was a Protestant theological scholar and expert of law, an educator and a great, public admirer of which Dutch Renaissance humanist?\nAnswer:Erasmus\nLevel:easy\nType:bridge"}, {"group": 86, "id": "a12582", "label": "Answer:Gregory\nPage Rank:0.48\nLabel:86", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:What is the middle name of the Associate Justice of the Supreme Court who John F. Duffy served as clerk?\nAnswer:Gregory\nLevel:medium\nType:bridge"}, {"group": 86, "id": "a25355", "label": "Answer:Luther\nPage Rank:0.88\nLabel:86", "shape": "square", "size": 4, "title": "Page Rank:0.8808534123630937\nQuestion:In what drama did the Saving Mr Banks and Saul Dibb\u0027s 2015 WW2 romance actress portray Alice Morgan?\nAnswer:Luther\nLevel:medium\nType:bridge"}, {"group": 86, "id": "a62065", "label": "Answer:Bede\nPage Rank:1.83\nLabel:86", "shape": "square", "size": 9, "title": "Page Rank:1.8276999025155098\nQuestion:Cearl is the first Mercian king mentioned by which English monk at the monastery of St. Peter and its companion monastery of St. Paul in the Kingdom of Northumbria of the Angles?\nAnswer:Bede\nLevel:medium\nType:bridge"}, {"group": 86, "id": "a76110", "label": "Answer:philologist\nPage Rank:0.68\nLabel:86", "shape": "square", "size": 3, "title": "Page Rank:0.6761438018344185\nQuestion:Luko Zore, was a Serb, Slavist from Dubrovnik, and which occupation?\nAnswer:philologist\nLevel:easy\nType:bridge"}, {"group": 86, "id": "a50984", "label": "Answer:historian\nPage Rank:0.57\nLabel:86", "shape": "square", "size": 3, "title": "Page Rank:0.5684297477068236\nQuestion:What kind of scholar were American writers Stephen E. Ambrose and Will Durant? \nAnswer:historian\nLevel:medium\nType:comparison"}, {"group": 86, "id": "a29584", "label": "Answer:Walpole\nPage Rank:0.51\nLabel:86", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Where was the subject of Godric born?\nAnswer:Walpole\nLevel:hard\nType:bridge"}, {"group": 86, "id": "a85086", "label": "Answer:Franklin\nPage Rank:1.66\nLabel:86", "shape": "square", "size": 8, "title": "Page Rank:1.6612728305737305\nQuestion:Shane Drake was a director of a video for an American rock band from what Tennessee city?\nAnswer:Franklin\nLevel:medium\nType:bridge"}, {"group": 86, "id": "a88943", "label": "Answer:Herodotus\nPage Rank:3.07\nLabel:86", "shape": "square", "size": 15, "title": "Page Rank:3.073354736561401\nQuestion:The Herodotus Machine was a machine described by Herodotus, a Greek historian born in Halicarnassus, Caria, modern-day Bodrum, Turkey, who claims this invention enabled the Ancient Egyptians to construct the pyramids, the Egyptian pyramids are ancient pyramid-shaped masonry structures located in Egypt?\nAnswer:Herodotus\nLevel:easy\nType:bridge"}, {"group": 86, "id": "a59880", "label": "Answer:Maitland\nPage Rank:0.69\nLabel:86", "shape": "square", "size": 3, "title": "Page Rank:0.6892210690945237\nQuestion:Mount Sugarloaf overlooks what city situated on the Hunter River approximately 166 km by road north of Sydney and 35 km north-west of Newcastle?\nAnswer:Maitland\nLevel:easy\nType:bridge"}, {"group": 122, "id": "a21500", "label": "Answer:Hipparchus\nPage Rank:0.74\nLabel:122", "shape": "square", "size": 4, "title": "Page Rank:0.7392625984140934\nQuestion:Which Greek astronomer first recorded the NGC 869 and 884 clusters?\nAnswer:Hipparchus\nLevel:easy\nType:bridge"}, {"group": 122, "id": "a8554", "label": "Answer:astrophysicist\nPage Rank:0.48\nLabel:122", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:Michael Foale and Dirk Frimout are both what type of physicist?\nAnswer:astrophysicist\nLevel:medium\nType:comparison"}, {"group": 122, "id": "a2583", "label": "Answer:mathematician\nPage Rank:0.89\nLabel:122", "shape": "square", "size": 4, "title": "Page Rank:0.8910888928895274\nQuestion:What occupation did Eugene Dynkin and Anatoly Maltsev both have in common?\nAnswer:mathematician\nLevel:medium\nType:comparison"}, {"group": 122, "id": "a25140", "label": "Answer:astronomers\nPage Rank:0.94\nLabel:122", "shape": "square", "size": 5, "title": "Page Rank:0.9432469824996353\nQuestion:What do Al-Nayrizi and Avicenna have in common?\nAnswer:astronomers\nLevel:hard\nType:comparison"}, {"group": 122, "id": "a25113", "label": "Answer:astronomer\nPage Rank:0.78\nLabel:122", "shape": "square", "size": 4, "title": "Page Rank:0.7779356556698023\nQuestion:What do Ibn al-Shatir and Ibn Tufail have in common?\nAnswer:astronomer\nLevel:easy\nType:comparison"}, {"group": 122, "id": "a86424", "label": "Answer:Laplace\nPage Rank:1.93\nLabel:122", "shape": "square", "size": 10, "title": "Page Rank:1.93175485092493\nQuestion:Who is a French scholar that specialized in Physics and astronomy?\nAnswer:Laplace\nLevel:easy\nType:bridge"}, {"group": 50, "id": "a44577", "label": "Answer:Paparazzi\nPage Rank:0.69\nLabel:50", "shape": "square", "size": 3, "title": "Page Rank:0.6863792823608523\nQuestion:Which Lady Gaga song wwhich appeared on her debut album Fame describes a stalker following somebody?\nAnswer:Paparazzi\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a32234", "label": "Answer:Wright\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:What town has a  24.8 mi tributary of Schoharie Creek in Schoharie and Albany counties in the U.S. state of New York, and was named after governor Silas Wright?\nAnswer:Wright\nLevel:easy\nType:bridge"}, {"group": 77, "id": "a58651", "label": "Answer:Madison\nPage Rank:1.26\nLabel:77", "shape": "square", "size": 6, "title": "Page Rank:1.2614614191561595\nQuestion:University of Alabama in Huntsville is a college located in what county?\nAnswer:Madison\nLevel:hard\nType:bridge"}, {"group": 77, "id": "a5821", "label": "Answer:Nixon\nPage Rank:0.52\nLabel:77", "shape": "square", "size": 3, "title": "Page Rank:0.5226115939379121\nQuestion:Cinergi Pictures, production company behind Judge Dredd, also produced a major hit film relating to ex-president Richard Nixon called what?\nAnswer:Nixon\nLevel:hard\nType:bridge"}, {"group": 77, "id": "a30893", "label": "Answer:Coolidge\nPage Rank:0.85\nLabel:77", "shape": "square", "size": 4, "title": "Page Rank:0.8464201043806113\nQuestion:What is the middle name of the man who composed John\u0027s Book of Alleged Dances?\nAnswer:Coolidge\nLevel:hard\nType:bridge"}, {"group": 77, "id": "a29368", "label": "Answer:Arthur\nPage Rank:0.70\nLabel:77", "shape": "square", "size": 3, "title": "Page Rank:0.6980784366025661\nQuestion:Paranoia 1.0 includes an actor who began acting as what character in \"My Little Girl\"?\nAnswer:Arthur\nLevel:medium\nType:bridge"}, {"group": 77, "id": "a28652", "label": "Answer:Jefferson\nPage Rank:0.60\nLabel:77", "shape": "square", "size": 3, "title": "Page Rank:0.5966482364124497\nQuestion:The Portsmouth Gaseous Diffusion Plant is located in a town that was originally called what?\nAnswer:Jefferson\nLevel:medium\nType:bridge"}, {"group": 77, "id": "a1597", "label": "Answer:Lincoln\nPage Rank:0.48\nLabel:77", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:What is the capital of the only triply landlocked U.S. state wherein one can find Maianthemum canadense?\nAnswer:Lincoln\nLevel:medium\nType:bridge"}, {"group": 77, "id": "a81295", "label": "Answer:Tyler\nPage Rank:2.33\nLabel:77", "shape": "square", "size": 12, "title": "Page Rank:2.3337036254388956\nQuestion:What town holds a celebration the name of which literally means \"apple slices\"?\nAnswer:Tyler\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a46711", "label": "Answer:Sade\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Who is older, Kirk Windstein or Sade?\nAnswer:Sade\nLevel:medium\nType:comparison"}, {"group": 35, "id": "a813", "label": "Answer:Hamilton\nPage Rank:0.48\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:Jordan Fished played the role of John Laurens in which Broadway production?\nAnswer:Hamilton\nLevel:easy\nType:bridge"}, {"group": 26, "id": "a25594", "label": "Answer:Grey\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Starving, is a song by American actress and singer Hailee Steinfeld, and which American electronic music duo group?\nAnswer:Grey\nLevel:easy\nType:bridge"}, {"group": 26, "id": "a8493", "label": "Answer:Saki\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Who was born first Sarah Waters or Saki?\nAnswer:Saki\nLevel:hard\nType:comparison"}, {"group": 119, "id": "a84159", "label": "Answer:Daimler\nPage Rank:1.34\nLabel:119", "shape": "square", "size": 7, "title": "Page Rank:1.3408103185197107\nQuestion:Kaya (rock, in Turkish) is designed and developed by Otokar as a mine-protected vehicle (MRAP), it is based on the proven Unimog 500 chassis for high level cross country mobility, Unimog is a range of multi-purpose all-wheel drive medium trucks, produced by which organization?\nAnswer:Daimler\nLevel:easy\nType:bridge"}, {"group": 119, "id": "a59281", "label": "Answer:Heinz\nPage Rank:0.72\nLabel:119", "shape": "square", "size": 4, "title": "Page Rank:0.7247623343349788\nQuestion:Which company is ranked first in ketchup in the United States and   is distributed through Sun Mark?\nAnswer:Heinz\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a7548", "label": "Answer:Baraka\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Which documentary was released first, Baraka or Born Rich?\nAnswer:Baraka\nLevel:medium\nType:comparison"}, {"group": 77, "id": "a67487", "label": "Answer:lawyer\nPage Rank:0.74\nLabel:77", "shape": "square", "size": 4, "title": "Page Rank:0.7447215213615248\nQuestion:What profession was the independent candidate who ran in the race to replace John Baldacci and also in Maine\u0027s 2014 gubernatorial race\nAnswer:lawyer\nLevel:medium\nType:bridge"}, {"group": 77, "id": "a30489", "label": "Answer:attorney\nPage Rank:0.52\nLabel:77", "shape": "square", "size": 3, "title": "Page Rank:0.5226115939379121\nQuestion:What is the main occupation of the American football official Ed Hochuli who was part of the officiating crew for the 2009 NFL season which selected Tim Podraza as a line judge?\nAnswer:attorney\nLevel:easy\nType:bridge"}, {"group": 77, "id": "a80540", "label": "Answer:Attorney\nPage Rank:1.38\nLabel:77", "shape": "square", "size": 7, "title": "Page Rank:1.3777348145188206\nQuestion:Gary Cole the character who plays what role on an Adult Swim program?\nAnswer:Attorney\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a64075", "label": "Answer:Hawthorne\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:\"Cuckoo Clock\" is a song written by Brian Wilson and Gary Usher for a band formed in what California city?\nAnswer:Hawthorne\nLevel:medium\nType:bridge"}, {"group": 122, "id": "a8633", "label": "Answer:physicist\nPage Rank:0.48\nLabel:122", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion:What type of profession does Physikalische Zeitschrift and Peter Debye have in common?\nAnswer:physicist\nLevel:hard\nType:bridge"}, {"group": 122, "id": "a37580", "label": "Answer:biophysicist\nPage Rank:0.58\nLabel:122", "shape": "square", "size": 3, "title": "Page Rank:0.5840244770965147\nQuestion:What profession does Andrew Huxley and Alan Lloyd Hodgkin have in common?\nAnswer:biophysicist\nLevel:medium\nType:bridge"}, {"group": 122, "id": "a75134", "label": "Answer:Einstein\nPage Rank:0.58\nLabel:122", "shape": "square", "size": 3, "title": "Page Rank:0.5840244770965147\nQuestion:What person does Wormholes in fiction and Nathan Rosen have in common?\nAnswer:Einstein\nLevel:hard\nType:bridge"}, {"group": 26, "id": "a53336", "label": "Answer:Carroll\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Kennett High School serves the students of a town in what New Hampshire county?\nAnswer:Carroll\nLevel:medium\nType:bridge"}, {"group": 83, "id": "a1408", "label": "Answer:novelist\nPage Rank:0.53\nLabel:83", "shape": "square", "size": 3, "title": "Page Rank:0.5271606963941049\nQuestion:What profession does Thornton Wilder and Richard Llewellyn have in common?\nAnswer:novelist\nLevel:medium\nType:comparison"}, {"group": 26, "id": "a68182", "label": "Answer:Leonard\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:What is the middle name of the male star of Mysterious Creatures?\nAnswer:Leonard\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a11767", "label": "Answer:Beauvoir\nPage Rank:0.54\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.544471655919367\nQuestion:What is the name of Jefferson Davis\u0027s estate in Biloxi, Mississippi, where there is a Tomb of the Unknown Confederate Soldier?\nAnswer:Beauvoir\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a5731", "label": "Answer:Conrad\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:John of Arsuf was the regent of Jerusalem under which memberof the Hohenstaufen dynasty?\nAnswer:Conrad\nLevel:hard\nType:bridge"}, {"group": 26, "id": "a82649", "label": "Answer:Baldwin\nPage Rank:0.94\nLabel:26", "shape": "square", "size": 5, "title": "Page Rank:0.944153766871154\nQuestion:Dollhouse is the debut extended play by a singer raised in what New York city?\nAnswer:Baldwin\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a33715", "label": "Answer:Irving\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:In which city is the conference, where Texas Longhorns women\u0027s volleyball competes, headquartered?\nAnswer:Irving\nLevel:hard\nType:bridge"}, {"group": 26, "id": "a3276", "label": "Answer:Melville\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Which suburb in southern Hamilton, New Zealand contains streets named after war heroes including Douglas Bader?\nAnswer:Melville\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a70721", "label": "Answer:writers\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:What was the profession of both Ellery Queen and John Fowles?\nAnswer:writers\nLevel:hard\nType:comparison"}, {"group": 26, "id": "a53258", "label": "Answer:Caldwell\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Cassius M. \"Cash\" Hollister (December 7, 1845 \u2013 October 18, 1884) was a 19th-century American law enforcement officer and deputy U.S. marshal who served as mayor and sheriff of which city in Kansas, during his career, he worked with several well-known lawmen including Henry Newton Brown (1857 \u2013 April 30, 1884) was an American Old West gunman who played the roles of both lawman and outlaw during his life?\nAnswer:Caldwell\nLevel:easy\nType:bridge"}, {"group": 26, "id": "a41728", "label": "Answer:Hesse\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:In which German federal state was did Walter Schlesinger born?\nAnswer:Hesse\nLevel:hard\nType:bridge"}, {"group": 26, "id": "a61373", "label": "Answer:Colette\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Which of these indviduals lived in France, Colette or Winston Churchill?\nAnswer:Colette\nLevel:easy\nType:comparison"}, {"group": 26, "id": "a67269", "label": "Answer:Grimm\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:David Barrera appeared in what television series that was created by Stephen Carpenter and Jim Kouf?\nAnswer:Grimm\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a55739", "label": "Answer:Gorky\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:What was the city where Mikhail Tetyaev was born known as from 1932 to 1990?\nAnswer:Gorky\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a3439", "label": "Answer:Mansfield\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Frank Freshwaters pled guilty to voluntary manslaughter and, after a brief sentence at a prison located in which city ?\nAnswer:Mansfield\nLevel:hard\nType:bridge"}, {"group": 26, "id": "a49469", "label": "Answer:Jensen\nPage Rank:0.51\nLabel:26", "shape": "square", "size": 3, "title": "Page Rank:0.5103533874979211\nQuestion:Which player has played tennis longer, Luke Jensen or Zheng Jie?\nAnswer:Jensen\nLevel:easy\nType:comparison"}, {"group": 95, "id": "a88965", "label": "Answer:Paul\nPage Rank:0.94\nLabel:95", "shape": "square", "size": 5, "title": "Page Rank:0.9444705793636391\nQuestion:Which movie, starring Simon Pegg and Nick Frost, did Gregory J. \"Greg\" Mottola produce?\nAnswer:Paul\nLevel:medium\nType:bridge"}, {"group": 119, "id": "a1602", "label": "Answer:entrepreneur\nPage Rank:0.48\nLabel:119", "shape": "square", "size": 2, "title": "Page Rank:0.481669671832177\nQuestion: Beverley Knight MBE is an English recording artist heavily influenced by an American singer, songwriter, and what?\nAnswer:entrepreneur\nLevel:medium\nType:bridge"}, {"group": 119, "id": "a38750", "label": "Answer:restaurateur\nPage Rank:0.62\nLabel:119", "shape": "square", "size": 3, "title": "Page Rank:0.6224075290706412\nQuestion:The Miss Chinese International Pageant 1993 ended in a winner who is now an actress who is of what other profession?\nAnswer:restaurateur\nLevel:medium\nType:bridge"}, {"group": 26, "id": "a2285", "label": "Answer:Voltaire\nPage Rank:0.50\nLabel:26", "shape": "square", "size": 2, "title": "Page Rank:0.4953169792007554\nQuestion:Who wrote a work that described European history until the dawn of the age of the longest serving monarch in European history?\nAnswer:Voltaire\nLevel:medium\nType:bridge"}]);
+                  edges = new vis.DataSet([{"from": "a72724", "label": 0.5, "length": 500, "to": "a60820", "width": 1}, {"from": "a72724", "label": 0.3333333333333333, "length": 500, "to": "a46315", "width": 1}, {"from": "a72724", "label": 0.25, "length": 500, "to": "a29927", "width": 1}, {"from": "a72724", "label": 0.2, "length": 500, "to": "a25791", "width": 1}, {"from": "a72724", "label": 0.14285714285714285, "length": 500, "to": "a24872", "width": 1}, {"from": "a72724", "label": 0.1111111111111111, "length": 500, "to": "a227", "width": 1}, {"from": "a72724", "label": 0.14285714285714285, "length": 500, "to": "a21012", "width": 1}, {"from": "a72724", "label": 1.0, "length": 500, "to": "a74978", "width": 1}, {"from": "a8891", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a8891", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a50298", "label": 0.08333333333333333, "length": 500, "to": "a7848", "width": 1}, {"from": "a50298", "label": 0.16666666666666666, "length": 500, "to": "a37845", "width": 1}, {"from": "a50298", "label": 0.16666666666666666, "length": 500, "to": "a27001", "width": 1}, {"from": "a50298", "label": 0.14285714285714285, "length": 500, "to": "a21069", "width": 1}, {"from": "a50298", "label": 0.125, "length": 500, "to": "a18521", "width": 1}, {"from": "a50298", "label": 0.1111111111111111, "length": 500, "to": "a18471", "width": 1}, {"from": "a50298", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a50298", "label": 0.25, "length": 500, "to": "a71896", "width": 1}, {"from": "a50298", "label": 0.25, "length": 500, "to": "a76245", "width": 1}, {"from": "a50298", "label": 0.25, "length": 500, "to": "a67503", "width": 1}, {"from": "a50298", "label": 0.25, "length": 500, "to": "a72637", "width": 1}, {"from": "a61873", "label": 0.5, "length": 500, "to": "a58671", "width": 1}, {"from": "a61873", "label": 1.0, "length": 500, "to": "a26415", "width": 1}, {"from": "a61873", "label": 0.16666666666666666, "length": 500, "to": "a19794", "width": 1}, {"from": "a61873", "label": 1.0, "length": 500, "to": "a73990", "width": 1}, {"from": "a54735", "label": 0.09090909090909091, "length": 500, "to": "a8146", "width": 1}, {"from": "a54735", "label": 0.25, "length": 500, "to": "a49926", "width": 1}, {"from": "a54735", "label": 0.14285714285714285, "length": 500, "to": "a49189", "width": 1}, {"from": "a54735", "label": 0.16666666666666666, "length": 500, "to": "a45084", "width": 1}, {"from": "a54735", "label": 0.14285714285714285, "length": 500, "to": "a24573", "width": 1}, {"from": "a54735", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a54735", "label": 0.1111111111111111, "length": 500, "to": "a11367", "width": 1}, {"from": "a54735", "label": 0.1, "length": 500, "to": "a10236", "width": 1}, {"from": "a54735", "label": 0.3333333333333333, "length": 500, "to": "a56807", "width": 1}, {"from": "a54735", "label": 0.3333333333333333, "length": 500, "to": "a71916", "width": 1}, {"from": "a54735", "label": 0.3333333333333333, "length": 500, "to": "a67025", "width": 1}, {"from": "a10236", "label": 0.09090909090909091, "length": 500, "to": "a8146", "width": 1}, {"from": "a10236", "label": 0.1, "length": 500, "to": "a49926", "width": 1}, {"from": "a10236", "label": 0.1, "length": 500, "to": "a56807", "width": 1}, {"from": "a10236", "label": 0.1, "length": 500, "to": "a11367", "width": 1}, {"from": "a10236", "label": 0.1, "length": 500, "to": "a71916", "width": 1}, {"from": "a10236", "label": 0.1, "length": 500, "to": "a67025", "width": 1}, {"from": "a10236", "label": 0.1, "length": 500, "to": "a24573", "width": 1}, {"from": "a10236", "label": 0.1, "length": 500, "to": "a13613", "width": 1}, {"from": "a10236", "label": 0.1, "length": 500, "to": "a45084", "width": 1}, {"from": "a10236", "label": 0.1, "length": 500, "to": "a49189", "width": 1}, {"from": "a42511", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a42511", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a54936", "label": 1.0, "length": 500, "to": "a6596", "width": 1}, {"from": "a54936", "label": 1.0, "length": 500, "to": "a51043", "width": 1}, {"from": "a54936", "label": 1.0, "length": 500, "to": "a46843", "width": 1}, {"from": "a54936", "label": 1.0, "length": 500, "to": "a34331", "width": 1}, {"from": "a54936", "label": 0.25, "length": 500, "to": "a1976", "width": 1}, {"from": "a54936", "label": 0.5, "length": 500, "to": "a1720", "width": 1}, {"from": "a24160", "label": 0.07692307692307693, "length": 500, "to": "a4163", "width": 1}, {"from": "a24160", "label": 0.1111111111111111, "length": 500, "to": "a14376", "width": 1}, {"from": "a24160", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a24160", "label": 0.09090909090909091, "length": 500, "to": "a11809", "width": 1}, {"from": "a24160", "label": 0.08333333333333333, "length": 500, "to": "a10359", "width": 1}, {"from": "a24160", "label": 0.125, "length": 500, "to": "a80144", "width": 1}, {"from": "a24160", "label": 0.125, "length": 500, "to": "a28570", "width": 1}, {"from": "a24160", "label": 0.125, "length": 500, "to": "a60670", "width": 1}, {"from": "a24160", "label": 0.125, "length": 500, "to": "a56807", "width": 1}, {"from": "a24160", "label": 0.125, "length": 500, "to": "a67025", "width": 1}, {"from": "a24160", "label": 0.125, "length": 500, "to": "a45012", "width": 1}, {"from": "a24160", "label": 0.125, "length": 500, "to": "a30028", "width": 1}, {"from": "a24160", "label": 0.125, "length": 500, "to": "a68335", "width": 1}, {"from": "a77375", "label": 1.0, "length": 500, "to": "a62076", "width": 1}, {"from": "a77375", "label": 0.5, "length": 500, "to": "a26220", "width": 1}, {"from": "a77375", "label": 0.16666666666666666, "length": 500, "to": "a12096", "width": 1}, {"from": "a784", "label": 0.14285714285714285, "length": 500, "to": "a23305", "width": 1}, {"from": "a784", "label": 0.14285714285714285, "length": 500, "to": "a67696", "width": 1}, {"from": "a784", "label": 0.14285714285714285, "length": 500, "to": "a19794", "width": 1}, {"from": "a784", "label": 0.14285714285714285, "length": 500, "to": "a24872", "width": 1}, {"from": "a784", "label": 0.14285714285714285, "length": 500, "to": "a9091", "width": 1}, {"from": "a784", "label": 0.14285714285714285, "length": 500, "to": "a8342", "width": 1}, {"from": "a784", "label": 0.14285714285714285, "length": 500, "to": "a7262", "width": 1}, {"from": "a14318", "label": 0.5, "length": 500, "to": "a12582", "width": 1}, {"from": "a14318", "label": 0.3333333333333333, "length": 500, "to": "a25355", "width": 1}, {"from": "a14318", "label": 0.3333333333333333, "length": 500, "to": "a62065", "width": 1}, {"from": "a14318", "label": 0.3333333333333333, "length": 500, "to": "a76110", "width": 1}, {"from": "a50984", "label": 0.2, "length": 500, "to": "a29584", "width": 1}, {"from": "a50984", "label": 0.25, "length": 500, "to": "a85086", "width": 1}, {"from": "a50984", "label": 0.25, "length": 500, "to": "a88943", "width": 1}, {"from": "a50984", "label": 0.25, "length": 500, "to": "a59880", "width": 1}, {"from": "a50984", "label": 0.25, "length": 500, "to": "a62065", "width": 1}, {"from": "a21500", "label": 0.16666666666666666, "length": 500, "to": "a8554", "width": 1}, {"from": "a21500", "label": 0.25, "length": 500, "to": "a2583", "width": 1}, {"from": "a21500", "label": 0.2, "length": 500, "to": "a25140", "width": 1}, {"from": "a21500", "label": 0.2, "length": 500, "to": "a37845", "width": 1}, {"from": "a21500", "label": 0.2, "length": 500, "to": "a25113", "width": 1}, {"from": "a21500", "label": 0.2, "length": 500, "to": "a67503", "width": 1}, {"from": "a21500", "label": 0.2, "length": 500, "to": "a86424", "width": 1}, {"from": "a27001", "label": 0.08333333333333333, "length": 500, "to": "a7848", "width": 1}, {"from": "a27001", "label": 0.14285714285714285, "length": 500, "to": "a21069", "width": 1}, {"from": "a27001", "label": 0.125, "length": 500, "to": "a18521", "width": 1}, {"from": "a27001", "label": 0.1111111111111111, "length": 500, "to": "a18471", "width": 1}, {"from": "a27001", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a27001", "label": 0.16666666666666666, "length": 500, "to": "a71896", "width": 1}, {"from": "a27001", "label": 0.16666666666666666, "length": 500, "to": "a76245", "width": 1}, {"from": "a27001", "label": 0.16666666666666666, "length": 500, "to": "a37845", "width": 1}, {"from": "a27001", "label": 0.16666666666666666, "length": 500, "to": "a67503", "width": 1}, {"from": "a27001", "label": 0.16666666666666666, "length": 500, "to": "a72637", "width": 1}, {"from": "a80144", "label": 1.0, "length": 500, "to": "a68335", "width": 1}, {"from": "a80144", "label": 0.3333333333333333, "length": 500, "to": "a67025", "width": 1}, {"from": "a80144", "label": 0.3333333333333333, "length": 500, "to": "a60670", "width": 1}, {"from": "a80144", "label": 0.2, "length": 500, "to": "a56807", "width": 1}, {"from": "a80144", "label": 0.2, "length": 500, "to": "a45012", "width": 1}, {"from": "a80144", "label": 0.07692307692307693, "length": 500, "to": "a4163", "width": 1}, {"from": "a80144", "label": 0.16666666666666666, "length": 500, "to": "a30028", "width": 1}, {"from": "a80144", "label": 0.14285714285714285, "length": 500, "to": "a28570", "width": 1}, {"from": "a80144", "label": 0.1111111111111111, "length": 500, "to": "a14376", "width": 1}, {"from": "a80144", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a80144", "label": 0.09090909090909091, "length": 500, "to": "a11809", "width": 1}, {"from": "a80144", "label": 0.08333333333333333, "length": 500, "to": "a10359", "width": 1}, {"from": "a1720", "label": 0.5, "length": 500, "to": "a44577", "width": 1}, {"from": "a32234", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a32234", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a58651", "label": 0.16666666666666666, "length": 500, "to": "a5821", "width": 1}, {"from": "a58651", "label": 0.14285714285714285, "length": 500, "to": "a49189", "width": 1}, {"from": "a58651", "label": 0.3333333333333333, "length": 500, "to": "a30893", "width": 1}, {"from": "a58651", "label": 0.25, "length": 500, "to": "a29368", "width": 1}, {"from": "a58651", "label": 0.2, "length": 500, "to": "a28652", "width": 1}, {"from": "a58651", "label": 0.1, "length": 500, "to": "a1597", "width": 1}, {"from": "a58651", "label": 1.0, "length": 500, "to": "a81295", "width": 1}, {"from": "a23305", "label": 0.25, "length": 500, "to": "a9091", "width": 1}, {"from": "a23305", "label": 0.2, "length": 500, "to": "a8342", "width": 1}, {"from": "a23305", "label": 0.16666666666666666, "length": 500, "to": "a7262", "width": 1}, {"from": "a23305", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a23305", "label": 0.16666666666666666, "length": 500, "to": "a19794", "width": 1}, {"from": "a23305", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a23305", "label": 0.5, "length": 500, "to": "a67696", "width": 1}, {"from": "a23305", "label": 0.5, "length": 500, "to": "a24872", "width": 1}, {"from": "a46711", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a46711", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a813", "label": 1.0, "length": 500, "to": "a2583", "width": 1}, {"from": "a25594", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a25594", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a67696", "label": 0.25, "length": 500, "to": "a9091", "width": 1}, {"from": "a67696", "label": 0.2, "length": 500, "to": "a8342", "width": 1}, {"from": "a67696", "label": 0.16666666666666666, "length": 500, "to": "a7262", "width": 1}, {"from": "a67696", "label": 0.14285714285714285, "length": 500, "to": "a24872", "width": 1}, {"from": "a67696", "label": 0.16666666666666666, "length": 500, "to": "a19794", "width": 1}, {"from": "a29368", "label": 0.16666666666666666, "length": 500, "to": "a5821", "width": 1}, {"from": "a29368", "label": 0.2, "length": 500, "to": "a28652", "width": 1}, {"from": "a29368", "label": 0.1, "length": 500, "to": "a1597", "width": 1}, {"from": "a29368", "label": 0.25, "length": 500, "to": "a30893", "width": 1}, {"from": "a29368", "label": 0.25, "length": 500, "to": "a81295", "width": 1}, {"from": "a29368", "label": 0.25, "length": 500, "to": "a49189", "width": 1}, {"from": "a49926", "label": 0.09090909090909091, "length": 500, "to": "a8146", "width": 1}, {"from": "a49926", "label": 0.14285714285714285, "length": 500, "to": "a49189", "width": 1}, {"from": "a49926", "label": 0.16666666666666666, "length": 500, "to": "a45084", "width": 1}, {"from": "a49926", "label": 0.14285714285714285, "length": 500, "to": "a24573", "width": 1}, {"from": "a49926", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a49926", "label": 0.1111111111111111, "length": 500, "to": "a11367", "width": 1}, {"from": "a49926", "label": 0.25, "length": 500, "to": "a56807", "width": 1}, {"from": "a49926", "label": 0.25, "length": 500, "to": "a71916", "width": 1}, {"from": "a49926", "label": 0.25, "length": 500, "to": "a67025", "width": 1}, {"from": "a85086", "label": 0.5, "length": 500, "to": "a62065", "width": 1}, {"from": "a85086", "label": 0.3333333333333333, "length": 500, "to": "a59880", "width": 1}, {"from": "a85086", "label": 0.2, "length": 500, "to": "a29584", "width": 1}, {"from": "a85086", "label": 1.0, "length": 500, "to": "a88943", "width": 1}, {"from": "a8493", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a8493", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a74978", "label": 0.5, "length": 500, "to": "a60820", "width": 1}, {"from": "a74978", "label": 0.3333333333333333, "length": 500, "to": "a46315", "width": 1}, {"from": "a74978", "label": 0.25, "length": 500, "to": "a29927", "width": 1}, {"from": "a74978", "label": 0.2, "length": 500, "to": "a25791", "width": 1}, {"from": "a74978", "label": 0.14285714285714285, "length": 500, "to": "a24872", "width": 1}, {"from": "a74978", "label": 0.1111111111111111, "length": 500, "to": "a227", "width": 1}, {"from": "a74978", "label": 0.14285714285714285, "length": 500, "to": "a21012", "width": 1}, {"from": "a71896", "label": 0.08333333333333333, "length": 500, "to": "a7848", "width": 1}, {"from": "a71896", "label": 0.25, "length": 500, "to": "a67503", "width": 1}, {"from": "a71896", "label": 0.16666666666666666, "length": 500, "to": "a37845", "width": 1}, {"from": "a71896", "label": 0.14285714285714285, "length": 500, "to": "a21069", "width": 1}, {"from": "a71896", "label": 0.125, "length": 500, "to": "a18521", "width": 1}, {"from": "a71896", "label": 0.1111111111111111, "length": 500, "to": "a18471", "width": 1}, {"from": "a71896", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a71896", "label": 0.5, "length": 500, "to": "a76245", "width": 1}, {"from": "a71896", "label": 0.5, "length": 500, "to": "a72637", "width": 1}, {"from": "a11809", "label": 0.07692307692307693, "length": 500, "to": "a4163", "width": 1}, {"from": "a11809", "label": 0.08333333333333333, "length": 500, "to": "a10359", "width": 1}, {"from": "a11809", "label": 0.09090909090909091, "length": 500, "to": "a28570", "width": 1}, {"from": "a11809", "label": 0.09090909090909091, "length": 500, "to": "a60670", "width": 1}, {"from": "a11809", "label": 0.09090909090909091, "length": 500, "to": "a56807", "width": 1}, {"from": "a11809", "label": 0.09090909090909091, "length": 500, "to": "a14376", "width": 1}, {"from": "a11809", "label": 0.09090909090909091, "length": 500, "to": "a67025", "width": 1}, {"from": "a11809", "label": 0.09090909090909091, "length": 500, "to": "a13613", "width": 1}, {"from": "a11809", "label": 0.09090909090909091, "length": 500, "to": "a45012", "width": 1}, {"from": "a11809", "label": 0.09090909090909091, "length": 500, "to": "a30028", "width": 1}, {"from": "a11809", "label": 0.09090909090909091, "length": 500, "to": "a68335", "width": 1}, {"from": "a76245", "label": 0.08333333333333333, "length": 500, "to": "a7848", "width": 1}, {"from": "a76245", "label": 1.0, "length": 500, "to": "a72637", "width": 1}, {"from": "a76245", "label": 0.25, "length": 500, "to": "a67503", "width": 1}, {"from": "a76245", "label": 0.16666666666666666, "length": 500, "to": "a37845", "width": 1}, {"from": "a76245", "label": 0.14285714285714285, "length": 500, "to": "a21069", "width": 1}, {"from": "a76245", "label": 0.125, "length": 500, "to": "a18521", "width": 1}, {"from": "a76245", "label": 0.1111111111111111, "length": 500, "to": "a18471", "width": 1}, {"from": "a76245", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a25355", "label": 0.5, "length": 500, "to": "a12582", "width": 1}, {"from": "a25355", "label": 1.0, "length": 500, "to": "a62065", "width": 1}, {"from": "a84159", "label": 1.0, "length": 500, "to": "a59281", "width": 1}, {"from": "a84159", "label": 0.25, "length": 500, "to": "a1976", "width": 1}, {"from": "a84159", "label": 0.16666666666666666, "length": 500, "to": "a12096", "width": 1}, {"from": "a7548", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a7548", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a28570", "label": 0.07692307692307693, "length": 500, "to": "a4163", "width": 1}, {"from": "a28570", "label": 0.1111111111111111, "length": 500, "to": "a14376", "width": 1}, {"from": "a28570", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a28570", "label": 0.08333333333333333, "length": 500, "to": "a10359", "width": 1}, {"from": "a28570", "label": 0.14285714285714285, "length": 500, "to": "a60670", "width": 1}, {"from": "a28570", "label": 0.14285714285714285, "length": 500, "to": "a56807", "width": 1}, {"from": "a28570", "label": 0.14285714285714285, "length": 500, "to": "a67025", "width": 1}, {"from": "a28570", "label": 0.14285714285714285, "length": 500, "to": "a45012", "width": 1}, {"from": "a28570", "label": 0.14285714285714285, "length": 500, "to": "a30028", "width": 1}, {"from": "a28570", "label": 0.14285714285714285, "length": 500, "to": "a68335", "width": 1}, {"from": "a21012", "label": 0.1111111111111111, "length": 500, "to": "a227", "width": 1}, {"from": "a21012", "label": 0.14285714285714285, "length": 500, "to": "a24872", "width": 1}, {"from": "a21012", "label": 0.14285714285714285, "length": 500, "to": "a29927", "width": 1}, {"from": "a21012", "label": 0.14285714285714285, "length": 500, "to": "a25791", "width": 1}, {"from": "a21012", "label": 0.14285714285714285, "length": 500, "to": "a46315", "width": 1}, {"from": "a21012", "label": 0.14285714285714285, "length": 500, "to": "a60820", "width": 1}, {"from": "a21069", "label": 0.08333333333333333, "length": 500, "to": "a7848", "width": 1}, {"from": "a21069", "label": 0.25, "length": 500, "to": "a2583", "width": 1}, {"from": "a21069", "label": 0.125, "length": 500, "to": "a18521", "width": 1}, {"from": "a21069", "label": 0.1111111111111111, "length": 500, "to": "a18471", "width": 1}, {"from": "a21069", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a21069", "label": 0.14285714285714285, "length": 500, "to": "a37845", "width": 1}, {"from": "a21069", "label": 0.14285714285714285, "length": 500, "to": "a67503", "width": 1}, {"from": "a21069", "label": 0.14285714285714285, "length": 500, "to": "a72637", "width": 1}, {"from": "a67487", "label": 0.5, "length": 500, "to": "a30489", "width": 1}, {"from": "a67487", "label": 0.1, "length": 500, "to": "a1597", "width": 1}, {"from": "a67487", "label": 1.0, "length": 500, "to": "a80540", "width": 1}, {"from": "a64075", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a64075", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a25140", "label": 0.25, "length": 500, "to": "a8633", "width": 1}, {"from": "a25140", "label": 0.16666666666666666, "length": 500, "to": "a8554", "width": 1}, {"from": "a25140", "label": 0.25, "length": 500, "to": "a25113", "width": 1}, {"from": "a25140", "label": 0.3333333333333333, "length": 500, "to": "a37845", "width": 1}, {"from": "a25140", "label": 0.3333333333333333, "length": 500, "to": "a67503", "width": 1}, {"from": "a25140", "label": 0.3333333333333333, "length": 500, "to": "a86424", "width": 1}, {"from": "a18521", "label": 0.08333333333333333, "length": 500, "to": "a7848", "width": 1}, {"from": "a18521", "label": 0.1111111111111111, "length": 500, "to": "a18471", "width": 1}, {"from": "a18521", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a18521", "label": 0.125, "length": 500, "to": "a37845", "width": 1}, {"from": "a18521", "label": 0.125, "length": 500, "to": "a67503", "width": 1}, {"from": "a18521", "label": 0.125, "length": 500, "to": "a72637", "width": 1}, {"from": "a8633", "label": 0.25, "length": 500, "to": "a25113", "width": 1}, {"from": "a8633", "label": 0.25, "length": 500, "to": "a37580", "width": 1}, {"from": "a8633", "label": 0.25, "length": 500, "to": "a75134", "width": 1}, {"from": "a26415", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a26415", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a60670", "label": 0.2, "length": 500, "to": "a56807", "width": 1}, {"from": "a60670", "label": 0.2, "length": 500, "to": "a45012", "width": 1}, {"from": "a60670", "label": 0.07692307692307693, "length": 500, "to": "a4163", "width": 1}, {"from": "a60670", "label": 0.16666666666666666, "length": 500, "to": "a30028", "width": 1}, {"from": "a60670", "label": 0.1111111111111111, "length": 500, "to": "a14376", "width": 1}, {"from": "a60670", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a60670", "label": 0.08333333333333333, "length": 500, "to": "a10359", "width": 1}, {"from": "a60670", "label": 0.3333333333333333, "length": 500, "to": "a67025", "width": 1}, {"from": "a60670", "label": 0.3333333333333333, "length": 500, "to": "a68335", "width": 1}, {"from": "a88943", "label": 0.5, "length": 500, "to": "a62065", "width": 1}, {"from": "a88943", "label": 0.3333333333333333, "length": 500, "to": "a59880", "width": 1}, {"from": "a88943", "label": 0.2, "length": 500, "to": "a29584", "width": 1}, {"from": "a18471", "label": 0.08333333333333333, "length": 500, "to": "a7848", "width": 1}, {"from": "a18471", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a18471", "label": 0.1111111111111111, "length": 500, "to": "a37845", "width": 1}, {"from": "a18471", "label": 0.1111111111111111, "length": 500, "to": "a67503", "width": 1}, {"from": "a18471", "label": 0.1111111111111111, "length": 500, "to": "a72637", "width": 1}, {"from": "a59281", "label": 0.25, "length": 500, "to": "a1976", "width": 1}, {"from": "a59281", "label": 0.16666666666666666, "length": 500, "to": "a12096", "width": 1}, {"from": "a37845", "label": 0.16666666666666666, "length": 500, "to": "a8554", "width": 1}, {"from": "a37845", "label": 0.08333333333333333, "length": 500, "to": "a7848", "width": 1}, {"from": "a37845", "label": 0.25, "length": 500, "to": "a25113", "width": 1}, {"from": "a37845", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a37845", "label": 0.16666666666666666, "length": 500, "to": "a67503", "width": 1}, {"from": "a37845", "label": 0.16666666666666666, "length": 500, "to": "a72637", "width": 1}, {"from": "a37845", "label": 0.16666666666666666, "length": 500, "to": "a86424", "width": 1}, {"from": "a58671", "label": 0.16666666666666666, "length": 500, "to": "a19794", "width": 1}, {"from": "a58671", "label": 0.5, "length": 500, "to": "a73990", "width": 1}, {"from": "a19794", "label": 0.25, "length": 500, "to": "a9091", "width": 1}, {"from": "a19794", "label": 0.2, "length": 500, "to": "a8342", "width": 1}, {"from": "a19794", "label": 0.16666666666666666, "length": 500, "to": "a7262", "width": 1}, {"from": "a19794", "label": 0.16666666666666666, "length": 500, "to": "a24872", "width": 1}, {"from": "a19794", "label": 0.16666666666666666, "length": 500, "to": "a73990", "width": 1}, {"from": "a30893", "label": 0.16666666666666666, "length": 500, "to": "a5821", "width": 1}, {"from": "a30893", "label": 0.2, "length": 500, "to": "a28652", "width": 1}, {"from": "a30893", "label": 0.1, "length": 500, "to": "a1597", "width": 1}, {"from": "a30893", "label": 0.3333333333333333, "length": 500, "to": "a81295", "width": 1}, {"from": "a30893", "label": 0.3333333333333333, "length": 500, "to": "a49189", "width": 1}, {"from": "a81295", "label": 0.16666666666666666, "length": 500, "to": "a5821", "width": 1}, {"from": "a81295", "label": 0.14285714285714285, "length": 500, "to": "a49189", "width": 1}, {"from": "a81295", "label": 0.2, "length": 500, "to": "a28652", "width": 1}, {"from": "a81295", "label": 0.1, "length": 500, "to": "a1597", "width": 1}, {"from": "a59880", "label": 0.2, "length": 500, "to": "a29584", "width": 1}, {"from": "a59880", "label": 0.3333333333333333, "length": 500, "to": "a62065", "width": 1}, {"from": "a28652", "label": 0.16666666666666666, "length": 500, "to": "a5821", "width": 1}, {"from": "a28652", "label": 0.1, "length": 500, "to": "a1597", "width": 1}, {"from": "a28652", "label": 0.2, "length": 500, "to": "a49189", "width": 1}, {"from": "a53336", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a53336", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a227", "label": 0.1111111111111111, "length": 500, "to": "a24872", "width": 1}, {"from": "a227", "label": 0.1111111111111111, "length": 500, "to": "a29927", "width": 1}, {"from": "a227", "label": 0.1111111111111111, "length": 500, "to": "a25791", "width": 1}, {"from": "a227", "label": 0.1111111111111111, "length": 500, "to": "a46315", "width": 1}, {"from": "a227", "label": 0.1111111111111111, "length": 500, "to": "a60820", "width": 1}, {"from": "a227", "label": 0.1111111111111111, "length": 500, "to": "a1408", "width": 1}, {"from": "a8146", "label": 0.09090909090909091, "length": 500, "to": "a56807", "width": 1}, {"from": "a8146", "label": 0.09090909090909091, "length": 500, "to": "a11367", "width": 1}, {"from": "a8146", "label": 0.09090909090909091, "length": 500, "to": "a71916", "width": 1}, {"from": "a8146", "label": 0.09090909090909091, "length": 500, "to": "a67025", "width": 1}, {"from": "a8146", "label": 0.09090909090909091, "length": 500, "to": "a24573", "width": 1}, {"from": "a8146", "label": 0.09090909090909091, "length": 500, "to": "a13613", "width": 1}, {"from": "a8146", "label": 0.09090909090909091, "length": 500, "to": "a45084", "width": 1}, {"from": "a8146", "label": 0.09090909090909091, "length": 500, "to": "a49189", "width": 1}, {"from": "a25113", "label": 0.16666666666666666, "length": 500, "to": "a8554", "width": 1}, {"from": "a25113", "label": 0.25, "length": 500, "to": "a67503", "width": 1}, {"from": "a25113", "label": 0.25, "length": 500, "to": "a86424", "width": 1}, {"from": "a30489", "label": 0.1, "length": 500, "to": "a1597", "width": 1}, {"from": "a30489", "label": 0.5, "length": 500, "to": "a80540", "width": 1}, {"from": "a56807", "label": 0.14285714285714285, "length": 500, "to": "a49189", "width": 1}, {"from": "a56807", "label": 0.16666666666666666, "length": 500, "to": "a45084", "width": 1}, {"from": "a56807", "label": 0.2, "length": 500, "to": "a45012", "width": 1}, {"from": "a56807", "label": 0.07692307692307693, "length": 500, "to": "a4163", "width": 1}, {"from": "a56807", "label": 0.16666666666666666, "length": 500, "to": "a30028", "width": 1}, {"from": "a56807", "label": 0.14285714285714285, "length": 500, "to": "a24573", "width": 1}, {"from": "a56807", "label": 0.1111111111111111, "length": 500, "to": "a14376", "width": 1}, {"from": "a56807", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a56807", "label": 0.1111111111111111, "length": 500, "to": "a11367", "width": 1}, {"from": "a56807", "label": 0.08333333333333333, "length": 500, "to": "a10359", "width": 1}, {"from": "a56807", "label": 0.2, "length": 500, "to": "a71916", "width": 1}, {"from": "a56807", "label": 0.2, "length": 500, "to": "a67025", "width": 1}, {"from": "a56807", "label": 0.2, "length": 500, "to": "a68335", "width": 1}, {"from": "a1597", "label": 0.1, "length": 500, "to": "a5821", "width": 1}, {"from": "a1597", "label": 0.1, "length": 500, "to": "a80540", "width": 1}, {"from": "a1597", "label": 0.1, "length": 500, "to": "a49189", "width": 1}, {"from": "a14376", "label": 0.07692307692307693, "length": 500, "to": "a4163", "width": 1}, {"from": "a14376", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a14376", "label": 0.08333333333333333, "length": 500, "to": "a10359", "width": 1}, {"from": "a14376", "label": 0.1111111111111111, "length": 500, "to": "a67025", "width": 1}, {"from": "a14376", "label": 0.1111111111111111, "length": 500, "to": "a45012", "width": 1}, {"from": "a14376", "label": 0.1111111111111111, "length": 500, "to": "a30028", "width": 1}, {"from": "a14376", "label": 0.1111111111111111, "length": 500, "to": "a68335", "width": 1}, {"from": "a68182", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a68182", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a62065", "label": 0.2, "length": 500, "to": "a29584", "width": 1}, {"from": "a7848", "label": 0.08333333333333333, "length": 500, "to": "a67503", "width": 1}, {"from": "a7848", "label": 0.08333333333333333, "length": 500, "to": "a72637", "width": 1}, {"from": "a7848", "label": 0.08333333333333333, "length": 500, "to": "a11767", "width": 1}, {"from": "a7848", "label": 0.08333333333333333, "length": 500, "to": "a11730", "width": 1}, {"from": "a62076", "label": 0.5, "length": 500, "to": "a26220", "width": 1}, {"from": "a62076", "label": 0.16666666666666666, "length": 500, "to": "a12096", "width": 1}, {"from": "a11367", "label": 0.1111111111111111, "length": 500, "to": "a71916", "width": 1}, {"from": "a11367", "label": 0.1111111111111111, "length": 500, "to": "a67025", "width": 1}, {"from": "a11367", "label": 0.1111111111111111, "length": 500, "to": "a24573", "width": 1}, {"from": "a11367", "label": 0.1111111111111111, "length": 500, "to": "a13613", "width": 1}, {"from": "a11367", "label": 0.1111111111111111, "length": 500, "to": "a45084", "width": 1}, {"from": "a11367", "label": 0.1111111111111111, "length": 500, "to": "a49189", "width": 1}, {"from": "a24872", "label": 0.25, "length": 500, "to": "a9091", "width": 1}, {"from": "a24872", "label": 0.2, "length": 500, "to": "a8342", "width": 1}, {"from": "a24872", "label": 0.16666666666666666, "length": 500, "to": "a7262", "width": 1}, {"from": "a24872", "label": 0.14285714285714285, "length": 500, "to": "a29927", "width": 1}, {"from": "a24872", "label": 0.14285714285714285, "length": 500, "to": "a25791", "width": 1}, {"from": "a24872", "label": 0.14285714285714285, "length": 500, "to": "a46315", "width": 1}, {"from": "a24872", "label": 0.14285714285714285, "length": 500, "to": "a60820", "width": 1}, {"from": "a67503", "label": 0.16666666666666666, "length": 500, "to": "a8554", "width": 1}, {"from": "a67503", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a67503", "label": 0.25, "length": 500, "to": "a72637", "width": 1}, {"from": "a67503", "label": 0.25, "length": 500, "to": "a86424", "width": 1}, {"from": "a5821", "label": 0.16666666666666666, "length": 500, "to": "a49189", "width": 1}, {"from": "a10359", "label": 0.07692307692307693, "length": 500, "to": "a4163", "width": 1}, {"from": "a10359", "label": 0.03571428571428571, "length": 500, "to": "a2392", "width": 1}, {"from": "a10359", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a10359", "label": 0.08333333333333333, "length": 500, "to": "a67025", "width": 1}, {"from": "a10359", "label": 0.08333333333333333, "length": 500, "to": "a13613", "width": 1}, {"from": "a10359", "label": 0.08333333333333333, "length": 500, "to": "a45012", "width": 1}, {"from": "a10359", "label": 0.08333333333333333, "length": 500, "to": "a30028", "width": 1}, {"from": "a10359", "label": 0.08333333333333333, "length": 500, "to": "a68335", "width": 1}, {"from": "a2392", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a5731", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a82649", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a33715", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a3276", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a70721", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a53258", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a41728", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a61373", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a25791", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a67269", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a11767", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a55739", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a3439", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a29584", "width": 1}, {"from": "a2392", "label": 0.03571428571428571, "length": 500, "to": "a49469", "width": 1}, {"from": "a72637", "label": 0.1, "length": 500, "to": "a11730", "width": 1}, {"from": "a88965", "label": 1.0, "length": 500, "to": "a11767", "width": 1}, {"from": "a5731", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a9091", "label": 0.2, "length": 500, "to": "a8342", "width": 1}, {"from": "a9091", "label": 0.16666666666666666, "length": 500, "to": "a7262", "width": 1}, {"from": "a82649", "label": 1.0, "length": 500, "to": "a70721", "width": 1}, {"from": "a82649", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a33715", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a29927", "label": 0.2, "length": 500, "to": "a25791", "width": 1}, {"from": "a29927", "label": 0.25, "length": 500, "to": "a46315", "width": 1}, {"from": "a29927", "label": 0.25, "length": 500, "to": "a60820", "width": 1}, {"from": "a4163", "label": 0.07692307692307693, "length": 500, "to": "a67025", "width": 1}, {"from": "a4163", "label": 0.07692307692307693, "length": 500, "to": "a13613", "width": 1}, {"from": "a4163", "label": 0.07692307692307693, "length": 500, "to": "a45012", "width": 1}, {"from": "a4163", "label": 0.07692307692307693, "length": 500, "to": "a30028", "width": 1}, {"from": "a4163", "label": 0.07692307692307693, "length": 500, "to": "a68335", "width": 1}, {"from": "a8342", "label": 0.16666666666666666, "length": 500, "to": "a7262", "width": 1}, {"from": "a3276", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a70721", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a71916", "label": 0.3333333333333333, "length": 500, "to": "a67025", "width": 1}, {"from": "a71916", "label": 0.14285714285714285, "length": 500, "to": "a49189", "width": 1}, {"from": "a71916", "label": 0.16666666666666666, "length": 500, "to": "a45084", "width": 1}, {"from": "a71916", "label": 0.14285714285714285, "length": 500, "to": "a24573", "width": 1}, {"from": "a71916", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a2583", "label": 0.25, "length": 500, "to": "a86424", "width": 1}, {"from": "a2583", "label": 0.25, "length": 500, "to": "a34331", "width": 1}, {"from": "a67025", "label": 0.14285714285714285, "length": 500, "to": "a49189", "width": 1}, {"from": "a67025", "label": 0.16666666666666666, "length": 500, "to": "a45084", "width": 1}, {"from": "a67025", "label": 0.2, "length": 500, "to": "a45012", "width": 1}, {"from": "a67025", "label": 0.16666666666666666, "length": 500, "to": "a30028", "width": 1}, {"from": "a67025", "label": 0.14285714285714285, "length": 500, "to": "a24573", "width": 1}, {"from": "a67025", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a67025", "label": 0.3333333333333333, "length": 500, "to": "a68335", "width": 1}, {"from": "a53258", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a41728", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a61373", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a24573", "label": 0.0625, "length": 500, "to": "a13613", "width": 1}, {"from": "a24573", "label": 0.14285714285714285, "length": 500, "to": "a45084", "width": 1}, {"from": "a24573", "label": 0.14285714285714285, "length": 500, "to": "a49189", "width": 1}, {"from": "a13613", "label": 0.0625, "length": 500, "to": "a45012", "width": 1}, {"from": "a13613", "label": 0.0625, "length": 500, "to": "a45084", "width": 1}, {"from": "a13613", "label": 0.0625, "length": 500, "to": "a30028", "width": 1}, {"from": "a13613", "label": 0.0625, "length": 500, "to": "a68335", "width": 1}, {"from": "a13613", "label": 0.0625, "length": 500, "to": "a49189", "width": 1}, {"from": "a25791", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a25791", "label": 1.0, "length": 500, "to": "a1408", "width": 1}, {"from": "a25791", "label": 0.2, "length": 500, "to": "a46315", "width": 1}, {"from": "a25791", "label": 0.2, "length": 500, "to": "a60820", "width": 1}, {"from": "a1602", "label": 1.0, "length": 500, "to": "a12096", "width": 1}, {"from": "a67269", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a11767", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a55739", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a8554", "label": 0.16666666666666666, "length": 500, "to": "a86424", "width": 1}, {"from": "a45012", "label": 0.16666666666666666, "length": 500, "to": "a30028", "width": 1}, {"from": "a45012", "label": 0.2, "length": 500, "to": "a68335", "width": 1}, {"from": "a46315", "label": 0.3333333333333333, "length": 500, "to": "a60820", "width": 1}, {"from": "a38750", "label": 0.16666666666666666, "length": 500, "to": "a12096", "width": 1}, {"from": "a45084", "label": 0.16666666666666666, "length": 500, "to": "a49189", "width": 1}, {"from": "a1976", "label": 0.25, "length": 500, "to": "a12096", "width": 1}, {"from": "a30028", "label": 0.16666666666666666, "length": 500, "to": "a68335", "width": 1}, {"from": "a3439", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a29584", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a26220", "label": 0.16666666666666666, "length": 500, "to": "a12096", "width": 1}, {"from": "a49469", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}, {"from": "a2285", "label": 0.03333333333333333, "length": 500, "to": "a1438", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

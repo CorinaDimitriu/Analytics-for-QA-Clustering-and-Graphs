@@ -1,0 +1,104 @@
+Total no questions: 7405
+No vertices: 27478
+No edges: 37025
+Total no patters found: 90
+
+Question 1: What team plays within the Big 12 Conference and has Kevin Bookout playing for them?
+Question 2: What is the name of the basketball team that trained under assistant coach, Steven Michael Henson at the University of Oklahoma ?
+Answer: Oklahoma Sooners men's basketball
+Paragraph title: Oklahoma Sooners men's basketball
+
+Question 1: Taylor McNamara played college football at USC a football program that is currently a member of what Conference
+Question 2: A wide receiver for the Toronto Argonauts played college football for a team that represents the University of Oklahoma, which belongs to what conference?
+Answer: Big 12 Conference
+Paragraph title: Oklahoma Sooners football
+
+Question 1: How many students attend the Swiss University Philip Kraft has lectured at?
+Question 2: Eduard Schweizer teaches at a German university with over how many students? 
+Answer: 26,000
+Paragraph title: University of Zurich
+
+Question 1: What Major League Soccer team owned by Anthony Precourt is coached by a retired American soccer player ?
+Question 2: Which soccer club's head coach was born August 1, 1973?
+Answer: Columbus Crew Soccer Club
+Paragraph title: Gregg Berhalter
+
+Question 1: Are Tim Rice and Leslie Marmon Silko both lyricists?
+Question 2: Are Tim Rice and Kathy Acker both from America?
+Answer: no
+Paragraph title: Tim Rice
+
+Question 1: Who was a Christian Evangelist and US prisoner of war survivor that was the basis for a film directed by Angelina Jolie?
+Question 2: Who is the US Olympian and Christian evangelist did the 2010 non-fiction book by Laura Hillenbrand focus on?  
+Answer: Louis "Louie" Zamperini
+Paragraph title: Louis Zamperini
+
+Question 1: Ai-Ling Lee is a Singaporean sound editor who worked on a  biographical survival drama film directed by who?
+Question 2: Who directed the 2014 American biographical survival drama film which Laura Elizabeth Dern was nominated for the Academy Award for Best Supporting Actress in
+Answer: Jean-Marc Vallée
+Paragraph title: Wild (2014 film)
+
+Question 1: Arbie Orenstein is known as a scholar on the life of what composer internationally regarded as France's greatest living composer? 
+Question 2: Who was born first, Maurice Ravel or William Walton?
+Answer: Maurice Ravel
+Paragraph title: Maurice Ravel
+
+Question 1: Where was the band who released Feeding the Wolves formed?
+Question 2:  Minus the Machine is the sixth studio album by a band formed in which city ?
+Answer: Knoxville, Tennessee
+Paragraph title: 10 Years (band)
+
+Question 1: Father Jean-Pierre Aulneau de le Touche was killed before he could go on an expedition to Mandan, which is located in which state? 
+Question 2: Where did the tribe Mato-tope chief over reside?
+Answer: North Dakota
+Paragraph title: Mandan
+
+Question 1: Which musical fantasy film is older, Bedknobs and Broomsticks or The Muppet Christmas Carol?
+Question 2: Which is a British-influenced film, Bedknobs and Broomsticks or The Journey of Natty Gann?
+Answer: Bedknobs and Broomsticks
+Paragraph title: Bedknobs and Broomsticks
+
+Question 1: Were Ulrich Walter and Léopold Eyharts both from Germany?
+Question 2: Were both Léopold Eyharts and Ulrich Walter a General in the French Air Force? 
+Answer: no
+Paragraph title: Léopold Eyharts
+
+Question 1: What Major League Soccer team owned by Anthony Precourt is coached by a retired American soccer player ?
+Question 2: Which soccer club's head coach was born August 1, 1973?
+Answer: Columbus Crew Soccer Club
+Paragraph title: Columbus Crew SC
+
+Question 1: Which player won more Grand Slam titles, Kevin Ullyett or Billie Jean King?
+Question 2: Who won more Grand Slam Titles, Liezel Huber or Billie Jean King?
+Answer: Billie Jean King
+Paragraph title: Billie Jean King
+
+Question 1: Which is the busiest airport in the United Kingdom outside of London?
+Question 2: Which major international airport in south-east England ranks as the 8th busiest airport in Europe and replaced Croydon Airport?
+Answer: Gatwick Airport
+Paragraph title: Gatwick Airport
+
+Question 1:  Who was born earlier, Simone Bolelli or Caroline Wozniacki?
+Question 2: Which tennis player is older out of John Peers and Simone Bolelli?
+Answer: Simone Bolelli
+Paragraph title: Simone Bolelli
+
+Question 1: What psychosis shares a name with an enemy fought by the protagonists in an animated show by Hasbro?
+Question 2: What legend that lends its name to a modern medical term, inspired the plot of the horror film Ghostkeeper?
+Answer: Wendigo
+Paragraph title: Wendigo
+
+Question 1: Dan Balan co-wrote the song from what T.I. album?
+Question 2: Which album came out first, "Paper Trail" or "If Tomorrow Comes..."?
+Answer: Paper Trail
+Paragraph title: Live Your Life (T.I. song)
+
+Question 1: Which of the writers of "The Telltale Head"  was born on February 15, 1954?
+Question 2: Who is this American cartoonist, writer, producer, animator, and voice actor that worked with this multiple Shuster Award, Harvey Award and Eisner Award nominee and an Eisner Award–winning comic book creator?
+Answer: Matt Groening
+Paragraph title: Matt Groening
+
+Question 1: What 1991 Disney film is also a 1946 French romantic fantasy film directed by French poet and filmmaker Jean Cocteau?
+Question 2: Which 9th longest-running musical in Broadway history was the 30th Disney animated feature film?
+Answer: Beauty and the Beast
+Paragraph title: Beauty and the Beast (1991 film)

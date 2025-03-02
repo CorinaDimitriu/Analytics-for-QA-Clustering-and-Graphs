@@ -1,0 +1,64 @@
+p 29 34
+v 1 Zanzibar medium bridge During the early-to-mid 1980s, in which club in New Jersey, was this dance music style, that Robbie Rivera used in his music with Latin elements, developed?
+v 2 Taiwan hard bridge What country is the actress who starred in the 1976 biographical film about Bruce Lee's final days from?
+v 3 Greenland medium bridge What autonomous country owns the uninhabited island Edward Island?
+v 4 Hispaniola medium bridge The 1976 Caribbean Series were held on what island?
+v 5 Oahu medium bridge On which Hawaiian island is Turtle Bay Resort, home of the SBS Open women's golf tournament?
+v 6 Kyushu medium bridge Enola Gay was one of the bombers that targeted the largest city on what Japanese island?
+v 7 Korea medium bridge What country considers the female artist featured in the Far East Movement's fifith studio album, Idenity, to best rapper of her sex?
+v 8 peninsula hard bridge What geographical landform is included in Hong Kong's Kowloon district, that plays host to the East Asian Games swimming events?
+v 9 Oxbow medium bridge Thin Black Duke is a studio album by which San Francisco-based rock band?
+v 10 Aruba hard bridge The Kingdom of the Netherlands, known as the Netherlands. What Caribbean country is part of that?
+v 11 Java hard bridge What island is the Sonobudoyo library located on?
+v 12 Spitsbergen medium bridge Which island is the largest and only permanently populated island of the Svalbard archipelago and is also home to the Gavrilovfjellet mountain?
+v 13 Molokai medium bridge What island that Zanthoxylum hawaiiense can be found on is nicknamed“The Friendly Isle”? 
+v 14 Bahrain hard bridge The character Sora Jung played in "Mayumi" was arrested in what country?
+v 15 Shikoku medium bridge What is the smallest of the four main islands of Japan where the Acronicta digna moth can be found?
+v 16 islands medium bridge The Dambuilders began in the only US state located in Oceania, and the only one composed entirely of what?
+v 17 Maui medium bridge Jesse Richman rode a barrel wave on which Hawaiian island?
+v 18 Scandinavia easy bridge In Norway, Pinnekjøtt, Stick Meat, is a main course dinner dish of lamb or mutton, this dish is largely associated with the celebration of Christmas, served with puréed swede and potatoes, beer and Akvavit, is a flavoured spirit, that has been produced since the 15th century, principally produced in which country?
+v 19 Gus medium comparison Which was released first, Frozen 2 or Gus?
+v 20 Anguilla easy bridge What is the name of the British overseas territory in the Caribbean which is one of the most northerly of the Leeward Islands and where Ronald Webster Park, a multi-use stadium is currently being used mostly for football matches?
+v 21 Trinidad medium bridge What country does Alfred Mendes and C. L. R. James have in common?
+v 22 Sumatra hard bridge Paradise Road, starring Glenn Close and Australian Cate Blanchett, tells a World War II story about women imprisoned where?
+v 23 Hokkaido medium comparison Between the Hokkaido and the Taiwan Dog, which is also known as the Do-ken?
+v 24 Zealand medium bridge What island in Denmark has 39% of the country's population and contains a mansion with an 8 hectare park?
+v 25 Nantucket easy bridge James H. Cromartie is an internationally renowned American artist credited with the birth of Hard-Edge Realism, a style by turns both redolent of and a departure from the Magic Realism, he has resided year-round on which island about 30 mi by ferry south from Cape Cod, in the American state of Massachusetts?
+v 26 Kodiak hard comparison Which airport is both a public and military airport, Wrangell Airport or Kodiak Airport?
+v 27 isthmus hard bridge What type of land mass was discovered in 1513 by a Spanish explorer, governor, and conquistador?
+v 28 Wonderland easy bridge What musical did Dan Domenech perform in that was based on a book by Jack Murphy and Gregory Boyd?
+v 29 Kauai easy bridge A measurement standards laboratory called the National Institute of Standards and Technology is located on what island in the state of Hawaii?
+e 16 19 1
+e 16 20 1
+e 16 22 1
+e 8 16 1
+e 3 16 1
+e 8 9 1
+e 11 16 1
+e 16 23 1
+e 10 16 1
+e 4 16 1
+e 16 24 1
+e 8 27 1
+e 1 16 1
+e 16 17 1
+e 14 16 1
+e 16 26 1
+e 5 16 1
+e 27 28 1
+e 16 27 1
+e 12 16 1
+e 9 16 1
+e 9 27 1
+e 7 8 1
+e 2 16 1
+e 8 28 1
+e 16 21 1
+e 6 16 1
+e 13 16 1
+e 18 8 1
+e 16 25 1
+e 9 28 1
+e 15 16 1
+e 16 28 1
+e 29 16 1

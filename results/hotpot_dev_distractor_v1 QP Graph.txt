@@ -1,0 +1,193 @@
+Total no questions: 7405
+No vertices: 21188
+No edges: 14810
+
+Max no paragraphs that are relevant to a question: 2
+Min no paragraphs that are relevant to a question: 2
+
+Max no question that consider a paragraph: 4
+Min no questions that consider a paragraph: 1
+
+Finding 2 question that have a common relevant paragraph
+
+Question 1: Which singer is younger, Kenny Greene or Billy Idol?
+Question 2: Which musician played in the band Soulfly, Max Cavalera or Billy Idol?
+Paragraph title: Billy Idol
+
+Question 1: Who was a supporting cast member of King Rat and was knighted in February 2001?
+Question 2: Which 1962 film starring Tom Courtenay is based on a short story of the same name?
+Paragraph title: Tom Courtenay
+
+Question 1: Vincent Drucci was a member of a rival gang to the mob boss who was known by what nickname?
+Question 2: Dean O'Banion was the main rival of which mobster, known as Scarface?
+Paragraph title: Al Capone
+
+Question 1: When was one of the teacher of Nikolai Lugansky died who was a Russian Soviet pianist, composer?
+Question 2: Russia Soviet pianist, composer and teacher, Tatiana Nikolayeva taught what Polish pianist and music educator?
+Paragraph title: Tatiana Nikolayeva
+
+Question 1: what is the principal activity of the company  which holds that which  Robert Melville previously worked with
+Question 2: What company headquartered in Whitley, Coventry, United Kingdom will start production in Nitra in 2018?
+Paragraph title: Jaguar Land Rover
+
+Question 1: Were Dee Dee Ramone and Ben Weasel ever in the same band?
+Question 2: are Dee Dee Ramone and Alex Band both singers, songwriters and musicians?
+Paragraph title: Dee Dee Ramone
+
+Question 1: Between Parsifal and Saul og David which opera has more acts?
+Question 2: Which opera has more acts, Parsifal or Manon by Massenet?
+Paragraph title: Parsifal
+
+Question 1: Which American filmmaker has directed more films, Jon Paul Puno or Ken Kwapis?
+Question 2: Which artist was Italian, Sergio Leone or Jon Paul Puno?
+Paragraph title: Jon Paul Puno
+
+Question 1: Which composer lived longer, Maurice Ravel or Paul Hindemith?
+Question 2: What was the nationality of Bernhard Heiden's teacher?
+Paragraph title: Paul Hindemith
+
+Question 1: What position did Ernest Newman hold at Her Majesty's Royal Palace and Fortress?
+Question 2: What year did the prison where William Penn wrote No Cross, No Crown stop being used as a prison?
+Paragraph title: Tower of London
+
+Question 1: What is the name of the Isles who were led by Aonghus Mór and covered a total land area of over 8300 km2?
+Question 2: King of Norway Magnus Barefoot launched aggressive military campaigns in this region that was at times independent of external control and was known to the Norse as what?
+Paragraph title: Kingdom of the Isles
+
+Question 1: Are Toshi and Warrel Dane both in the band Sanctuary?
+Question 2: What occupations do Toshi and Emily Haines share?
+Paragraph title: Toshi (musician)
+
+Question 1: What is the capacity of the stadium that hosts games of the team that was coached by Barry Switzer in 1981?
+Question 2: when was the coach of the 1981 Oklahoma Sooners football team born ?
+Paragraph title: 1981 Oklahoma Sooners football team
+
+Question 1: The German geographer and geopolitician Otto Maull was part of a team led by Haushofer whose close associate was a prominent politician in Nazi Germany born in 1894 who served under Hitler in 1933 as what capacity?
+Question 2: Why did Rudolf Hess stop serving Hitler in 1941?
+Paragraph title: Rudolf Hess
+
+Question 1: Little Brown Stein is a rivalry trophy that imitates a mug made out of what item?
+Question 2: The trophy given to the winner of the college football game between University of Idaho Vandals and University of Montana Grizzlies is derived from which European culture?
+Paragraph title: Beer stein
+
+Question 1: Are Wake Forest University and Pennsylvania State University both located in the US?
+Question 2: Was Pennsylvania State University or University of California, San Francisco founded first?
+Paragraph title: Pennsylvania State University
+
+Question 1: Which film was released first, Home on the Range or Pete's Dragon?
+Question 2: Which was Disney's 2nd animated production, Pinocchio or Home on the Range?
+Paragraph title: Home on the Range (2004 film)
+
+Question 1: Vices and Virtues, coincidentally released just four days after "Vices & Virtues" by Las Vegas band Panic! at the Disco, was the second studio album by which Canadian rock band?
+Question 2: Brendon Urie wrote new perspective after firing which bassist?
+Paragraph title: Panic! at the Disco
+
+Question 1: What was the nationality of the person Mountbatten Institute was named after?
+Question 2: How is the namesake of The Mountbatten Institute related to Elizabeth II?
+Paragraph title: Mountbatten Institute
+
+Question 1: Do Czesław Miłosz and Nathalie Sarraute have the same nationality?
+Question 2: Which author is an economist, Czesław Miłosz or Bhabananda Deka?
+Paragraph title: Czesław Miłosz
+
+Finding 2 questions that have the same 2 paragraphs as common
+
+Question 1: What is the name of the film directed by Alex Cox  adapted from a 1606 play starring Diana Quick as the Dutchess?
+Question 2: What is the birthday of the actress who was the Duchess in "The Revengers Tragedy"?
+Paragraph 1 Title: Diana Quick
+Paragraph 2 Title: Revengers Tragedy
+
+Question 1: Since 2 June 2017, The Leader of Fine Gael had been held by which Irish Fine Gael politician who has served as Taoiseach and Minister for Defence?
+Question 2: What position did the current Leader of Fine Gael hold from 2016 until 2017?
+Paragraph 1 Title: Leo Varadkar
+Paragraph 2 Title: Leader of Fine Gael
+
+Question 1: Which of the three worst hotel fires in modern US History occurred most recently?
+Question 2: On what street was the hotel located where the fire happened that ranked one above the MGM Grand fire in severity?
+Paragraph 1 Title: MGM Grand fire
+Paragraph 2 Title: Winecoff Hotel fire
+
+Question 1: How many rooms does that largest single hotel within the United States that is owned by MGM Resorts International?
+Question 2: What resort in Biloxi, Mississippi does the Chief Operating Officer of the largest single hotel in the United States oversee?
+Paragraph 1 Title: MGM Grand Las Vegas
+Paragraph 2 Title: Corey I. Sanders
+
+Question 1: Which Dutch footballer is featured on the song Wij zijn Ajax by Ajax and Friends?
+Question 2: What rapper on the song "Wij zijn Ajax" plays for the Turkish club Beşiktaş?
+Paragraph 1 Title: Ryan Babel
+Paragraph 2 Title: Wij zijn Ajax
+
+Question 1: Which Dutch footballer is featured on the song Wij zijn Ajax by Ajax and Friends?
+Question 2: How is the Dutch footballer, Ryan Babel, connected to the song, Wij Zijn Ajax?
+Paragraph 1 Title: Ryan Babel
+Paragraph 2 Title: Wij zijn Ajax
+
+Question 1: Brigadier Stanley James Ledger Hill was attached to the command post of which senior British Army officer born on July 10, 1886?
+Question 2: who were James Hill and John Vereker, 6th Viscount Gort officers for?
+Paragraph 1 Title: John Vereker, 6th Viscount Gort
+Paragraph 2 Title: James Hill (British Army officer)
+
+Question 1: What was the sequel of the game that e was published by U.S. Gold in 1992?
+Question 2: What software company developed Fade to black and it's 1992 Sequel, Flashback? 
+Paragraph 1 Title: Fade to Black (video game)
+Paragraph 2 Title: Flashback (1992 video game)
+
+Question 1: Which Eminem album included vocals from a singer who had an album titled "Unapologetic"?
+Question 2: Which song did Eminem and Rihanna collaborate on after their other collaboration song in studio album "Unapologetic?"
+Paragraph 1 Title: The Monster (song)
+Paragraph 2 Title: Numb (Rihanna song)
+
+Question 1: Which Eminem album included vocals from a singer who had an album titled "Unapologetic"?
+Question 2: Who collaborated with Rihanna on the album release "Numb"?
+Paragraph 1 Title: The Monster (song)
+Paragraph 2 Title: Numb (Rihanna song)
+
+Question 1:  where is the American professional basketball team which Jalen Jones played for based
+Question 2: Jalen Jones plays basketball for an NBA team that plays their home games in what arena?
+Paragraph 1 Title: New Orleans Pelicans
+Paragraph 2 Title: Jalen Jones
+
+Question 1: Li Yitong made her television debut on which network?
+Question 2: Li Yitong played Huang Rong is a tv series directed by who?
+Paragraph 1 Title: The Legend of the Condor Heroes (2017 TV series)
+Paragraph 2 Title: Li Yitong (actress)
+
+Question 1: Who is the lead vocalist for Maroon 5's sixth studio album?
+Question 2: Who is the current drummer of the band who did the song "What Lovers Do"?
+Paragraph 1 Title: What Lovers Do
+Paragraph 2 Title: Maroon 5
+
+Question 1: The Pioneer Helmet and the Benty Grange helmet are linked because of which feature?
+Question 2: What adorns the archaeological artefact excavated by Thomas Bateman on 3 May 1848?
+Paragraph 1 Title: Benty Grange helmet
+Paragraph 2 Title: Pioneer Helmet
+
+Question 1: In what movie did the male star of a movie about a widowed 37-year-old woman also star in in the year 1993?
+Question 2: In what year did a movie that starred both Nicholas Cage and Cher come out? 
+Paragraph 1 Title: Moonstruck
+Paragraph 2 Title: Nicolas Cage
+
+Question 1: What year was the independent regional brewery founded that currently operates in Hasting's oldest pub?
+Question 2: When was the brewery founded which has The Stag Inn Hastings as a tied house ?
+Paragraph 1 Title: Stag Inn, Hastings
+Paragraph 2 Title: Shepherd Neame Brewery
+
+Question 1: Stockely Webster has paintings hanging in what home (that serves as the residence for the Mayor of New York)?
+Question 2: Stokely Webster has paintings can be found at the official residence of whom?
+Paragraph 1 Title: Gracie Mansion
+Paragraph 2 Title: Stokely Webster
+
+Question 1: What did the main character in Unbroken do in the Olympics?
+Question 2: Who is the US Olympian and Christian evangelist did the 2010 non-fiction book by Laura Hillenbrand focus on?  
+Paragraph 1 Title: Louis Zamperini
+Paragraph 2 Title: Unbroken (film)
+
+Question 1: What did the main character in Unbroken do in the Olympics?
+Question 2: Who was a Christian Evangelist and US prisoner of war survivor that was the basis for a film directed by Angelina Jolie?
+Paragraph 1 Title: Louis Zamperini
+Paragraph 2 Title: Unbroken (film)
+
+Question 1: What did Felix Salten originally title his most famous work?
+Question 2: What was the home city of the author of the famous novel tracing the life of a male roe deer from his birth onward?
+Paragraph 1 Title: Felix Salten
+Paragraph 2 Title: Bambi, a Life in the Woods

@@ -1,0 +1,261 @@
+p 25 235
+v 1 Slovenian hard bridge ND Črnuče was managed in the mid-90s by the football coach of what nationality?
+v 2 Belgian medium bridge Non-Stop Mix Best is by a pair of producers who are of what heritage?
+v 3 Dutchman hard bridge Which play, written by a professor of several universities including State University of New York at Buffalo and the State University of New York at Stony Brook, shared the title of Obie award for Distinguished play?
+v 4 Sardinian easy bridge Casu modde, casu cundídu and casu fràzigu , translated to English means "rotten/putrid cheese", is what  primary indigenous Romance language spoken on most of the island of Sardinia ?
+v 5 Danes medium bridge Strut-Harald was a king who ruled over what North Germanic tribe of southern Scandinavia?
+v 6 Lithuanian medium bridge What is the native language of Rolandas Kazlas' homeland?
+v 7 Welsh medium bridge What ethnicity was the actor that played Reg Cattermole in the movie rendition of J. K. Rowling's seventh novel of the Harry Potter series?
+v 8 Romanian medium bridge  Dan Balan, along with O-Zone, produced a hit single that was sung in what language?
+v 9 Saxon easy bridge The concept of treason can be dated back to the early Roman republic, but was defined by nebulous criteria, it would be the common laws of this time period which would most directly influence those customary in the court of King Arthur, a legendary British leader who, according to medieval histories and romances, led the defence of Britain against which invaders in the late 5th and early 6th centuries AD?
+v 10 Dalmatian medium comparison Which breed of dog would be larger, Dalmatian or Bedlington Terrier?
+v 11 Gibraltarian medium bridge What is the nationality of the man who wrote "When I Need You"?
+v 12 Salian hard bridge In the Battle of Głogów  the Imperial forces were under command of Holy Roman Emperor and the fourth and last ruler of the what dynasty?
+v 13 Franks easy bridge Chagnoald, was a bishop of Laon during the 7th century, from which collection of Germanic peoples that originated in the lands between the Lower and Middle Rhine in the 3rd century AD and eventually formed a large empire dominating much of western and central Europe during the Middle Ages?
+v 14 German hard bridge What was the nationality of the man with whom Hans Loewald studied philosophy? 
+v 15 Roman hard bridge What city of origin does Ermine Street and Lindum Colonia have in common?
+v 16 European medium bridge Ghosts comes from a slang term that applies to what type of ethnicities?
+v 17 Bulgarian medium bridge Roman Kapitonenko lost his semifinal bout at the 2008 European Championships to a boxer of what nationality?
+v 18 Czech hard bridge What was Bill Dvorak's fifth cousin's nationality?
+v 19 Hungarian medium bridge  Hunnenschlacht was created by a composer who was of what nationality?
+v 20 Austrian medium bridge Nikolaas Tinbergen shared the 1973 Nobel in Medicine with the zoologist who was of what nationality?
+v 21 Finn medium bridge What role did Hans Morten Hansen played in the form of "found footage" mockumentary?
+v 22 Latvian hard bridge What country is Kristaps Porziņģis, the the current champion of the New York Knicks, from?
+v 23 Cypriot medium bridge What is the nationality of the cinematographer famous for his work on the fourth film in the Marvel Comics Universe?
+v 24 Italian medium bridge What was the nationality of the director of the film Paprika?
+v 25 Norwegian medium bridge John Balliol became the King of Scotland after the princess from what country passed away?
+e 20 1 1
+e 1 2 1
+e 14 2 1
+e 16 2 1
+e 18 2 1
+e 19 2 1
+e 20 2 1
+e 24 2 1
+e 25 2 1
+e 1 3 1
+e 2 3 1
+e 14 3 1
+e 16 3 1
+e 18 3 1
+e 19 3 1
+e 20 3 1
+e 24 3 1
+e 25 3 1
+e 24 4 1
+e 1 5 1
+e 2 5 1
+e 3 5 1
+e 14 5 1
+e 16 5 1
+e 18 5 1
+e 19 5 1
+e 20 5 1
+e 24 5 1
+e 25 5 1
+e 1 6 1
+e 2 6 1
+e 3 6 1
+e 5 6 1
+e 14 6 1
+e 16 6 1
+e 18 6 1
+e 19 6 1
+e 20 6 1
+e 24 6 1
+e 25 6 1
+e 1 7 1
+e 2 7 1
+e 3 7 1
+e 5 7 1
+e 6 7 1
+e 14 7 1
+e 16 7 1
+e 18 7 1
+e 19 7 1
+e 20 7 1
+e 24 7 1
+e 25 7 1
+e 1 8 1
+e 2 8 1
+e 3 8 1
+e 5 8 1
+e 6 8 1
+e 7 8 1
+e 14 8 1
+e 16 8 1
+e 18 8 1
+e 19 8 1
+e 20 8 1
+e 24 8 1
+e 25 8 1
+e 1 9 1
+e 2 9 1
+e 3 9 1
+e 5 9 1
+e 6 9 1
+e 7 9 1
+e 8 9 1
+e 14 9 1
+e 16 9 1
+e 18 9 1
+e 19 9 1
+e 20 9 1
+e 24 9 1
+e 25 9 1
+e 1 10 1
+e 2 10 1
+e 3 10 1
+e 5 10 1
+e 6 10 1
+e 7 10 1
+e 8 10 1
+e 9 10 1
+e 14 10 1
+e 16 10 1
+e 18 10 1
+e 19 10 1
+e 20 10 1
+e 24 10 1
+e 25 10 1
+e 1 11 1
+e 2 11 1
+e 3 11 1
+e 5 11 1
+e 6 11 1
+e 7 11 1
+e 8 11 1
+e 9 11 1
+e 10 11 1
+e 14 11 1
+e 16 11 1
+e 18 11 1
+e 19 11 1
+e 20 11 1
+e 24 11 1
+e 25 11 1
+e 1 13 1
+e 2 13 1
+e 3 13 1
+e 5 13 1
+e 6 13 1
+e 7 13 1
+e 8 13 1
+e 9 13 1
+e 10 13 1
+e 11 13 1
+e 12 13 1
+e 14 13 1
+e 16 13 1
+e 18 13 1
+e 19 13 1
+e 20 13 1
+e 24 13 1
+e 25 13 1
+e 1 14 1
+e 20 14 1
+e 4 15 1
+e 24 15 1
+e 1 16 1
+e 14 16 1
+e 20 16 1
+e 1 17 1
+e 2 17 1
+e 3 17 1
+e 5 17 1
+e 6 17 1
+e 7 17 1
+e 8 17 1
+e 9 17 1
+e 10 17 1
+e 11 17 1
+e 13 17 1
+e 14 17 1
+e 16 17 1
+e 18 17 1
+e 19 17 1
+e 20 17 1
+e 24 17 1
+e 25 17 1
+e 1 18 1
+e 14 18 1
+e 16 18 1
+e 20 18 1
+e 1 19 1
+e 14 19 1
+e 16 19 1
+e 18 19 1
+e 20 19 1
+e 1 21 1
+e 2 21 1
+e 3 21 1
+e 5 21 1
+e 6 21 1
+e 7 21 1
+e 8 21 1
+e 9 21 1
+e 10 21 1
+e 11 21 1
+e 13 21 1
+e 14 21 1
+e 16 21 1
+e 17 21 1
+e 18 21 1
+e 19 21 1
+e 20 21 1
+e 24 21 1
+e 25 21 1
+e 1 22 1
+e 2 22 1
+e 3 22 1
+e 5 22 1
+e 6 22 1
+e 7 22 1
+e 8 22 1
+e 9 22 1
+e 10 22 1
+e 11 22 1
+e 13 22 1
+e 14 22 1
+e 16 22 1
+e 17 22 1
+e 18 22 1
+e 19 22 1
+e 20 22 1
+e 21 22 1
+e 24 22 1
+e 25 22 1
+e 1 23 1
+e 2 23 1
+e 3 23 1
+e 5 23 1
+e 6 23 1
+e 7 23 1
+e 8 23 1
+e 9 23 1
+e 10 23 1
+e 11 23 1
+e 13 23 1
+e 14 23 1
+e 16 23 1
+e 17 23 1
+e 18 23 1
+e 19 23 1
+e 20 23 1
+e 21 23 1
+e 22 23 1
+e 24 23 1
+e 25 23 1
+e 1 24 1
+e 14 24 1
+e 16 24 1
+e 18 24 1
+e 19 24 1
+e 20 24 1
+e 1 25 1
+e 14 25 1
+e 16 25 1
+e 18 25 1
+e 19 25 1
+e 20 25 1
+e 24 25 1

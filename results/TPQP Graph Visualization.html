@@ -1,0 +1,448 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="p0">p0</option>
+                                
+                                    <option value="q0">q0</option>
+                                
+                                    <option value="p1">p1</option>
+                                
+                                    <option value="p10">p10</option>
+                                
+                                    <option value="q1">q1</option>
+                                
+                                    <option value="p11">p11</option>
+                                
+                                    <option value="p12">p12</option>
+                                
+                                    <option value="p13">p13</option>
+                                
+                                    <option value="p14">p14</option>
+                                
+                                    <option value="p15">p15</option>
+                                
+                                    <option value="p16">p16</option>
+                                
+                                    <option value="p17">p17</option>
+                                
+                                    <option value="p18">p18</option>
+                                
+                                    <option value="p19">p19</option>
+                                
+                                    <option value="p2">p2</option>
+                                
+                                    <option value="p20">p20</option>
+                                
+                                    <option value="q2">q2</option>
+                                
+                                    <option value="p21">p21</option>
+                                
+                                    <option value="p22">p22</option>
+                                
+                                    <option value="p23">p23</option>
+                                
+                                    <option value="p24">p24</option>
+                                
+                                    <option value="p25">p25</option>
+                                
+                                    <option value="p26">p26</option>
+                                
+                                    <option value="p27">p27</option>
+                                
+                                    <option value="p28">p28</option>
+                                
+                                    <option value="p29">p29</option>
+                                
+                                    <option value="p3">p3</option>
+                                
+                                    <option value="p4">p4</option>
+                                
+                                    <option value="p5">p5</option>
+                                
+                                    <option value="p6">p6</option>
+                                
+                                    <option value="p7">p7</option>
+                                
+                                    <option value="p8">p8</option>
+                                
+                                    <option value="p9">p9</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 18, "id": "p0", "label": "p0", "shape": "circle", "size": 5, "title": "Ed Wood (film)"}, {"group": 18, "id": "q0", "label": "q0", "shape": "square", "size": 3, "title": "Question:Were Scott Derrickson and Ed Wood of the same nationality?\nAnswer:yes\nLevel:hard\nType:comparison"}, {"group": 4, "id": "p1", "label": "p1", "shape": "circle", "size": 5, "title": "Scott Derrickson"}, {"group": 7, "id": "p10", "label": "p10", "shape": "circle", "size": 5, "title": "Meet Corliss Archer"}, {"group": 0, "id": "q1", "label": "q1", "shape": "square", "size": 3, "title": "Question:What government position was held by the woman who portrayed Corliss Archer in the film Kiss and Tell?\nAnswer:Chief of Protocol\nLevel:hard\nType:bridge"}, {"group": 15, "id": "p11", "label": "p11", "shape": "circle", "size": 5, "title": "Shirley Temple"}, {"group": 9, "id": "p12", "label": "p12", "shape": "circle", "size": 5, "title": "Janet Waldo"}, {"group": 7, "id": "p13", "label": "p13", "shape": "circle", "size": 5, "title": "Meet Corliss Archer (TV series)"}, {"group": 8, "id": "p14", "label": "p14", "shape": "circle", "size": 5, "title": "Lord High Treasurer"}, {"group": 0, "id": "p15", "label": "p15", "shape": "circle", "size": 5, "title": "A Kiss for Corliss"}, {"group": 0, "id": "p16", "label": "p16", "shape": "circle", "size": 5, "title": "Kiss and Tell (1945 film)"}, {"group": 8, "id": "p17", "label": "p17", "shape": "circle", "size": 5, "title": "Secretary of State for Constitutional Affairs"}, {"group": 19, "id": "p18", "label": "p18", "shape": "circle", "size": 5, "title": "Village accountant"}, {"group": 12, "id": "p19", "label": "p19", "shape": "circle", "size": 5, "title": "Charles Craft"}, {"group": 13, "id": "p2", "label": "p2", "shape": "circle", "size": 5, "title": "Woodson, Arkansas"}, {"group": 18, "id": "p20", "label": "p20", "shape": "circle", "size": 5, "title": "Andre Norton Award"}, {"group": 18, "id": "q2", "label": "q2", "shape": "square", "size": 3, "title": "Question:What science fantasy young adult series, told in first person, has a set of companion books narrating the stories of enslaved worlds and alien species?\nAnswer:Animorphs\nLevel:hard\nType:bridge"}, {"group": 3, "id": "p21", "label": "p21", "shape": "circle", "size": 5, "title": "Victoria Hanley"}, {"group": 3, "id": "p22", "label": "p22", "shape": "circle", "size": 5, "title": "The Hork-Bajir Chronicles"}, {"group": 6, "id": "p23", "label": "p23", "shape": "circle", "size": 5, "title": "Shadowshaper"}, {"group": 18, "id": "p24", "label": "p24", "shape": "circle", "size": 5, "title": "Left Behind: The Kids"}, {"group": 17, "id": "p25", "label": "p25", "shape": "circle", "size": 5, "title": "List of Square Enix companion books"}, {"group": 11, "id": "p26", "label": "p26", "shape": "circle", "size": 5, "title": "The Divide trilogy"}, {"group": 1, "id": "p27", "label": "p27", "shape": "circle", "size": 5, "title": "Science Fantasy (magazine)"}, {"group": 3, "id": "p28", "label": "p28", "shape": "circle", "size": 5, "title": "Animorphs"}, {"group": 18, "id": "p29", "label": "p29", "shape": "circle", "size": 5, "title": "Etiquette \u0026amp; Espionage"}, {"group": 16, "id": "p3", "label": "p3", "shape": "circle", "size": 5, "title": "Tyler Bates"}, {"group": 15, "id": "p4", "label": "p4", "shape": "circle", "size": 5, "title": "Ed Wood"}, {"group": 4, "id": "p5", "label": "p5", "shape": "circle", "size": 5, "title": "Deliver Us from Evil (2014 film)"}, {"group": 7, "id": "p6", "label": "p6", "shape": "circle", "size": 5, "title": "Adam Collis"}, {"group": 4, "id": "p7", "label": "p7", "shape": "circle", "size": 5, "title": "Sinister (film)"}, {"group": 12, "id": "p8", "label": "p8", "shape": "circle", "size": 5, "title": "Conrad Brooks"}, {"group": 4, "id": "p9", "label": "p9", "shape": "circle", "size": 5, "title": "Doctor Strange (2016 film)"}]);
+                  edges = new vis.DataSet([{"from": "p0", "to": "q0", "width": 1}, {"from": "p1", "title": "Is supporting", "to": "q0", "width": 1}, {"from": "p10", "to": "q1", "width": 1}, {"from": "p11", "title": "Is supporting", "to": "q1", "width": 1}, {"from": "p12", "to": "q1", "width": 1}, {"from": "p13", "to": "q1", "width": 1}, {"from": "p14", "to": "q1", "width": 1}, {"from": "p15", "to": "q1", "width": 1}, {"from": "p16", "title": "Is supporting", "to": "q1", "width": 1}, {"from": "p17", "to": "q1", "width": 1}, {"from": "p18", "to": "q1", "width": 1}, {"from": "p19", "to": "q1", "width": 1}, {"from": "p2", "to": "q0", "width": 1}, {"from": "p20", "to": "q2", "width": 1}, {"from": "p21", "to": "q2", "width": 1}, {"from": "p22", "title": "Is supporting", "to": "q2", "width": 1}, {"from": "p23", "to": "q2", "width": 1}, {"from": "p24", "to": "q2", "width": 1}, {"from": "p25", "to": "q2", "width": 1}, {"from": "p26", "to": "q2", "width": 1}, {"from": "p27", "to": "q2", "width": 1}, {"from": "p28", "title": "Is supporting", "to": "q2", "width": 1}, {"from": "p29", "to": "q2", "width": 1}, {"from": "p3", "to": "q0", "width": 1}, {"from": "p4", "title": "Is supporting", "to": "q0", "width": 1}, {"from": "p5", "to": "q0", "width": 1}, {"from": "p6", "to": "q0", "width": 1}, {"from": "p7", "to": "q0", "width": 1}, {"from": "p8", "to": "q0", "width": 1}, {"from": "p9", "to": "q0", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

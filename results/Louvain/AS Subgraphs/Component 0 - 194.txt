@@ -1,0 +1,577 @@
+p 194 382
+v 1 Bergen medium bridge Where are Audrey Horne and Gorgoth based?
+v 2 Abidjan hard bridge Port Bouet Airport is the main hub of the flag carrier based in what city?
+v 3 Duluth easy bridge Low is the first EP by which city in Minnesota, slowcore group Low, released in 1994, it's a major port city in the U.S. state of Minnesota and the county seat of Saint Louis County?
+v 4 Reno medium bridge Geoff Boss won a race in which city, 22 miles from Lake Tahoe?
+v 5 Auckland easy bridge Wanaka Airport no longer has scheduled commercial flights, with Air New Zealand, a company based in what city, having ceased flights to the airport in 2013?
+v 6 Hermosillo hard bridge What is the capital city of the Mexican state that has the municipal seat Ímuris?
+v 7 Basel medium bridge After graduatng college,  André Dreiding spent two years as a research assisant for a healthcare company headquartered in what city?
+v 8 Akron medium bridge Which city in Ohio hosted the soccer competition for Gay Games 9?
+v 9 Shenyang medium bridge What is the name of this provincial capital and the largest city of Liaoning Province, People's Republic of China, that developed SIASUN UAV?
+v 10 Munich medium bridge Which footballing city beat the Netherlands in the 1974 FIFA World Cup Final?
+v 11 Pasadena medium bridge What city in California does KMRB and KAZN broadcast from?
+v 12 Schenectady hard bridge What town did Nate Leaman coach the Union Dutchmen?
+v 13 Leningrad hard bridge The first movement of the most vast and dramatic of Dimitry Kabalevsky's three sonatas has been compared to a symphony that was dedicated by is composer to what city?  
+v 14 Charlotte hard bridge In which city did the draft take place in which The Sixers selected Keith Van Horn with the second pick?
+v 15 Hanover medium bridge The 1820 UK general election produced the first parliament under the reign of the King from what house?
+v 16 Reims easy bridge At the time of its construction, Fort des Ayvelles, controlled Meuse and the railway line linking what city in the Grand Est region of France, that lies 129 km east-northeast of Paris?
+v 17 Cologne hard bridge Bayenthaler SV is part of a current day football club that plays in what city?
+v 18 Kumasi medium bridge Metro FM is a station in which city, among the largest in Ghana?
+v 19 Camden easy bridge McLemore Avenue is a 1970 album by Booker T. & the M.G.s, consisting entirely of mostly instrumental covers of songs from the Beatles' album Abbey Road, and also is a thoroughfare in the borough of what, and the City of Westminster in London?
+v 20 Herat easy bridge  the son of Husayn Bayqarah, who was a great-great-grandson  of the man historically known as Amir Timur and Tamerlane, was the ruler of where?
+v 21 Samarkand medium bridge What city on the Silk Road means "Sandy place" in Persian?
+v 22 Nanjing medium comparison Which Chinese city is the capital of the Jiangsu province, Nanjing or Pu'er City
+v 23 Bihar medium bridge Jayantabhai Ki Luv Story includes a lead role for the film actress and model who is a native of what city?
+v 24 Murmansk medium bridge What port city and administrative center is several hours of ride from Nemetsky Peninsula?
+v 25 Chihuahua easy comparison Which breed of dog is more diverse in terms of colors, the Stephens Cur  or the Chihuahua ? 
+v 26 Bangalore hard bridge Alipur, Karnataka is 55 km away from the airport serving what capital of Karnataka?
+v 27 Karachi medium bridge Mirza Ahmad Ispahani was the first chairman of an airline out of what main hub?
+v 28 Hamburg medium bridge What town was evacuated in 1940-1941 and take over by the U.S. Government to create Weldon Spring Ordnance Works, a 17323 acre facility?
+v 29 Allentown medium bridge Which city is the third most populated city in Pennsylvania and was apart of the film the Florentine? 
+v 30 Oakland medium bridge What city in California was home to a team that Robert Girard played hockey for?
+v 31 Albuquerque medium bridge from 1911-1916 Ralph Hutchinson was the head football coach for a university located in what city?
+v 32 Apeldoorn hard bridge What city was the man who replaced Anouk on "The Voice of Holland" born in?
+v 33 Frankfurt medium bridge Werner Gunter Jaffé Fellner was born in which metropolis and the largest city in the German state of Hesse and the fifth-largest city in Germany?
+v 34 Benghazi medium bridge The attack on what city in Libya by members of the Islamic group Ansar al-Sharia led to the formation of a committee with Trey Gowdy as it's chairman?
+v 35 Winston-Salem medium bridge Which North Carolina city is nicknamed "Camel City" after the local cigarette brand, formerly a big supporter of GT and other auto racing?
+v 36 Milwaukee medium bridge Hart D. Fisher created a comic book about a criminal from what city?
+v 37 Johannesburg hard bridge What city is located in Gauteng, South Africa with a suburb called Kew?
+v 38 Lille hard bridge María Eugenia Bielsa is the sister of the football manager in charge of what team?
+v 39 Lynchburg medium bridge Before being annexed by Oroville, Center Ville was located part way between Oroville and which other city in Brutte County, California?
+v 40 Naples medium bridge Where did Frederick II, a memeber of the House of Hohenstaufen, invite Jacob Anatoli?
+v 41 Utrecht hard bridge Mariënhof is a defunct restaurant in what Netherland province?
+v 42 Orlando medium bridge The band that released the album "Let's Cheers to This" is from what Florida city?
+v 43 Padua medium bridge Which city in Veneto, northern Italy is home to Codevigo?
+v 44 Calcutta medium bridge Of which city was the author of the poem Palestine a bishop ?
+v 45 Newark medium bridge Bergen Arches is located in this city that is the second most populous after which city within the state?
+v 46 Detroit hard bridge Bad Meets Evil was a duo that formed because of a mutual friend from what city?
+v 47 Chicago medium bridge Axle Whitehead was a part of an American comedy-drama television series that is a remake of the British series with the same name set in what city?
+v 48 Dallas medium bridge Metal band Crown the Empire, whose first album was called Limitless, are from which Texas city?
+v 49 Chongqing medium bridge Other than Beijing, Shanghai and Tianjin, what other major city is one of China's four direct-controlled municipalities, and is also the birthplace of Chinese rally driver, Liu Caodong?
+v 50 Glasgow medium bridge Where was the British singer-songwriter who composed The Princess Bride's soundtrack born?
+v 51 Billings medium bridge Bracut, California has a campground run by the company that was founded in what Montana city?
+v 52 Verona hard bridge Who directed the 1979 American drama film that starred the actress who won the Golden Globe Award for Best Supporting Actress for "Psycho"?
+v 53 UFA medium bridge What major film studio did the German global banking and financial services company, Deutsche Bank, force the German film product and distribution company, National Film, to merge with? 
+v 54 Kosovo medium bridge Nick Houghton was replaced as Chief of the Defence Staff by a man who was deployed to what country in 2000?
+v 55 Morgantown medium bridge In what city does Mike Carey coach women's basketball ?
+v 56 Assam medium bridge Indian Singers Padmanav Bordoloi and Papon come from which state?
+v 57 Ur medium bridge Which Sumerian city was very powerful and influential during the Early Dynastic period and once a coastal city?
+v 58 Barranquilla medium bridge In what city were the Los Titanes band founded and is also the fourth most populous city in Columbia?
+v 59 Leeds medium bridge in which UK city is the long-running British soap opera in which Abby Mavers' farther appears as Gordon Livesy filmed?
+v 60 Tulsa medium bridge At The 2012 Summit League Baseball Tournament, The top four regular season finishers of the league's seven teams met in the double-elimination tournament held at a university based in which city ?
+v 61 Aarhus easy bridge What is the second-largest city in Denmark, and also where the Vestergade 58 building is listed?
+v 62 Kolkata medium bridge Kanchenjunga Express has songs by the playback singer based out of what city?
+v 63 Davenport medium bridge The Cody Michelin Cup Biplane was built by a man born in what US city?
+v 64 Hyderabad medium bridge Among India's oldest universities founded in 1918, Osmania University is in which city?
+v 65 Florence medium bridge What is the capital of the region of Italy in which San Raimondo is loacted?
+v 66 Burlington medium bridge Ben Cohen is a co-founder of the ice cream company founded in 1978 in what Vermont town?
+v 67 Brighton hard bridge Which seaside resort is 11 mi south of Bolney?
+v 68 Bologna medium bridge Reggio Emilia Cathedral is one of the three main religious buildings in the administrative region that has what city as its capital?
+v 69 Rotterdam medium bridge In which city was this global energy and commodity trading company larger than Trafigura as an oil trader formed?
+v 70 Knoxville hard bridge Which city in Tennessee, is the Seven Islands State Birding Park, that lies on the French Broad River, located next to?
+v 71 Pompeii easy bridge D. James Goodwin is an American record producer, recording engineer, musician, and filmmaker, based in Woodstock, New York, his discography includes bands and artists such as which band named after, an ancient Roman town-city near modern Naples, in the Campania region of Italy, in the territory of the comune of Pompei?
+v 72 Lubbock medium bridge Jones AT&T Stadium is on the campus of the university in what Texas city?
+v 73 Cremona medium bridge In which city was the birthplace of Alessandro Rinaldi?
+v 74 state hard bridge What type of territory does Northern New Hampshire Correctional Facility and New Hampshire Department of Corrections have in common?
+v 75 Cincinnati hard bridge In what Ohio city does the highway which the northern terminus of Pennsylvania Route 75 interchanges with originate?
+v 76 Thebes medium bridge Situated on the west bank of the Nile, opposite Luxor, the famous tomb TT34 is located in which ancient city?
+v 77 Pittsburgh medium bridge Which city in the commonwealth of Pennsylvania was the song Beans in My Ears banned ?
+v 78 Fargo medium bridge Which Joel and Ethan Coen film was released in the same year as "Scream"?
+v 79 Campeche medium bridge Delfines de la Unacar is based in a city  in the southwest of the what Mexican state?
+v 80 Salzburg medium bridge In what city was Symphony No. 13, which was mistaken at one time to be created by the Father of the Symphony, written?
+v 81 Dubai easy bridge Which is the largest and most populous city in the region with the national anthem Hoyamal?
+v 82 Essen medium bridge What German city was the family that developed and built the 8.8 cm KwK 36 L/56 from?
+v 83 Lucknow easy bridge Priyanka Gandhi, is an Indian politician who is the granddaughter of the publisher of "The National Herald" and "The Navjivan" newspapers from where?
+v 84 Lahore hard bridge where is the mosque  where  De'Montmorency College of Dentistry: is  situated next to located 
+v 85 Rawalpindi hard bridge In what part of Pakistan is the company owned by Malik Riaz Hussain based?
+v 86 Tianjin medium bridge In which city, the largest coastal city in northern China, can Helcystogramma perelegans be found?
+v 87 Yokohama medium bridge The 1993 Toray Pan Pacific Open took place in what city that is the second largest city in Japan by population, and is the capital city of Kanagawa Prefecture?
+v 88 Turin medium bridge Italy has taken part in every Universiade since the first one, held in what city?
+v 89 Bristol medium bridge Wallace and Gromit's Cracking Contraptions was produced by a British animation studio that is known for films made using stop-motion clay animation techniques, and that is based where?
+v 90 Canton medium bridge New Orleans, Jackson and Great Northern began at what Madison county, Mississippi town?
+v 91 Tyre medium bridge Which ancient Lebanese city issued the coins known as shekels, used to pay taxes in the Temple of Jerusalem?
+v 92 Porto hard bridge Which team won the European Cup Final in which Helmut Winklhofer played ?
+v 93 Antwerp medium bridge In what city is the church located that was named after the Anglo-Saxon missionary to the Frankish Empire?
+v 94 Sarajevo easy bridge What is the capital and largest city of Bosnia, a location were the United Nations Security Council Resolution 727 was also signed?
+v 95 Bordeaux medium bridge The Lords of Appellant were a group of nobles in the reign of a king that was born where?
+v 96 Milan hard bridge In which city is the conglomerate that bought Ray Ban from Bausch & Lomb ?
+v 97 Tsaritsyn medium bridge What was the town formerly known as that Denis Dorozhkin was born in?
+v 98 Aalborg medium bridge In 1995 Peter Rasmussen played association football for the Danish team located in what city?
+v 99 Rio medium bridge As well as the Brasil '66 and Brasil '77 bands, Sérgio Mendes wrote songs for which animated film in 2012?
+v 100 Norfolk medium bridge Readville, Boston is bordered on the south by the town in what Massachusetts county, the birthplace of George HW Bush?
+v 101 Chennai medium bridge Karty was a writer in the weekly magazine published in what Indian city?
+v 102 Rochester medium bridge The wife of Leonard Lenihan works for a politician in what town?
+v 103 Merida hard bridge Mairead's fictional name is which main character from the 2012 Disney Pixar film "Brave"?
+v 104 Savannah medium bridge Lazaretto Creek divides the creek that is 18 miles east of what Georgia city?
+v 105 Syracuse easy bridge What is the name of the 2,700 year old city where the Battle of Himera River was fought?
+v 106 Aachen medium bridge Where was Barbarossa Chandelier crowned Holy Roman Emperor?
+v 107 Istanbul medium comparison Where in Turkey are the Kuleli Military High School and the Atik Valide Mosque located?
+v 108 Hohhot medium bridge What is the capital of the region that includes the Lang Mountains?
+v 109 Mumbai medium bridge Tata Movus is manufactured by a company headquartered in what city?
+v 110 Portsmouth hard bridge What team, managed by a man who is also and advisor to Central Coast Mariners, won the 2008 FA Cup?
+v 111 Stuttgart hard bridge Where is the headquarters of this German multinational automotive corporation, which includes Mercedes-Benz buses?
+v 112 Kaunas hard bridge FC Stumbras plays its home matches in what Lithuanian town?
+v 113 Oxford easy bridge Of which University was the co-founder, with his brother Charles Wesley, of Methodism, a fellow?
+v 114 Tamale medium bridge Which suburb in the Northern Region of Ghana that created Sagnarigu district was Yakubu II born?
+v 115 Puebla hard bridge What Mexican city had an Athletic Club whose football team played in the Primera Fuerza in 1943?
+v 116 Volgograd medium bridge Viktor Zholudev commanded a division during its defense of a tractor factory located in a city now know as what
+v 117 Cartagena easy bridge What major port founded in 1533 was Nicolas De la Hoz born in?
+v 118 Northampton medium bridge So Rock was a comedy album by the comedian from what English town?
+v 119 Nijmegen medium bridge In what city was the football club that Mohamed Rayhi is an attacking midfielder for founded?
+v 120 Hiroshima easy bridge The 1994 Asian Games also known as XII Asiad were held from October 2 to October 16, 1994 in which capital of Hiroshima Prefecture and the largest city in the Chūgoku region of western Honshu - the largest island of Japan?
+v 121 Birmingham hard bridge  The End is an EP by an English heavy metal band which was only available at dates with the  final show was February 4, 2017, in their home city of what?
+v 122 Brindisi hard bridge Which city in the region of Apulia in southern Italy is Cesare Braico born in 
+v 123 Monterrey medium bridge Of the cities Abdiel Vázquez has lived in, which one was the capital of Nuevo Leon?
+v 124 Durham medium bridge An American professional basketball player for the New York Knicks, who was born in 1983,  attended a college preparatory, non-denominational, co-educational day school in what North Carolina city?
+v 125 Dubrovnik easy bridge Francesco da Mosto, is an Italian architect, author, historian, film maker and television presenter, he explored the country in an Alfa Romeo Spider, which sees him traveling from his home in Venice to which Croatian city on the Adriatic Sea, in the region of Dalmatia, that was historically Ragusa?
+v 126 Thessaloniki easy bridge In what city  was a former US NBA player named MVP during the FIBA Under 19 World championship?
+v 127 Palermo medium bridge the rest of Shabbethai Donnolo's family was carried to what location that is over 2700 years old?
+v 128 Shanghai hard comparison In between  Xinji and Shanghai which one is located in the Yangtze River Delta?
+v 129 Jacksonville medium bridge Rickey Medlocke was the frontman for the southern rock band from which Florida city?
+v 130 Bonn medium bridge Which city on the banks of the Rhine is home to a museum of contemporary history with around one million visitors every year?
+v 131 Tyrol easy bridge Two-man bobsleigh at the 1964 Winter Olympics took place on 31 January and 1 February at Bob und Rodelbahn Igls, Innsbruck, Austria, Innsbruck is the capital city of which city, in western Austria?
+v 132 Winchester medium bridge SLS station was just south of those that were designed to give access to the RV park and casino in what Nevada suburb?
+v 133 Osaka medium bridge Apocalyze was an album by a Japanese band from what city?
+v 134 Nagasaki medium bridge What city featured a graduate of the Shinjuku private research university as a mayor in 1995?
+v 135 Sparta easy bridge What prominent city-state in ancient Greece was Gylippus expelled from?
+v 136 cities easy bridge Andover, located in Essex County, Massachusetts, is an example of a basic unit of local government and local division of state authority in each of the six New England states, commonly referred to in other states as what?
+v 137 Cleveland medium bridge Excuse My French was the debut album that features a guest appearance by the American rapper and actor from what Ohio city?
+v 138 Galway medium bridge Which city is in the Western area of Ireland which is also the home of Sean Smyth?
+v 139 Persepolis medium bridge The brother of  Zlatko Ivanković currently manages what Pro League team?
+v 140 Huntsville hard bridge Willie Hayes is the former college basketball head coach for a university located in which city ?
+v 141 Minneapolis medium bridge Overcast! was the only Atmosphere album to feature the American rapper from what Minnesota city?
+v 142 Philadelphia medium bridge Curt Weldon represented the congressional district that involved which major city's suburbs?
+v 143 Houston easy bridge From which city hails the American rapper and music producer Brad Terrence Jordan who put together the American hip hop group Facemob?
+v 144 Baltimore medium bridge IN what city were stations WAAM-TV and WJZ-TV located?
+v 145 Anaheim medium bridge Ed Grier was previously president of the hotel located at the resort in what California city?
+v 146 Nagoya medium bridge What is the name of the city in Japan where Shingo Takeyama plays baseball?
+v 147 Manchester hard bridge In what city was the person that discovered British singer-songwriter Kavana based?
+v 148 Trondheim medium bridge Which city with population of 187,353 did  EV3 The Pilgrims Route run from 
+v 149 Byzantium medium bridge What is the name of this Irish horror fantasy thriller film starring Jonny Lee Miller and Gemma Arterton?
+v 150 Medina hard comparison Which was a game for more than two people, Medina or Hijara?
+v 151 Bavaria medium bridge Voll-Damm is a style of beer that originated where?
+v 152 Delhi medium bridge The Oberoi family is part of a hotel company that has a head office in what city?
+v 153 Grenoble easy bridge What city did Lebanese physicist, Rammal Hassan attend Joseph Fourier University?
+v 154 Leiden medium bridge The De Stijl art movement, associated with Truus Schröder-Schräder, grew from which Dutch city in the early 20th century?
+v 155 Ferrara medium bridge Leonardo Brescia was born and active in which comune in Emilia-Romagna?
+v 156 Geneva hard bridge Pasquale Pistoriois the ex president of a multinational electronics and semiconductor manufacturer headquartered in which city ?
+v 157 Montreal medium bridge Campari Knoepffler competed in 3 events at the Olympics in which city?
+v 158 city easy comparison What do Linqing and Luzhou have in common?
+v 159 Calgary medium bridge "Working for the Weekend" is a song by a band formed in which Canadian city ?
+v 160 Portland medium bridge Mirror Lake is south of which city?
+v 161 Sheffield hard bridge Where are the duo who released the single "Sing It Back" from ?
+v 162 Leipzig hard bridge From what city was high-lying bass singer and conductor Gotthold Schwarz from?
+v 163 Haifa easy bridge Raphael "Raphi" Rom is an Israeli computer scientist working at Technion – Israel Institute of Technology, a public research university in which city, in Israel?
+v 164 Innsbruck hard bridge Hans Rinn won his first gold medal during the Winter Olympics held in which city?
+v 165 Lancaster medium bridge What was the middle name of the author, whose secret agent, the actor, Barry Nelson, was the first to portray ?
+v 166 Tangier medium bridge Which Virginia town speaks the High Tider dialect and has lost 67% of its landmass since 1850?
+v 167 Valencia medium bridge For two seasons, Murat Šaran joined a Spanish football club based where?
+v 168 Oaxaca medium bridge Which of the 31 Mexican states is home to the mountain frog Ptychohyla zophodes?
+v 169 Barcelona medium bridge With which club, did the striker who played with Mark Falco and Garth Brooks at Spurs, win the Spanish league ?
+v 170 Motown medium bridge Contract, an American album released by Freda Payne for Invictus Records, was compared to music by Diana Ross who performed under a division of what label?
+v 171 Municipality easy bridge What is another name for town?
+v 172 Sichuan easy comparison Suining and Guang'an, are both cities, in which province in Southwest China?
+v 173 Louisville easy bridge James M. Long, was an American baseball player who played outfielder in the Major Leagues from 1891 to 1893, and was born in which city in Kentucky?
+v 174 Nantes medium bridge Adrian Ilie's head coach at Valencia is currently the head coach of what team?
+v 175 Corinth medium bridge What North Mississippi city has ZIP code 38834?
+v 176 Nanchang medium comparison Which region in China is larger, Jiutai District or Nanchang?
+v 177 Mysore medium bridge Tipu Sultan succeeded Dhondia Wagh as ruler of which Indian Kingdom, earning the soubriquet "the Tiger of" it?
+v 178 Dortmund medium bridge What city that was a leading member of the Hanseatic League is an independent city in North Rhine-Westphalia?
+v 179 Laredo medium bridge Interval starred Merle Oberon who fell in love with her co-star most known for his role in what?
+v 180 Seattle hard bridge Which city is host to "The Fifty Worst Films of All Time" writer Michael Medved's syndicated talk show?
+v 181 Lyon medium bridge Which city is the training center that a forward for Spanish side Las Palmas of La Liga located in?
+v 182 Memphis medium bridge The 2016 Liberty Bowl was sponsored by a company based in what city?
+v 183 Newcastle medium bridge In which town is the university located that Stewart Wingate graduated from during his time at Black & Decker?
+v 184 Kobe medium bridge What city in Japan did Jean Francisque Coignet become known for modernizing?
+v 185 Liverpool medium bridge Bill Harry is the creator of the publication that was founded in what city?
+v 186 Genoa medium bridge Which Italian port do many of the inhabitants of La Boca in Buenos Aires originate from?
+v 187 Venice medium bridge What is the birthplace of the composer of Griselda?
+v 188 Arlington medium bridge Idlewild and Soak Zone has won several awards from the publication that is based in what Texas city?
+v 189 Saskatoon medium bridge What is the name of the large city in the Canadian province of Saskatchewan, where J.D. McAskill served as mayor? 
+v 190 Toledo medium bridge In what city in central Spain known for its extensive cultural heritage is the Banos de Tenerias located? 
+v 191 Dayton medium bridge  W. S. McIntosh pushed for minorities to be able to work at the department store in what Ohio city?
+v 192 Constantinople easy comparison Great Palace Mosaic Museum and Hirami Ahmet Pasha Mosque, have which city in common?
+v 193 Swansea hard bridge Which coastal city is the second largest in Wales and home to the blues band The Electric Revelators? 
+v 194 Versailles medium bridge Bankrupt! is an album by a french band from which city ?
+e 136 1 1
+e 136 2 1
+e 158 2 1
+e 136 3 1
+e 158 3 1
+e 136 4 1
+e 158 4 1
+e 136 5 1
+e 136 6 1
+e 158 6 1
+e 136 7 1
+e 158 7 1
+e 136 8 1
+e 158 8 1
+e 136 9 1
+e 158 9 1
+e 136 10 1
+e 136 11 1
+e 158 11 1
+e 136 12 1
+e 158 12 1
+e 136 13 1
+e 158 13 1
+e 136 14 1
+e 158 14 1
+e 136 15 1
+e 158 15 1
+e 136 16 1
+e 158 16 1
+e 136 17 1
+e 158 17 1
+e 136 18 1
+e 158 18 1
+e 136 19 1
+e 158 19 1
+e 136 20 1
+e 158 20 1
+e 136 21 1
+e 158 21 1
+e 136 22 1
+e 158 22 1
+e 136 24 1
+e 158 24 1
+e 136 25 1
+e 158 25 1
+e 136 26 1
+e 158 26 1
+e 136 27 1
+e 158 27 1
+e 136 28 1
+e 136 29 1
+e 136 30 1
+e 136 31 1
+e 158 31 1
+e 136 32 1
+e 158 32 1
+e 136 33 1
+e 136 34 1
+e 158 34 1
+e 136 35 1
+e 158 35 1
+e 136 36 1
+e 158 36 1
+e 136 38 1
+e 158 38 1
+e 136 39 1
+e 158 39 1
+e 136 40 1
+e 158 40 1
+e 136 41 1
+e 158 41 1
+e 136 43 1
+e 158 43 1
+e 136 44 1
+e 158 44 1
+e 62 44 1
+e 136 45 1
+e 158 45 1
+e 136 46 1
+e 170 46 1
+e 136 48 1
+e 136 49 1
+e 158 49 1
+e 136 51 1
+e 158 51 1
+e 136 52 1
+e 136 53 1
+e 158 53 1
+e 136 55 1
+e 158 55 1
+e 136 57 1
+e 158 57 1
+e 136 58 1
+e 158 58 1
+e 136 59 1
+e 136 60 1
+e 158 60 1
+e 136 61 1
+e 158 61 1
+e 136 62 1
+e 158 62 1
+e 136 63 1
+e 158 63 1
+e 136 64 1
+e 136 65 1
+e 136 66 1
+e 158 66 1
+e 136 67 1
+e 158 67 1
+e 136 68 1
+e 136 69 1
+e 136 70 1
+e 158 70 1
+e 136 71 1
+e 158 71 1
+e 136 72 1
+e 158 72 1
+e 136 73 1
+e 158 73 1
+e 54 74 1
+e 56 74 1
+e 23 74 1
+e 171 74 1
+e 131 74 1
+e 151 74 1
+e 136 75 1
+e 158 75 1
+e 136 76 1
+e 158 76 1
+e 136 77 1
+e 158 77 1
+e 136 78 1
+e 158 78 1
+e 136 79 1
+e 158 79 1
+e 136 80 1
+e 158 80 1
+e 136 81 1
+e 158 81 1
+e 136 82 1
+e 158 82 1
+e 136 83 1
+e 158 83 1
+e 136 84 1
+e 158 84 1
+e 136 85 1
+e 158 85 1
+e 136 86 1
+e 158 86 1
+e 136 87 1
+e 158 87 1
+e 136 88 1
+e 158 88 1
+e 136 89 1
+e 158 89 1
+e 136 90 1
+e 158 90 1
+e 136 91 1
+e 136 92 1
+e 158 92 1
+e 136 93 1
+e 158 93 1
+e 136 94 1
+e 136 95 1
+e 158 95 1
+e 136 96 1
+e 136 97 1
+e 158 97 1
+e 136 98 1
+e 158 98 1
+e 136 99 1
+e 158 99 1
+e 136 100 1
+e 136 101 1
+e 158 101 1
+e 136 102 1
+e 158 102 1
+e 136 103 1
+e 158 103 1
+e 136 104 1
+e 158 104 1
+e 136 105 1
+e 158 105 1
+e 136 106 1
+e 158 106 1
+e 136 107 1
+e 158 107 1
+e 136 108 1
+e 158 108 1
+e 136 109 1
+e 158 109 1
+e 136 110 1
+e 136 111 1
+e 158 111 1
+e 136 112 1
+e 158 112 1
+e 136 113 1
+e 136 114 1
+e 136 115 1
+e 158 115 1
+e 136 116 1
+e 158 116 1
+e 97 116 1
+e 136 117 1
+e 158 117 1
+e 136 118 1
+e 158 118 1
+e 136 119 1
+e 158 119 1
+e 136 120 1
+e 158 120 1
+e 136 121 1
+e 158 121 1
+e 136 122 1
+e 158 122 1
+e 136 123 1
+e 136 124 1
+e 136 125 1
+e 158 125 1
+e 136 126 1
+e 158 126 1
+e 136 127 1
+e 136 128 1
+e 158 128 1
+e 136 129 1
+e 158 129 1
+e 136 130 1
+e 136 132 1
+e 136 133 1
+e 158 133 1
+e 136 134 1
+e 158 134 1
+e 136 135 1
+e 158 135 1
+e 50 136 1
+e 182 136 1
+e 42 136 1
+e 37 136 1
+e 47 136 1
+e 152 136 1
+e 136 137 1
+e 136 138 1
+e 136 139 1
+e 158 139 1
+e 136 140 1
+e 158 140 1
+e 136 141 1
+e 158 141 1
+e 136 142 1
+e 158 142 1
+e 136 143 1
+e 136 144 1
+e 136 145 1
+e 158 145 1
+e 136 146 1
+e 158 146 1
+e 136 147 1
+e 136 148 1
+e 136 149 1
+e 158 149 1
+e 136 150 1
+e 158 150 1
+e 136 153 1
+e 158 153 1
+e 136 154 1
+e 158 154 1
+e 136 155 1
+e 158 155 1
+e 136 156 1
+e 136 157 1
+e 136 158 1
+e 50 158 1
+e 5 158 1
+e 65 158 1
+e 46 158 1
+e 1 158 1
+e 30 158 1
+e 148 158 1
+e 28 158 1
+e 185 158 1
+e 64 158 1
+e 113 158 1
+e 179 158 1
+e 144 158 1
+e 59 158 1
+e 143 158 1
+e 68 158 1
+e 94 158 1
+e 170 158 1
+e 130 158 1
+e 123 158 1
+e 100 158 1
+e 110 158 1
+e 96 158 1
+e 156 158 1
+e 33 158 1
+e 124 158 1
+e 157 158 1
+e 132 158 1
+e 162 158 1
+e 147 158 1
+e 91 158 1
+e 182 158 1
+e 52 158 1
+e 42 158 1
+e 166 158 1
+e 114 158 1
+e 37 158 1
+e 69 158 1
+e 138 158 1
+e 181 158 1
+e 47 158 1
+e 29 158 1
+e 48 158 1
+e 127 158 1
+e 10 158 1
+e 137 158 1
+e 152 158 1
+e 136 159 1
+e 158 159 1
+e 136 160 1
+e 158 160 1
+e 136 161 1
+e 158 161 1
+e 136 162 1
+e 136 163 1
+e 158 163 1
+e 136 164 1
+e 158 164 1
+e 136 165 1
+e 158 165 1
+e 136 166 1
+e 136 167 1
+e 158 167 1
+e 136 168 1
+e 158 168 1
+e 136 169 1
+e 158 169 1
+e 136 170 1
+e 136 171 1
+e 158 171 1
+e 74 172 1
+e 136 173 1
+e 158 173 1
+e 136 174 1
+e 158 174 1
+e 136 175 1
+e 158 175 1
+e 136 176 1
+e 158 176 1
+e 136 177 1
+e 158 177 1
+e 136 178 1
+e 158 178 1
+e 136 179 1
+e 136 180 1
+e 158 180 1
+e 136 181 1
+e 136 183 1
+e 158 183 1
+e 136 184 1
+e 158 184 1
+e 136 185 1
+e 136 186 1
+e 158 186 1
+e 136 187 1
+e 158 187 1
+e 136 188 1
+e 158 188 1
+e 136 189 1
+e 158 189 1
+e 136 190 1
+e 158 190 1
+e 136 191 1
+e 158 191 1
+e 136 192 1
+e 158 192 1
+e 107 192 1
+e 136 193 1
+e 158 193 1
+e 136 194 1
+e 158 194 1

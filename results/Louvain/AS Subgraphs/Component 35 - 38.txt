@@ -1,0 +1,116 @@
+p 38 77
+v 1 south hard bridge If you started out at 1 Penn Square in Philadelphia, which direction should you go to find the most notable partof the Avenue of the Arts?
+v 2 Alaska medium bridge The last assignment of the 5070th Air Defense Wing was at the largest United States military facility in what state?
+v 3 Indiana medium bridge Stewart Nozette is currently serving time at a prison located in what state?
+v 4 Arizona hard bridge in the 1975–76, Seattle SuperSonics lost to a team based in which US state ?
+v 5 Florida medium bridge In what state was the university Darryl Carlton played for?
+v 6 Connecticut hard bridge Where was the mythical world creator of the game RuneQuest born?
+v 7 Kansas hard bridge When considering Kelly D.Johnston and Bod Dole, which state was represented in the United States senate first - Oklahoma or Kansas?
+v 8 Wyoming medium bridge Which state did that Survey which named the Excelsior Geyser Crater survey?
+v 9 Massachusetts easy bridge Michael Ralph DeVito (born June 10, 1984) is a former American football defensive end, he  the National Football League (NFL), DeVito attended high school at Nauset Regional High School an NEASC accredited high school located in North Eastham, in which state?
+v 10 Nevada easy bridge American politician Joe Heck ran unsuccessfully against Democrat Catherine Cortez Masto, a woman who previously served as the 32nd Attorney General of where?
+v 11 Utah medium bridge What state did the United States House Committee on Oversight and Government Reform chairman and Geolocation Privacy and Surveillance Act sponsor act as a representative for?
+v 12 Alabama medium bridge Great WAgon Road was an improved trail through one of the major landform features of eastern North America, and stretches about 1200 miles from Quebec to where?
+v 13 Arkansas hard bridge For what state was the person who signed the Iran Nonproliferation Act of 2000 into law a governor?
+v 14 Vermont medium bridge The president that signed a new Railway Labor Act in 1926 was a lawyer from what state?
+v 15 Michigan hard bridge In what state are the headquarters of this American multinational automaker, which has a 50:50 joint venture with Changan Automobile?
+v 16 Maryland medium bridge In which state was the 1926 Navy Midshipmen football team located?
+v 17 Tennessee easy bridge Norris Dam State Park is a state park in Anderson County and Campbell County, Tennessee, the park is situated along the shores of Norris Lake, an impoundment of the Clinch River created by the completion of Norris Dam in 1936, the Clinch River rises near Tazewell, Virginia, and flows southwest for more than 300 mi through the Great Appalachian Valley, at the end, it joins the Tennessee River in Kingston in which US state?
+v 18 Nebraska medium bridge Marion M. Ganey relied on a fellow Jesuit who had grown up at the non-profit that is located in which state?
+v 19 Oregon hard bridge Craig Duane Neal who was selected in the 1988 NBA draft by a team based in which US state ?
+v 20 Texas medium bridge What state was the president who appointed Fran P. Mainella to be the 16th Director of the National Park Service of the United States once governor of?
+v 21 Georgia medium bridge  S. Truett Cathy founded a fast food chain that is headquartered in what state?
+v 22 Louisiana medium bridge What state is the college that Everson Walls played at located in?
+v 23 OH easy bridge Three Nationwide Plaza is a 408 ft(124m) postmodern highrise building located at the address 3 Nationwide Plaza in Downtown Columbus, Nationwide Plaza is the headquarters of Nationwide Mutual Insurance Company, and affiliated companies, are a group of large U.S. insurance and financial services companies based in Columbus in which US state (acronym)?
+v 24 California easy bridge The 337th Flight Test Squadron (337 FLTS) was most recently part of the 46th Test Wing and based at McClellan Air Force Base, a former United States Air Force base located in the North Highlands area of Sacramento County, in which US state?
+v 25 Idaho easy bridge The Boomershoot is a long range precision rifle event held near Orofino, in which state, each year, in recent years, the event has also featured an explosive fireball and an Anvil firing to start the event?
+v 26 Kentucky easy bridge Clay County is a county located in the U.S. state of South Dakota, the county is named in honor of Henry Clay, an American lawyer and planter, statesman, and skilled orator who represented which state,in both the United States Senate and House of Representatives?
+v 27 Pennsylvania medium bridge Foxcatcher is a 2014 American true crime sports drama film about a wrestling team set up in what state?
+v 28 Maine medium bridge What state does First East Branch Magalloway River and Kennebec River have in common?
+v 29 Ohio medium bridge In what state is the national guard base that is name for America's most successful fighter ace in World War I?
+v 30 Colorado hard bridge What state is Ruxton Park and Pikes Peak located in?
+v 31 Missouri easy bridge Mike Gibbons won the middleweight championship after the previous champion was found murdered where?
+v 32 South hard bridge What direction does Australian Grand Prix and Adelaide Street Circuit have in common?
+v 33 Virginia medium bridge What state is the university, in which Albert Levitt was a professor, located?
+v 34 Illinois hard bridge Which team won the 1914 championship of the Big Ten Conference? 
+v 35 Oklahoma medium bridge The tribe that Robin Wall Kimmerer is a member of, is located in which state?
+v 36 Dixie medium bridge Which patriotic song in "American Patrol" is a toponym for the United States?
+v 37 Confederacy easy bridge What the man who received a medal of honor during the American Civil War capture that represented the Confederacy?
+v 38 Montana hard bridge Which State's fish was discovered at the base of Colter Falls?
+e 5 2 1
+e 22 3 1
+e 23 3 1
+e 29 3 1
+e 10 4 1
+e 24 4 1
+e 9 6 1
+e 14 6 1
+e 31 7 1
+e 15 8 1
+e 17 8 1
+e 19 8 1
+e 30 8 1
+e 38 8 1
+e 4 11 1
+e 8 11 1
+e 10 11 1
+e 20 11 1
+e 30 11 1
+e 1 12 1
+e 21 12 1
+e 34 12 1
+e 7 13 1
+e 20 13 1
+e 22 13 1
+e 30 13 1
+e 31 13 1
+e 35 13 1
+e 9 14 1
+e 15 17 1
+e 31 17 1
+e 7 18 1
+e 8 18 1
+e 30 18 1
+e 9 19 1
+e 24 19 1
+e 4 20 1
+e 7 20 1
+e 10 20 1
+e 5 21 1
+e 15 21 1
+e 15 22 1
+e 20 22 1
+e 21 23 1
+e 10 24 1
+e 8 25 1
+e 19 25 1
+e 28 25 1
+e 38 25 1
+e 9 26 1
+e 17 26 1
+e 16 27 1
+e 19 28 1
+e 21 28 1
+e 21 29 1
+e 23 29 1
+e 4 30 1
+e 7 30 1
+e 10 30 1
+e 20 30 1
+e 9 31 1
+e 1 32 1
+e 12 32 1
+e 16 33 1
+e 17 33 1
+e 27 33 1
+e 9 34 1
+e 31 34 1
+e 7 35 1
+e 20 35 1
+e 22 35 1
+e 30 35 1
+e 1 36 1
+e 32 36 1
+e 1 37 1
+e 32 37 1
+e 36 37 1

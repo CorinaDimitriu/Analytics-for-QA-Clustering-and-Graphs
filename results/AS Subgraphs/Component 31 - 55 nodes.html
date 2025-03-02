@@ -1,0 +1,464 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a85903">a85903</option>
+                                
+                                    <option value="a7984">a7984</option>
+                                
+                                    <option value="a79703">a79703</option>
+                                
+                                    <option value="a78381">a78381</option>
+                                
+                                    <option value="a767">a767</option>
+                                
+                                    <option value="a57309">a57309</option>
+                                
+                                    <option value="a1686">a1686</option>
+                                
+                                    <option value="a1477">a1477</option>
+                                
+                                    <option value="a41702">a41702</option>
+                                
+                                    <option value="a180">a180</option>
+                                
+                                    <option value="a65189">a65189</option>
+                                
+                                    <option value="a62206">a62206</option>
+                                
+                                    <option value="a60699">a60699</option>
+                                
+                                    <option value="a55591">a55591</option>
+                                
+                                    <option value="a45296">a45296</option>
+                                
+                                    <option value="a4353">a4353</option>
+                                
+                                    <option value="a37592">a37592</option>
+                                
+                                    <option value="a30372">a30372</option>
+                                
+                                    <option value="a24352">a24352</option>
+                                
+                                    <option value="a2203">a2203</option>
+                                
+                                    <option value="a20985">a20985</option>
+                                
+                                    <option value="a20390">a20390</option>
+                                
+                                    <option value="a1997">a1997</option>
+                                
+                                    <option value="a17942">a17942</option>
+                                
+                                    <option value="a84771">a84771</option>
+                                
+                                    <option value="a72114">a72114</option>
+                                
+                                    <option value="a14208">a14208</option>
+                                
+                                    <option value="a4649">a4649</option>
+                                
+                                    <option value="a13606">a13606</option>
+                                
+                                    <option value="a78247">a78247</option>
+                                
+                                    <option value="a48202">a48202</option>
+                                
+                                    <option value="a24571">a24571</option>
+                                
+                                    <option value="a3956">a3956</option>
+                                
+                                    <option value="a1852">a1852</option>
+                                
+                                    <option value="a13991">a13991</option>
+                                
+                                    <option value="a69416">a69416</option>
+                                
+                                    <option value="a63046">a63046</option>
+                                
+                                    <option value="a90043">a90043</option>
+                                
+                                    <option value="a88893">a88893</option>
+                                
+                                    <option value="a7693">a7693</option>
+                                
+                                    <option value="a22027">a22027</option>
+                                
+                                    <option value="a75894">a75894</option>
+                                
+                                    <option value="a8248">a8248</option>
+                                
+                                    <option value="a37269">a37269</option>
+                                
+                                    <option value="a26304">a26304</option>
+                                
+                                    <option value="a3863">a3863</option>
+                                
+                                    <option value="a20280">a20280</option>
+                                
+                                    <option value="a82492">a82492</option>
+                                
+                                    <option value="a10510">a10510</option>
+                                
+                                    <option value="a54369">a54369</option>
+                                
+                                    <option value="a37454">a37454</option>
+                                
+                                    <option value="a31881">a31881</option>
+                                
+                                    <option value="a1445">a1445</option>
+                                
+                                    <option value="a11142">a11142</option>
+                                
+                                    <option value="a67889">a67889</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 35, "id": "a85903", "label": "Answer:McCartney\nPage Rank:2.87\nLabel:35", "shape": "square", "size": 14, "title": "Page Rank:2.8662220654522867\nQuestion:What album from Paul McCartney did the song Maybe I\u0027m Amazed appear in?\nAnswer:McCartney\nLevel:hard\nType:bridge"}, {"group": 32, "id": "a7984", "label": "Answer:songwriter\nPage Rank:0.49\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.4873669610259493\nQuestion:What do Lonnie Wilson and Dave Gahan have in common?\nAnswer:songwriter\nLevel:easy\nType:comparison"}, {"group": 35, "id": "a79703", "label": "Answer:Domino\nPage Rank:0.63\nLabel:35", "shape": "square", "size": 3, "title": "Page Rank:0.632782239055314\nQuestion:Which magazine has been in print longer, Meatpaper or Domino?\nAnswer:Domino\nLevel:medium\nType:comparison"}, {"group": 35, "id": "a78381", "label": "Answer:vocalists\nPage Rank:5.97\nLabel:35", "shape": "square", "size": 30, "title": "Page Rank:5.965990489437065\nQuestion:Moonbabies and We Are the Ocean, have which occupation in common?\nAnswer:vocalists\nLevel:easy\nType:comparison"}, {"group": 35, "id": "a767", "label": "Answer:singer\nPage Rank:0.39\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.39005247909001833\nQuestion:Steve Jones and Blag Dahlia, have which occupation in common?\nAnswer:singer\nLevel:easy\nType:comparison"}, {"group": 35, "id": "a57309", "label": "Answer:Williams\nPage Rank:0.86\nLabel:35", "shape": "square", "size": 4, "title": "Page Rank:0.8626610314351568\nQuestion:What team did the Canadian professional race driver and musician finish second in in 1996?\nAnswer:Williams\nLevel:easy\nType:bridge"}, {"group": 35, "id": "a1686", "label": "Answer:vocalist\nPage Rank:0.40\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.4018933579195368\nQuestion:What role in their respective bands do Stephen Christian and Jonathan Davis share?\nAnswer:vocalist\nLevel:medium\nType:comparison"}, {"group": 32, "id": "a1477", "label": "Answer:composer\nPage Rank:0.45\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.4453099136277709\nQuestion:What do Alessandro Scarlatti and Nikolai Rimsky-Korsakov have in common?\nAnswer:composer\nLevel:easy\nType:comparison"}, {"group": 41, "id": "a41702", "label": "Answer:Energizer\nPage Rank:0.42\nLabel:41", "shape": "square", "size": 2, "title": "Page Rank:0.4201928979287925\nQuestion:Mark Jackson made an appearance in the television commercial for what American battery company?\nAnswer:Energizer\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a180", "label": "Answer:barnstormer\nPage Rank:0.39\nLabel:41", "shape": "square", "size": 2, "title": "Page Rank:0.39005247909001833\nQuestion:Gelatine was an airship piloted on September 19, 1905 by a pioneer American aviator and what?\nAnswer:barnstormer\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a65189", "label": "Answer:Chevalier\nPage Rank:2.18\nLabel:35", "shape": "square", "size": 11, "title": "Page Rank:2.177533783626423\nQuestion:Robert NIchols wrote about a composer who received what honor in 1903?\nAnswer:Chevalier\nLevel:easy\nType:bridge"}, {"group": 35, "id": "a62206", "label": "Answer:baritone\nPage Rank:1.13\nLabel:35", "shape": "square", "size": 6, "title": "Page Rank:1.133996996163776\nQuestion:What range did H\u00fcsker D\u00fc\u0027s frontman contribute?\nAnswer:baritone\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a60699", "label": "Answer:Vaughan\nPage Rank:0.88\nLabel:35", "shape": "square", "size": 4, "title": "Page Rank:0.8836340229847606\nQuestion:What is the middle name of the co-founder of a doughnut chain named after a Canadian ice hockey player?\nAnswer:Vaughan\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a55591", "label": "Answer:Soprano\nPage Rank:1.22\nLabel:35", "shape": "square", "size": 6, "title": "Page Rank:1.2160426874345747\nQuestion:What type of opera singer was this Egyptian singer born in 1931 and performed in more than 500 opera performances and had a vocal range from approximately middle C to about two octaves above middle C?\nAnswer:Soprano\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a45296", "label": "Answer:contralto\nPage Rank:0.52\nLabel:35", "shape": "square", "size": 3, "title": "Page Rank:0.516044668156101\nQuestion:What voice type does Sonny Bono\u0027s collaborator on the album Ch\u00e9r have?\nAnswer:contralto\nLevel:hard\nType:bridge"}, {"group": 41, "id": "a4353", "label": "Answer:actor\nPage Rank:0.50\nLabel:41", "shape": "square", "size": 3, "title": "Page Rank:0.5030790497354214\nQuestion:Billy Bob Thornton and Gene Saks, are Americans that have which occupation in common?\nAnswer:actor\nLevel:easy\nType:comparison"}, {"group": 41, "id": "a37592", "label": "Answer:Howard\nPage Rank:0.78\nLabel:41", "shape": "square", "size": 4, "title": "Page Rank:0.7848581799447923\nQuestion:What is the middle name of the author of Only Time Will Tell?\nAnswer:Howard\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a30372", "label": "Answer:rapper\nPage Rank:0.46\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.46016722001180976\nQuestion:What kind of artist does I Mean It and These Things Happen have in common?\nAnswer:rapper\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a24352", "label": "Answer:actress\nPage Rank:0.95\nLabel:41", "shape": "square", "size": 5, "title": "Page Rank:0.950596925448524\nQuestion:What profession do both Milla Jovovich and Takako Honda share?\nAnswer:actress\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a2203", "label": "Answer:soprano\nPage Rank:0.43\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.4338276821660159\nQuestion:Roger Vignoles has accompanied singer Sylvia McNair, what redister does she sing in?\nAnswer:soprano\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a20985", "label": "Answer:Extras\nPage Rank:0.57\nLabel:41", "shape": "square", "size": 3, "title": "Page Rank:0.5695097362098552\nQuestion:Terence Beesley is married to an actress that was nominated for an Emmy for her role on what television show?\nAnswer:Extras\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a20390", "label": "Answer:Fairbanks\nPage Rank:0.51\nLabel:41", "shape": "square", "size": 3, "title": "Page Rank:0.5078430768750302\nQuestion:Red Flag \u2013 Alaska is held at the Air Force Base 26 miles southeast of what Alaska city?\nAnswer:Fairbanks\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a1997", "label": "Answer:musician\nPage Rank:0.45\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.45369708097893874\nQuestion:Miki Berenyi and Phil Anselmo, are in which industry?\nAnswer:musician\nLevel:easy\nType:comparison"}, {"group": 41, "id": "a17942", "label": "Answer:Guinness\nPage Rank:0.46\nLabel:41", "shape": "square", "size": 2, "title": "Page Rank:0.4590671881356205\nQuestion:Mustang television and cinema promoted which brand of Irish dry stout beer?\nAnswer:Guinness\nLevel:easy\nType:bridge"}, {"group": 41, "id": "a84771", "label": "Answer:Extra\nPage Rank:2.93\nLabel:41", "shape": "square", "size": 15, "title": "Page Rank:2.933453728828186\nQuestion:The year directly after Splash was first broadcasted, what was the name of the syndicated entertainment news show that Charissa Thompson co-hosted in?\nAnswer:Extra\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a72114", "label": "Answer:Harrison\nPage Rank:1.57\nLabel:41", "shape": "square", "size": 8, "title": "Page Rank:1.5686084485438805\nQuestion:Long Lake is located in which town?\nAnswer:Harrison\nLevel:hard\nType:bridge"}, {"group": 35, "id": "a14208", "label": "Answer:Norman\nPage Rank:0.59\nLabel:35", "shape": "square", "size": 3, "title": "Page Rank:0.5889122644042761\nQuestion:Lynn McGruder attended college in what town?\nAnswer:Norman\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a4649", "label": "Answer:mezzo-soprano\nPage Rank:0.44\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.4408850940702048\nQuestion:What is the vocal range of the performer on the 2010 album \"Laws of Illusion\"?\nAnswer:mezzo-soprano\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a13606", "label": "Answer:Sutherland\nPage Rank:0.50\nLabel:35", "shape": "square", "size": 3, "title": "Page Rank:0.5033438157301505\nQuestion:What is the name of the partner of the american engineer and inventor born January 30,1925?\nAnswer:Sutherland\nLevel:hard\nType:bridge"}, {"group": 35, "id": "a78247", "label": "Answer:Coloratura\nPage Rank:1.24\nLabel:35", "shape": "square", "size": 6, "title": "Page Rank:1.2400494994131293\nQuestion:Nikki Einfeld, is a Canadian born Soprano of Lyric of which kind, which is originally from Italian, literally meaning \"coloring\", and derives from the Latin word \"colorare\" (\"to color\")? \nAnswer:Coloratura\nLevel:easy\nType:bridge"}, {"group": 35, "id": "a48202", "label": "Answer:coloratura\nPage Rank:0.83\nLabel:35", "shape": "square", "size": 4, "title": "Page Rank:0.8320338587219982\nQuestion:Hj\u00f6rdis Gunborg Schymberg was what type of operatic soprano voice that specializes in music that is distinguished by agile runs, leaps and trills?\nAnswer:coloratura\nLevel:hard\nType:bridge"}, {"group": 53, "id": "a24571", "label": "Answer:accordionist\nPage Rank:0.61\nLabel:53", "shape": "square", "size": 3, "title": "Page Rank:0.6055541524794031\nQuestion:Didi Tera Devar Deewana is a 1994 Bollywood song composed by an Indian composer, pianist, musician and what?\nAnswer:accordionist\nLevel:medium\nType:bridge"}, {"group": 53, "id": "a3956", "label": "Answer:guitarist\nPage Rank:0.47\nLabel:53", "shape": "square", "size": 2, "title": "Page Rank:0.4729792069205437\nQuestion:What insturument type did Dickie Peterson and Ely Buendia have in common?\nAnswer:guitarist\nLevel:easy\nType:comparison"}, {"group": 53, "id": "a1852", "label": "Answer:saxophonist\nPage Rank:0.41\nLabel:53", "shape": "square", "size": 2, "title": "Page Rank:0.414545556224411\nQuestion:What was the occupation of Manikanth Kadri\u0027s father?\nAnswer:saxophonist\nLevel:medium\nType:bridge"}, {"group": 53, "id": "a13991", "label": "Answer:accompanist\nPage Rank:0.53\nLabel:53", "shape": "square", "size": 3, "title": "Page Rank:0.530412396332324\nQuestion:Donald Corren created a role of a character best known as what? \nAnswer:accompanist\nLevel:medium\nType:bridge"}, {"group": 53, "id": "a69416", "label": "Answer:percussionist\nPage Rank:1.21\nLabel:53", "shape": "square", "size": 6, "title": "Page Rank:1.2069886738379731\nQuestion:The man who played with the Canadian singer-songwriter and is noted for his work with Weather Report is known as what type of musician?\nAnswer:percussionist\nLevel:medium\nType:bridge"}, {"group": 53, "id": "a63046", "label": "Answer:cellist\nPage Rank:0.71\nLabel:53", "shape": "square", "size": 4, "title": "Page Rank:0.7084983584009017\nQuestion:What was Troels Svane and Daniil Shafran musical profession?\nAnswer:cellist\nLevel:medium\nType:bridge"}, {"group": 53, "id": "a90043", "label": "Answer:bassist\nPage Rank:5.35\nLabel:53", "shape": "square", "size": 27, "title": "Page Rank:5.3490869582713545\nQuestion:What position did Melvin George Schacher play in the American rock band popular during the 1970s?\nAnswer:bassist\nLevel:easy\nType:bridge"}, {"group": 53, "id": "a88893", "label": "Answer:violinist\nPage Rank:2.89\nLabel:53", "shape": "square", "size": 14, "title": "Page Rank:2.891398355822354\nQuestion:Symphony No. 3 was written by a musician who was proficient on what instrument?\nAnswer:violinist\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a7693", "label": "Answer:Melba\nPage Rank:0.42\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.4163920169358121\nQuestion:What is the middle name of the singer who released The Double EP: A Sea of Split Peas ?\nAnswer:Melba\nLevel:hard\nType:bridge"}, {"group": 32, "id": "a22027", "label": "Answer:Herbert\nPage Rank:0.43\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.43210952648819667\nQuestion:What was the middle name of the creator of the show The Honeymooners ?\nAnswer:Herbert\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a75894", "label": "Answer:Crosby\nPage Rank:1.64\nLabel:41", "shape": "square", "size": 8, "title": "Page Rank:1.6427922109486024\nQuestion:The Limehouse Declaration was issued, in part, by the Baroness of what constituency?\nAnswer:Crosby\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a8248", "label": "Answer:Shankar\nPage Rank:0.41\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.4093346050316233\nQuestion:Who is the director of the 1994 Tamil film which has the soundtrack Kadhalan, featuring 9 songs composed by an Indian composer, singer-songwriter, and philanthropist born as A. S. Dileep Kumar?\nAnswer:Shankar\nLevel:easy\nType:bridge"}, {"group": 53, "id": "a37269", "label": "Answer:drummer\nPage Rank:0.41\nLabel:53", "shape": "square", "size": 2, "title": "Page Rank:0.4093346050316233\nQuestion:What musical instrument did Jasen Rauch play for the band he left?\nAnswer:drummer\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a26304", "label": "Answer:Oliver\nPage Rank:0.41\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.4093346050316233\nQuestion:What is the middle name of Benjamin O. Davis Sr.\u0027s son?\nAnswer:Oliver\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a3863", "label": "Answer:Lillie\nPage Rank:0.39\nLabel:41", "shape": "square", "size": 2, "title": "Page Rank:0.39005247909001833\nQuestion:Under the Cherry Moon stars the English Actress who won a 1979 BAFTA for what serial?\nAnswer:Lillie\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a20280", "label": "Answer:Monroe\nPage Rank:0.51\nLabel:41", "shape": "square", "size": 3, "title": "Page Rank:0.5118129211034752\nQuestion:Named for a signer of the Declaration of Independence, the George Walton Academy is a private school in which Georgia town?\nAnswer:Monroe\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a82492", "label": "Answer:Jackson\nPage Rank:0.86\nLabel:41", "shape": "square", "size": 4, "title": "Page Rank:0.8640013103443265\nQuestion:What area does WOAD and Ridgeland, Mississippi have in common?\nAnswer:Jackson\nLevel:hard\nType:bridge"}, {"group": 35, "id": "a10510", "label": "Answer:countertenor\nPage Rank:0.41\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.414545556224411\nQuestion:Michael Maniaci is the type of voice that is a specific type of what?\nAnswer:countertenor\nLevel:medium\nType:bridge"}, {"group": 32, "id": "a54369", "label": "Answer:Ravel\nPage Rank:1.85\nLabel:32", "shape": "square", "size": 9, "title": "Page Rank:1.8490717731542048\nQuestion:Robert Nagy once performed in whose second opera?\nAnswer:Ravel\nLevel:hard\nType:bridge"}, {"group": 32, "id": "a37454", "label": "Answer:Pistons\nPage Rank:1.00\nLabel:32", "shape": "square", "size": 5, "title": "Page Rank:0.9994982557590296\nQuestion:Which other sports team plays its home games at the Little Caesars Arena, a multi-purpose arena in Midtown Detroit, where the National Hockey League team the Detroit Red Wings play?\nAnswer:Pistons\nLevel:easy\nType:bridge"}, {"group": 32, "id": "a31881", "label": "Answer:Grieg\nPage Rank:0.70\nLabel:32", "shape": "square", "size": 4, "title": "Page Rank:0.7014022847431787\nQuestion:Minken Fosheim had success writing books for children about which Norwegian Composer ?\nAnswer:Grieg\nLevel:hard\nType:bridge"}, {"group": 32, "id": "a1445", "label": "Answer:Debussy\nPage Rank:0.39\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.39005247909001833\nQuestion:Sarabande and Danse is a ballet made by Jacques d\u0027Amboise to which song, by who?\nAnswer:Debussy\nLevel:easy\nType:bridge"}, {"group": 32, "id": "a11142", "label": "Answer:Moore\nPage Rank:0.55\nLabel:32", "shape": "square", "size": 3, "title": "Page Rank:0.5465472348648145\nQuestion:What is the middle name of the U.S. Representative interviewed for the documentary Aristide and the Endless Revolution ?\nAnswer:Moore\nLevel:medium\nType:bridge"}, {"group": 35, "id": "a67889", "label": "Answer:Caruso\nPage Rank:0.41\nLabel:35", "shape": "square", "size": 2, "title": "Page Rank:0.414545556224411\nQuestion:What is the name of the song that was written by Lucio Dalla and was covered on Maria Farantouri\u0027s album titled 17 Songs?\nAnswer:Caruso\nLevel:medium\nType:bridge"}]);
+                  edges = new vis.DataSet([{"from": "a85903", "label": 0.14285714285714285, "length": 500, "to": "a7984", "width": 1}, {"from": "a85903", "label": 1.0, "length": 500, "to": "a79703", "width": 1}, {"from": "a85903", "label": 0.3333333333333333, "length": 500, "to": "a78381", "width": 1}, {"from": "a85903", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a85903", "label": 0.16666666666666666, "length": 500, "to": "a57309", "width": 1}, {"from": "a85903", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a85903", "label": 0.1111111111111111, "length": 500, "to": "a1477", "width": 1}, {"from": "a41702", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a65189", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a65189", "label": 0.5, "length": 500, "to": "a62206", "width": 1}, {"from": "a65189", "label": 0.3333333333333333, "length": 500, "to": "a60699", "width": 1}, {"from": "a65189", "label": 0.16666666666666666, "length": 500, "to": "a57309", "width": 1}, {"from": "a65189", "label": 0.16666666666666666, "length": 500, "to": "a55591", "width": 1}, {"from": "a65189", "label": 0.16666666666666666, "length": 500, "to": "a45296", "width": 1}, {"from": "a65189", "label": 0.09090909090909091, "length": 500, "to": "a4353", "width": 1}, {"from": "a65189", "label": 0.25, "length": 500, "to": "a37592", "width": 1}, {"from": "a65189", "label": 0.14285714285714285, "length": 500, "to": "a30372", "width": 1}, {"from": "a65189", "label": 0.16666666666666666, "length": 500, "to": "a24352", "width": 1}, {"from": "a65189", "label": 0.07142857142857142, "length": 500, "to": "a2203", "width": 1}, {"from": "a65189", "label": 0.16666666666666666, "length": 500, "to": "a20985", "width": 1}, {"from": "a65189", "label": 0.14285714285714285, "length": 500, "to": "a20390", "width": 1}, {"from": "a65189", "label": 0.05, "length": 500, "to": "a1997", "width": 1}, {"from": "a65189", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a65189", "label": 0.125, "length": 500, "to": "a17942", "width": 1}, {"from": "a65189", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a65189", "label": 0.3333333333333333, "length": 500, "to": "a84771", "width": 1}, {"from": "a65189", "label": 0.3333333333333333, "length": 500, "to": "a72114", "width": 1}, {"from": "a65189", "label": 0.3333333333333333, "length": 500, "to": "a78381", "width": 1}, {"from": "a14208", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a14208", "label": 0.16666666666666666, "length": 500, "to": "a4649", "width": 1}, {"from": "a14208", "label": 0.07142857142857142, "length": 500, "to": "a2203", "width": 1}, {"from": "a14208", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a14208", "label": 0.2, "length": 500, "to": "a13606", "width": 1}, {"from": "a14208", "label": 0.25, "length": 500, "to": "a55591", "width": 1}, {"from": "a14208", "label": 0.25, "length": 500, "to": "a78247", "width": 1}, {"from": "a14208", "label": 0.25, "length": 500, "to": "a48202", "width": 1}, {"from": "a14208", "label": 0.25, "length": 500, "to": "a78381", "width": 1}, {"from": "a24571", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a24571", "label": 0.14285714285714285, "length": 500, "to": "a3956", "width": 1}, {"from": "a24571", "label": 0.05, "length": 500, "to": "a1997", "width": 1}, {"from": "a24571", "label": 0.1111111111111111, "length": 500, "to": "a1852", "width": 1}, {"from": "a24571", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a24571", "label": 0.16666666666666666, "length": 500, "to": "a13991", "width": 1}, {"from": "a24571", "label": 0.2, "length": 500, "to": "a69416", "width": 1}, {"from": "a24571", "label": 0.2, "length": 500, "to": "a63046", "width": 1}, {"from": "a24571", "label": 0.2, "length": 500, "to": "a78381", "width": 1}, {"from": "a24571", "label": 0.2, "length": 500, "to": "a90043", "width": 1}, {"from": "a24571", "label": 0.2, "length": 500, "to": "a88893", "width": 1}, {"from": "a3956", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a3956", "label": 0.05, "length": 500, "to": "a1997", "width": 1}, {"from": "a3956", "label": 0.1111111111111111, "length": 500, "to": "a1852", "width": 1}, {"from": "a3956", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a3956", "label": 0.14285714285714285, "length": 500, "to": "a69416", "width": 1}, {"from": "a3956", "label": 0.14285714285714285, "length": 500, "to": "a63046", "width": 1}, {"from": "a3956", "label": 0.14285714285714285, "length": 500, "to": "a13991", "width": 1}, {"from": "a3956", "label": 0.14285714285714285, "length": 500, "to": "a78381", "width": 1}, {"from": "a3956", "label": 0.14285714285714285, "length": 500, "to": "a90043", "width": 1}, {"from": "a3956", "label": 0.14285714285714285, "length": 500, "to": "a88893", "width": 1}, {"from": "a2203", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a2203", "label": 0.05, "length": 500, "to": "a1997", "width": 1}, {"from": "a2203", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a45296", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a13606", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a55591", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a7693", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a78247", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a48202", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a57309", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a60699", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a62206", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a78381", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a4649", "width": 1}, {"from": "a2203", "label": 0.07142857142857142, "length": 500, "to": "a30372", "width": 1}, {"from": "a22027", "label": 0.1111111111111111, "length": 500, "to": "a1477", "width": 1}, {"from": "a17942", "label": 0.09090909090909091, "length": 500, "to": "a4353", "width": 1}, {"from": "a17942", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a17942", "label": 0.125, "length": 500, "to": "a20985", "width": 1}, {"from": "a17942", "label": 0.125, "length": 500, "to": "a84771", "width": 1}, {"from": "a17942", "label": 0.125, "length": 500, "to": "a72114", "width": 1}, {"from": "a17942", "label": 0.125, "length": 500, "to": "a20390", "width": 1}, {"from": "a17942", "label": 0.125, "length": 500, "to": "a37592", "width": 1}, {"from": "a17942", "label": 0.125, "length": 500, "to": "a24352", "width": 1}, {"from": "a17942", "label": 0.125, "length": 500, "to": "a75894", "width": 1}, {"from": "a20985", "label": 0.09090909090909091, "length": 500, "to": "a4353", "width": 1}, {"from": "a20985", "label": 0.14285714285714285, "length": 500, "to": "a20390", "width": 1}, {"from": "a20985", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a20985", "label": 0.16666666666666666, "length": 500, "to": "a84771", "width": 1}, {"from": "a20985", "label": 0.16666666666666666, "length": 500, "to": "a72114", "width": 1}, {"from": "a20985", "label": 0.16666666666666666, "length": 500, "to": "a37592", "width": 1}, {"from": "a20985", "label": 0.16666666666666666, "length": 500, "to": "a24352", "width": 1}, {"from": "a20985", "label": 0.16666666666666666, "length": 500, "to": "a75894", "width": 1}, {"from": "a45296", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a45296", "label": 0.14285714285714285, "length": 500, "to": "a30372", "width": 1}, {"from": "a45296", "label": 0.05, "length": 500, "to": "a1997", "width": 1}, {"from": "a45296", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a45296", "label": 0.16666666666666666, "length": 500, "to": "a55591", "width": 1}, {"from": "a45296", "label": 0.16666666666666666, "length": 500, "to": "a57309", "width": 1}, {"from": "a45296", "label": 0.16666666666666666, "length": 500, "to": "a60699", "width": 1}, {"from": "a45296", "label": 0.16666666666666666, "length": 500, "to": "a62206", "width": 1}, {"from": "a45296", "label": 0.16666666666666666, "length": 500, "to": "a78381", "width": 1}, {"from": "a13606", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a13606", "label": 0.16666666666666666, "length": 500, "to": "a4649", "width": 1}, {"from": "a13606", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a13606", "label": 0.2, "length": 500, "to": "a55591", "width": 1}, {"from": "a13606", "label": 0.2, "length": 500, "to": "a78247", "width": 1}, {"from": "a13606", "label": 0.2, "length": 500, "to": "a48202", "width": 1}, {"from": "a13606", "label": 0.2, "length": 500, "to": "a78381", "width": 1}, {"from": "a1997", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a1997", "label": 0.1111111111111111, "length": 500, "to": "a1852", "width": 1}, {"from": "a1997", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a55591", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a69416", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a63046", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a13991", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a8248", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a57309", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a60699", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a37269", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a62206", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a78381", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a79703", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a26304", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a90043", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a88893", "width": 1}, {"from": "a1997", "label": 0.05, "length": 500, "to": "a30372", "width": 1}, {"from": "a55591", "label": 0.3333333333333333, "length": 500, "to": "a7693", "width": 1}, {"from": "a55591", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a55591", "label": 0.3333333333333333, "length": 500, "to": "a48202", "width": 1}, {"from": "a55591", "label": 0.16666666666666666, "length": 500, "to": "a4649", "width": 1}, {"from": "a55591", "label": 0.14285714285714285, "length": 500, "to": "a30372", "width": 1}, {"from": "a55591", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a55591", "label": 0.16666666666666666, "length": 500, "to": "a78247", "width": 1}, {"from": "a55591", "label": 0.16666666666666666, "length": 500, "to": "a57309", "width": 1}, {"from": "a55591", "label": 0.16666666666666666, "length": 500, "to": "a60699", "width": 1}, {"from": "a55591", "label": 0.16666666666666666, "length": 500, "to": "a62206", "width": 1}, {"from": "a55591", "label": 0.16666666666666666, "length": 500, "to": "a78381", "width": 1}, {"from": "a84771", "label": 0.5, "length": 500, "to": "a75894", "width": 1}, {"from": "a84771", "label": 0.5, "length": 500, "to": "a72114", "width": 1}, {"from": "a84771", "label": 0.09090909090909091, "length": 500, "to": "a4353", "width": 1}, {"from": "a84771", "label": 0.25, "length": 500, "to": "a37592", "width": 1}, {"from": "a84771", "label": 0.16666666666666666, "length": 500, "to": "a24352", "width": 1}, {"from": "a84771", "label": 0.14285714285714285, "length": 500, "to": "a20390", "width": 1}, {"from": "a84771", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a69416", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a69416", "label": 0.25, "length": 500, "to": "a63046", "width": 1}, {"from": "a69416", "label": 1.0, "length": 500, "to": "a37269", "width": 1}, {"from": "a69416", "label": 0.1111111111111111, "length": 500, "to": "a1852", "width": 1}, {"from": "a69416", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a69416", "label": 0.16666666666666666, "length": 500, "to": "a13991", "width": 1}, {"from": "a69416", "label": 0.3333333333333333, "length": 500, "to": "a78381", "width": 1}, {"from": "a69416", "label": 0.3333333333333333, "length": 500, "to": "a90043", "width": 1}, {"from": "a69416", "label": 0.3333333333333333, "length": 500, "to": "a88893", "width": 1}, {"from": "a4353", "label": 0.25, "length": 500, "to": "a3863", "width": 1}, {"from": "a4353", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a4353", "label": 0.09090909090909091, "length": 500, "to": "a72114", "width": 1}, {"from": "a4353", "label": 0.09090909090909091, "length": 500, "to": "a20280", "width": 1}, {"from": "a4353", "label": 0.09090909090909091, "length": 500, "to": "a20390", "width": 1}, {"from": "a4353", "label": 0.09090909090909091, "length": 500, "to": "a82492", "width": 1}, {"from": "a4353", "label": 0.09090909090909091, "length": 500, "to": "a37592", "width": 1}, {"from": "a4353", "label": 0.09090909090909091, "length": 500, "to": "a24352", "width": 1}, {"from": "a4353", "label": 0.09090909090909091, "length": 500, "to": "a75894", "width": 1}, {"from": "a10510", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a10510", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a10510", "label": 1.0, "length": 500, "to": "a78381", "width": 1}, {"from": "a63046", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a63046", "label": 0.1111111111111111, "length": 500, "to": "a1852", "width": 1}, {"from": "a63046", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a63046", "label": 0.16666666666666666, "length": 500, "to": "a13991", "width": 1}, {"from": "a63046", "label": 0.25, "length": 500, "to": "a78381", "width": 1}, {"from": "a63046", "label": 0.25, "length": 500, "to": "a90043", "width": 1}, {"from": "a63046", "label": 0.25, "length": 500, "to": "a88893", "width": 1}, {"from": "a13991", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a13991", "label": 0.1111111111111111, "length": 500, "to": "a1852", "width": 1}, {"from": "a13991", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a13991", "label": 0.16666666666666666, "length": 500, "to": "a78381", "width": 1}, {"from": "a13991", "label": 0.16666666666666666, "length": 500, "to": "a90043", "width": 1}, {"from": "a13991", "label": 0.16666666666666666, "length": 500, "to": "a88893", "width": 1}, {"from": "a54369", "label": 0.14285714285714285, "length": 500, "to": "a7984", "width": 1}, {"from": "a54369", "label": 1.0, "length": 500, "to": "a37454", "width": 1}, {"from": "a54369", "label": 0.5, "length": 500, "to": "a31881", "width": 1}, {"from": "a54369", "label": 0.1111111111111111, "length": 500, "to": "a1477", "width": 1}, {"from": "a54369", "label": 0.16666666666666666, "length": 500, "to": "a1445", "width": 1}, {"from": "a54369", "label": 0.3333333333333333, "length": 500, "to": "a11142", "width": 1}, {"from": "a7693", "label": 0.3333333333333333, "length": 500, "to": "a78247", "width": 1}, {"from": "a7693", "label": 0.3333333333333333, "length": 500, "to": "a48202", "width": 1}, {"from": "a78247", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a78247", "label": 0.3333333333333333, "length": 500, "to": "a48202", "width": 1}, {"from": "a78247", "label": 0.16666666666666666, "length": 500, "to": "a4649", "width": 1}, {"from": "a78247", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a78247", "label": 1.0, "length": 500, "to": "a78381", "width": 1}, {"from": "a1445", "label": 0.16666666666666666, "length": 500, "to": "a1477", "width": 1}, {"from": "a1445", "label": 0.16666666666666666, "length": 500, "to": "a37454", "width": 1}, {"from": "a1445", "label": 0.16666666666666666, "length": 500, "to": "a7984", "width": 1}, {"from": "a1445", "label": 0.16666666666666666, "length": 500, "to": "a11142", "width": 1}, {"from": "a1445", "label": 0.16666666666666666, "length": 500, "to": "a31881", "width": 1}, {"from": "a72114", "label": 0.25, "length": 500, "to": "a37592", "width": 1}, {"from": "a72114", "label": 0.16666666666666666, "length": 500, "to": "a24352", "width": 1}, {"from": "a72114", "label": 0.14285714285714285, "length": 500, "to": "a20390", "width": 1}, {"from": "a72114", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a72114", "label": 0.5, "length": 500, "to": "a75894", "width": 1}, {"from": "a48202", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a48202", "label": 0.16666666666666666, "length": 500, "to": "a4649", "width": 1}, {"from": "a48202", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a48202", "label": 0.3333333333333333, "length": 500, "to": "a78381", "width": 1}, {"from": "a20280", "label": 0.25, "length": 500, "to": "a3863", "width": 1}, {"from": "a20280", "label": 0.5, "length": 500, "to": "a82492", "width": 1}, {"from": "a20280", "label": 0.5, "length": 500, "to": "a24352", "width": 1}, {"from": "a20390", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a20390", "label": 0.14285714285714285, "length": 500, "to": "a37592", "width": 1}, {"from": "a20390", "label": 0.14285714285714285, "length": 500, "to": "a24352", "width": 1}, {"from": "a20390", "label": 0.14285714285714285, "length": 500, "to": "a75894", "width": 1}, {"from": "a3863", "label": 0.25, "length": 500, "to": "a82492", "width": 1}, {"from": "a3863", "label": 0.25, "length": 500, "to": "a24352", "width": 1}, {"from": "a82492", "label": 0.16666666666666666, "length": 500, "to": "a24352", "width": 1}, {"from": "a57309", "label": 0.14285714285714285, "length": 500, "to": "a7984", "width": 1}, {"from": "a57309", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a57309", "label": 0.14285714285714285, "length": 500, "to": "a30372", "width": 1}, {"from": "a57309", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a57309", "label": 0.1111111111111111, "length": 500, "to": "a1477", "width": 1}, {"from": "a57309", "label": 0.16666666666666666, "length": 500, "to": "a60699", "width": 1}, {"from": "a57309", "label": 0.16666666666666666, "length": 500, "to": "a62206", "width": 1}, {"from": "a57309", "label": 0.16666666666666666, "length": 500, "to": "a78381", "width": 1}, {"from": "a57309", "label": 0.16666666666666666, "length": 500, "to": "a79703", "width": 1}, {"from": "a1852", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a1852", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a1852", "label": 0.1111111111111111, "length": 500, "to": "a78381", "width": 1}, {"from": "a1852", "label": 0.1111111111111111, "length": 500, "to": "a90043", "width": 1}, {"from": "a1852", "label": 0.1111111111111111, "length": 500, "to": "a88893", "width": 1}, {"from": "a60699", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a60699", "label": 0.14285714285714285, "length": 500, "to": "a30372", "width": 1}, {"from": "a60699", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a60699", "label": 0.3333333333333333, "length": 500, "to": "a62206", "width": 1}, {"from": "a60699", "label": 0.3333333333333333, "length": 500, "to": "a78381", "width": 1}, {"from": "a1477", "label": 0.1111111111111111, "length": 500, "to": "a79703", "width": 1}, {"from": "a1477", "label": 0.1111111111111111, "length": 500, "to": "a37454", "width": 1}, {"from": "a1477", "label": 0.1111111111111111, "length": 500, "to": "a7984", "width": 1}, {"from": "a1477", "label": 0.1111111111111111, "length": 500, "to": "a11142", "width": 1}, {"from": "a1477", "label": 0.1111111111111111, "length": 500, "to": "a31881", "width": 1}, {"from": "a37592", "label": 0.16666666666666666, "length": 500, "to": "a24352", "width": 1}, {"from": "a37592", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a37592", "label": 0.25, "length": 500, "to": "a75894", "width": 1}, {"from": "a62206", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a62206", "label": 0.14285714285714285, "length": 500, "to": "a30372", "width": 1}, {"from": "a62206", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a62206", "label": 0.5, "length": 500, "to": "a78381", "width": 1}, {"from": "a24352", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a24352", "label": 0.16666666666666666, "length": 500, "to": "a75894", "width": 1}, {"from": "a75894", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a75894", "label": 0.09090909090909091, "length": 500, "to": "a180", "width": 1}, {"from": "a75894", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a75894", "label": 0.5, "length": 500, "to": "a78381", "width": 1}, {"from": "a78381", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a78381", "label": 1.0, "length": 500, "to": "a67889", "width": 1}, {"from": "a78381", "label": 0.16666666666666666, "length": 500, "to": "a4649", "width": 1}, {"from": "a78381", "label": 0.14285714285714285, "length": 500, "to": "a30372", "width": 1}, {"from": "a78381", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a78381", "label": 0.3333333333333333, "length": 500, "to": "a90043", "width": 1}, {"from": "a78381", "label": 0.3333333333333333, "length": 500, "to": "a88893", "width": 1}, {"from": "a79703", "label": 0.14285714285714285, "length": 500, "to": "a7984", "width": 1}, {"from": "a67889", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a67889", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a37454", "label": 0.14285714285714285, "length": 500, "to": "a7984", "width": 1}, {"from": "a37454", "label": 0.5, "length": 500, "to": "a31881", "width": 1}, {"from": "a37454", "label": 0.3333333333333333, "length": 500, "to": "a11142", "width": 1}, {"from": "a4649", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a4649", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a7984", "label": 0.14285714285714285, "length": 500, "to": "a11142", "width": 1}, {"from": "a7984", "label": 0.14285714285714285, "length": 500, "to": "a31881", "width": 1}, {"from": "a11142", "label": 0.3333333333333333, "length": 500, "to": "a31881", "width": 1}, {"from": "a90043", "label": 1.0, "length": 500, "to": "a88893", "width": 1}, {"from": "a90043", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a90043", "label": 0.037037037037037035, "length": 500, "to": "a1686", "width": 1}, {"from": "a1686", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a1686", "label": 0.037037037037037035, "length": 500, "to": "a88893", "width": 1}, {"from": "a1686", "label": 0.037037037037037035, "length": 500, "to": "a30372", "width": 1}, {"from": "a88893", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}, {"from": "a30372", "label": 0.03571428571428571, "length": 500, "to": "a767", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

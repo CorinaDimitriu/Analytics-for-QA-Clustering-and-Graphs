@@ -1,0 +1,370 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a12311">a12311</option>
+                                
+                                    <option value="a5177">a5177</option>
+                                
+                                    <option value="a25013">a25013</option>
+                                
+                                    <option value="a54736">a54736</option>
+                                
+                                    <option value="a72789">a72789</option>
+                                
+                                    <option value="a7260">a7260</option>
+                                
+                                    <option value="a30944">a30944</option>
+                                
+                                    <option value="a55483">a55483</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 2, "id": "a12311", "label": "Answer:Venezuelan\nPage Rank:0.55\nLabel:2", "shape": "square", "size": 3, "title": "Page Rank:0.5532518997584281\nQuestion:The 2013\u201314 Toronto Raptors season included a trade to the Sacramento Kings for the player of what nationality who played college for Maryland?\nAnswer:Venezuelan\nLevel:hard\nType:bridge"}, {"group": 2, "id": "a5177", "label": "Answer:Brazilian\nPage Rank:0.43\nLabel:2", "shape": "square", "size": 2, "title": "Page Rank:0.43212757059563867\nQuestion:The 1997\u201398 FC Barcelona season began with the addition of the striker who was of what nationality?\nAnswer:Brazilian\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a25013", "label": "Answer:Paraguayan\nPage Rank:0.65\nLabel:2", "shape": "square", "size": 3, "title": "Page Rank:0.6473047227173608\nQuestion:What is the nationality of the striker who scored 19 league goals for Blackburn Rovers in the 2007-08 season ?\nAnswer:Paraguayan\nLevel:hard\nType:bridge"}, {"group": 2, "id": "a54736", "label": "Answer:Colombian\nPage Rank:1.01\nLabel:2", "shape": "square", "size": 5, "title": "Page Rank:1.0072331195783266\nQuestion:Soul Plane\u0027s supporting actors include Mo\u0027Nique, Loni Love, K.D. Aubert, D.L. Hughley, Godfrey, and another actress of what nationality?\nAnswer:Colombian\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a72789", "label": "Answer:Uruguayan\nPage Rank:2.66\nLabel:2", "shape": "square", "size": 13, "title": "Page Rank:2.655318311488364\nQuestion:What is the nationality of the goal scorer in the1998 UEFA Super Cup ? \nAnswer:Uruguayan\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a7260", "label": "Answer:Ecuadorian\nPage Rank:0.48\nLabel:2", "shape": "square", "size": 2, "title": "Page Rank:0.48460020416796623\nQuestion:The 2010 FA Community Shield had a goal by the right wing player who is of which nationality?\nAnswer:Ecuadorian\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a30944", "label": "Answer:Guyanese\nPage Rank:0.78\nLabel:2", "shape": "square", "size": 4, "title": "Page Rank:0.7848569762948\nQuestion:What is the nationality of Ike Quartey and Andrew \"The Eagle Murray\"?\nAnswer:Guyanese\nLevel:easy\nType:bridge"}, {"group": 2, "id": "a55483", "label": "Answer:Argentinian\nPage Rank:1.44\nLabel:2", "shape": "square", "size": 7, "title": "Page Rank:1.4353071953991157\nQuestion:What nationality is Renaissance: Sequential Vol. 2\u0027s writer?\nAnswer:Argentinian\nLevel:easy\nType:bridge"}]);
+                  edges = new vis.DataSet([{"from": "a12311", "label": 0.14285714285714285, "length": 500, "to": "a5177", "width": 1}, {"from": "a12311", "label": 0.2, "length": 500, "to": "a25013", "width": 1}, {"from": "a12311", "label": 0.2, "length": 500, "to": "a54736", "width": 1}, {"from": "a12311", "label": 0.2, "length": 500, "to": "a72789", "width": 1}, {"from": "a12311", "label": 0.16666666666666666, "length": 500, "to": "a7260", "width": 1}, {"from": "a12311", "label": 0.2, "length": 500, "to": "a30944", "width": 1}, {"from": "a12311", "label": 0.2, "length": 500, "to": "a55483", "width": 1}, {"from": "a25013", "label": 0.25, "length": 500, "to": "a54736", "width": 1}, {"from": "a25013", "label": 0.16666666666666666, "length": 500, "to": "a7260", "width": 1}, {"from": "a25013", "label": 0.25, "length": 500, "to": "a55483", "width": 1}, {"from": "a25013", "label": 0.25, "length": 500, "to": "a72789", "width": 1}, {"from": "a25013", "label": 0.25, "length": 500, "to": "a30944", "width": 1}, {"from": "a25013", "label": 0.14285714285714285, "length": 500, "to": "a5177", "width": 1}, {"from": "a30944", "label": 0.3333333333333333, "length": 500, "to": "a55483", "width": 1}, {"from": "a30944", "label": 0.3333333333333333, "length": 500, "to": "a72789", "width": 1}, {"from": "a30944", "label": 0.14285714285714285, "length": 500, "to": "a5177", "width": 1}, {"from": "a30944", "label": 0.16666666666666666, "length": 500, "to": "a7260", "width": 1}, {"from": "a30944", "label": 0.3333333333333333, "length": 500, "to": "a54736", "width": 1}, {"from": "a5177", "label": 0.14285714285714285, "length": 500, "to": "a55483", "width": 1}, {"from": "a5177", "label": 0.14285714285714285, "length": 500, "to": "a54736", "width": 1}, {"from": "a5177", "label": 0.14285714285714285, "length": 500, "to": "a7260", "width": 1}, {"from": "a5177", "label": 0.14285714285714285, "length": 500, "to": "a72789", "width": 1}, {"from": "a54736", "label": 0.5, "length": 500, "to": "a72789", "width": 1}, {"from": "a54736", "label": 0.5, "length": 500, "to": "a55483", "width": 1}, {"from": "a54736", "label": 0.16666666666666666, "length": 500, "to": "a7260", "width": 1}, {"from": "a55483", "label": 1.0, "length": 500, "to": "a72789", "width": 1}, {"from": "a55483", "label": 0.16666666666666666, "length": 500, "to": "a7260", "width": 1}, {"from": "a7260", "label": 0.16666666666666666, "length": 500, "to": "a72789", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

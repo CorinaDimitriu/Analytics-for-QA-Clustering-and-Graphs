@@ -1,0 +1,430 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a10652">a10652</option>
+                                
+                                    <option value="a22043">a22043</option>
+                                
+                                    <option value="a50844">a50844</option>
+                                
+                                    <option value="a73025">a73025</option>
+                                
+                                    <option value="a75587">a75587</option>
+                                
+                                    <option value="a11053">a11053</option>
+                                
+                                    <option value="a1626">a1626</option>
+                                
+                                    <option value="a11616">a11616</option>
+                                
+                                    <option value="a3671">a3671</option>
+                                
+                                    <option value="a3714">a3714</option>
+                                
+                                    <option value="a4705">a4705</option>
+                                
+                                    <option value="a1466">a1466</option>
+                                
+                                    <option value="a19">a19</option>
+                                
+                                    <option value="a39">a39</option>
+                                
+                                    <option value="a20934">a20934</option>
+                                
+                                    <option value="a3442">a3442</option>
+                                
+                                    <option value="a4745">a4745</option>
+                                
+                                    <option value="a3512">a3512</option>
+                                
+                                    <option value="a16880">a16880</option>
+                                
+                                    <option value="a184">a184</option>
+                                
+                                    <option value="a2367">a2367</option>
+                                
+                                    <option value="a1819">a1819</option>
+                                
+                                    <option value="a485">a485</option>
+                                
+                                    <option value="a22165">a22165</option>
+                                
+                                    <option value="a31816">a31816</option>
+                                
+                                    <option value="a6502">a6502</option>
+                                
+                                    <option value="a18325">a18325</option>
+                                
+                                    <option value="a2401">a2401</option>
+                                
+                                    <option value="a3117">a3117</option>
+                                
+                                    <option value="a3252">a3252</option>
+                                
+                                    <option value="a8804">a8804</option>
+                                
+                                    <option value="a40927">a40927</option>
+                                
+                                    <option value="a4177">a4177</option>
+                                
+                                    <option value="a5793">a5793</option>
+                                
+                                    <option value="a3072">a3072</option>
+                                
+                                    <option value="a4422">a4422</option>
+                                
+                                    <option value="a5779">a5779</option>
+                                
+                                    <option value="a4519">a4519</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 11, "id": "a10652", "label": "Answer:south\nPage Rank:0.49\nLabel:11", "shape": "square", "size": 2, "title": "Page Rank:0.4942911641917848\nQuestion:If you started out at 1 Penn Square in Philadelphia, which direction should you go to find the most notable partof the Avenue of the Arts?\nAnswer:south\nLevel:hard\nType:bridge"}, {"group": 11, "id": "a22043", "label": "Answer:Alabama\nPage Rank:1.35\nLabel:11", "shape": "square", "size": 7, "title": "Page Rank:1.352923830622705\nQuestion:Great WAgon Road was an improved trail through one of the major landform features of eastern North America, and stretches about 1200 miles from Quebec to where?\nAnswer:Alabama\nLevel:medium\nType:bridge"}, {"group": 11, "id": "a50844", "label": "Answer:South\nPage Rank:1.75\nLabel:11", "shape": "square", "size": 9, "title": "Page Rank:1.7493132926118382\nQuestion:What direction does Australian Grand Prix and Adelaide Street Circuit have in common?\nAnswer:South\nLevel:hard\nType:bridge"}, {"group": 11, "id": "a73025", "label": "Answer:Dixie\nPage Rank:1.34\nLabel:11", "shape": "square", "size": 7, "title": "Page Rank:1.3427861859425703\nQuestion:Which patriotic song in \"American Patrol\" is a toponym for the United States?\nAnswer:Dixie\nLevel:medium\nType:bridge"}, {"group": 11, "id": "a75587", "label": "Answer:Confederacy\nPage Rank:2.48\nLabel:11", "shape": "square", "size": 12, "title": "Page Rank:2.4841544439937553\nQuestion:What the man who received a medal of honor during the American Civil War capture that represented the Confederacy?\nAnswer:Confederacy\nLevel:easy\nType:bridge"}, {"group": 11, "id": "a11053", "label": "Answer:Alaska\nPage Rank:0.70\nLabel:11", "shape": "square", "size": 4, "title": "Page Rank:0.7043649089732934\nQuestion:The last assignment of the 5070th Air Defense Wing was at the largest United States military facility in what state?\nAnswer:Alaska\nLevel:medium\nType:bridge"}, {"group": 11, "id": "a1626", "label": "Answer:Florida\nPage Rank:0.49\nLabel:11", "shape": "square", "size": 2, "title": "Page Rank:0.4942911641917848\nQuestion:In what state was the university Darryl Carlton played for?\nAnswer:Florida\nLevel:medium\nType:bridge"}, {"group": 11, "id": "a11616", "label": "Answer:Indiana\nPage Rank:1.80\nLabel:11", "shape": "square", "size": 9, "title": "Page Rank:1.7984481118476923\nQuestion:Stewart Nozette is currently serving time at a prison located in what state?\nAnswer:Indiana\nLevel:medium\nType:bridge"}, {"group": 29, "id": "a3671", "label": "Answer:Louisiana\nPage Rank:0.76\nLabel:29", "shape": "square", "size": 4, "title": "Page Rank:0.7550876523044237\nQuestion:What state is the college that Everson Walls played at located in?\nAnswer:Louisiana\nLevel:medium\nType:bridge"}, {"group": 11, "id": "a3714", "label": "Answer:OH\nPage Rank:0.67\nLabel:11", "shape": "square", "size": 3, "title": "Page Rank:0.6662890427316449\nQuestion:Three Nationwide Plaza is a 408 ft(124m) postmodern highrise building located at the address 3 Nationwide Plaza in Downtown Columbus, Nationwide Plaza is the headquarters of Nationwide Mutual Insurance Company, and affiliated companies, are a group of large U.S. insurance and financial services companies based in Columbus in which US state (acronym)?\nAnswer:OH\nLevel:easy\nType:bridge"}, {"group": 11, "id": "a4705", "label": "Answer:Ohio\nPage Rank:0.95\nLabel:11", "shape": "square", "size": 5, "title": "Page Rank:0.9494618858925942\nQuestion:In what state is the national guard base that is name for America\u0027s most successful fighter ace in World War I?\nAnswer:Ohio\nLevel:medium\nType:bridge"}, {"group": 29, "id": "a1466", "label": "Answer:Arizona\nPage Rank:0.82\nLabel:29", "shape": "square", "size": 4, "title": "Page Rank:0.8241069434987534\nQuestion:in the 1975\u201376, Seattle SuperSonics lost to a team based in which US state ?\nAnswer:Arizona\nLevel:hard\nType:bridge"}, {"group": 29, "id": "a19", "label": "Answer:Nevada\nPage Rank:0.49\nLabel:29", "shape": "square", "size": 2, "title": "Page Rank:0.4942911641917848\nQuestion:American politician Joe Heck ran unsuccessfully against Democrat Catherine Cortez Masto, a woman who previously served as the 32nd Attorney General of where?\nAnswer:Nevada\nLevel:easy\nType:bridge"}, {"group": 29, "id": "a39", "label": "Answer:California\nPage Rank:0.58\nLabel:29", "shape": "square", "size": 3, "title": "Page Rank:0.5783206621043883\nQuestion:The 337th Flight Test Squadron (337 FLTS) was most recently part of the 46th Test Wing and based at McClellan Air Force Base, a former United States Air Force base located in the North Highlands area of Sacramento County, in which US state?\nAnswer:California\nLevel:easy\nType:bridge"}, {"group": 29, "id": "a20934", "label": "Answer:Utah\nPage Rank:1.55\nLabel:29", "shape": "square", "size": 8, "title": "Page Rank:1.5535534043119839\nQuestion:What state did the United States House Committee on Oversight and Government Reform chairman and Geolocation Privacy and Surveillance Act sponsor act as a representative for?\nAnswer:Utah\nLevel:medium\nType:bridge"}, {"group": 29, "id": "a3442", "label": "Answer:Texas\nPage Rank:0.92\nLabel:29", "shape": "square", "size": 5, "title": "Page Rank:0.916233033658144\nQuestion:What state was the president who appointed Fran P. Mainella to be the 16th Director of the National Park Service of the United States once governor of?\nAnswer:Texas\nLevel:medium\nType:bridge"}, {"group": 29, "id": "a4745", "label": "Answer:Colorado\nPage Rank:1.07\nLabel:29", "shape": "square", "size": 5, "title": "Page Rank:1.0719926493800285\nQuestion:What state is Ruxton Park and Pikes Peak located in?\nAnswer:Colorado\nLevel:hard\nType:bridge"}, {"group": 11, "id": "a3512", "label": "Answer:Georgia\nPage Rank:0.81\nLabel:11", "shape": "square", "size": 4, "title": "Page Rank:0.8094017813640476\nQuestion: S. Truett Cathy founded a fast food chain that is headquartered in what state?\nAnswer:Georgia\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a16880", "label": "Answer:Connecticut\nPage Rank:1.04\nLabel:8", "shape": "square", "size": 5, "title": "Page Rank:1.0439841297033987\nQuestion:Where was the mythical world creator of the game RuneQuest born?\nAnswer:Connecticut\nLevel:hard\nType:bridge"}, {"group": 29, "id": "a184", "label": "Answer:Massachusetts\nPage Rank:0.49\nLabel:29", "shape": "square", "size": 2, "title": "Page Rank:0.4942911641917848\nQuestion:Michael Ralph DeVito (born June 10, 1984) is a former American football defensive end, he  the National Football League (NFL), DeVito attended high school at Nauset Regional High School an NEASC accredited high school located in North Eastham, in which state?\nAnswer:Massachusetts\nLevel:easy\nType:bridge"}, {"group": 8, "id": "a2367", "label": "Answer:Vermont\nPage Rank:0.56\nLabel:8", "shape": "square", "size": 3, "title": "Page Rank:0.5643157457856209\nQuestion:The president that signed a new Railway Labor Act in 1926 was a lawyer from what state?\nAnswer:Vermont\nLevel:medium\nType:bridge"}, {"group": 29, "id": "a1819", "label": "Answer:Kansas\nPage Rank:0.61\nLabel:29", "shape": "square", "size": 3, "title": "Page Rank:0.6142082601712292\nQuestion:When considering Kelly D.Johnston and Bod Dole, which state was represented in the United States senate first - Oklahoma or Kansas?\nAnswer:Kansas\nLevel:hard\nType:bridge"}, {"group": 29, "id": "a485", "label": "Answer:Missouri\nPage Rank:0.56\nLabel:29", "shape": "square", "size": 3, "title": "Page Rank:0.5643157457856209\nQuestion:Mike Gibbons won the middleweight championship after the previous champion was found murdered where?\nAnswer:Missouri\nLevel:easy\nType:bridge"}, {"group": 29, "id": "a22165", "label": "Answer:Arkansas\nPage Rank:2.25\nLabel:29", "shape": "square", "size": 11, "title": "Page Rank:2.248613002623172\nQuestion:For what state was the person who signed the Iran Nonproliferation Act of 2000 into law a governor?\nAnswer:Arkansas\nLevel:hard\nType:bridge"}, {"group": 29, "id": "a31816", "label": "Answer:Nebraska\nPage Rank:1.18\nLabel:29", "shape": "square", "size": 6, "title": "Page Rank:1.1846827275819583\nQuestion:Marion M. Ganey relied on a fellow Jesuit who had grown up at the non-profit that is located in which state?\nAnswer:Nebraska\nLevel:medium\nType:bridge"}, {"group": 29, "id": "a6502", "label": "Answer:Oklahoma\nPage Rank:1.15\nLabel:29", "shape": "square", "size": 6, "title": "Page Rank:1.1506464360236366\nQuestion:The tribe that Robin Wall Kimmerer is a member of, is located in which state?\nAnswer:Oklahoma\nLevel:medium\nType:bridge"}, {"group": 29, "id": "a18325", "label": "Answer:Wyoming\nPage Rank:1.42\nLabel:29", "shape": "square", "size": 7, "title": "Page Rank:1.4249555603522106\nQuestion:Which state did that Survey which named the Excelsior Geyser Crater survey?\nAnswer:Wyoming\nLevel:medium\nType:bridge"}, {"group": 29, "id": "a2401", "label": "Answer:Michigan\nPage Rank:0.49\nLabel:29", "shape": "square", "size": 2, "title": "Page Rank:0.4942911641917848\nQuestion:In what state are the headquarters of this American multinational automaker, which has a 50:50 joint venture with Changan Automobile?\nAnswer:Michigan\nLevel:hard\nType:bridge"}, {"group": 29, "id": "a3117", "label": "Answer:Tennessee\nPage Rank:0.72\nLabel:29", "shape": "square", "size": 4, "title": "Page Rank:0.7192451325619835\nQuestion:Norris Dam State Park is a state park in Anderson County and Campbell County, Tennessee, the park is situated along the shores of Norris Lake, an impoundment of the Clinch River created by the completion of Norris Dam in 1936, the Clinch River rises near Tazewell, Virginia, and flows southwest for more than 300 mi through the Great Appalachian Valley, at the end, it joins the Tennessee River in Kingston in which US state?\nAnswer:Tennessee\nLevel:easy\nType:bridge"}, {"group": 29, "id": "a3252", "label": "Answer:Oregon\nPage Rank:0.81\nLabel:29", "shape": "square", "size": 4, "title": "Page Rank:0.8101020271799859\nQuestion:Craig Duane Neal who was selected in the 1988 NBA draft by a team based in which US state ?\nAnswer:Oregon\nLevel:hard\nType:bridge"}, {"group": 29, "id": "a8804", "label": "Answer:Montana\nPage Rank:0.49\nLabel:29", "shape": "square", "size": 2, "title": "Page Rank:0.4942911641917848\nQuestion:Which State\u0027s fish was discovered at the base of Colter Falls?\nAnswer:Montana\nLevel:hard\nType:bridge"}, {"group": 29, "id": "a40927", "label": "Answer:Idaho\nPage Rank:2.10\nLabel:29", "shape": "square", "size": 10, "title": "Page Rank:2.099076483308494\nQuestion:The Boomershoot is a long range precision rifle event held near Orofino, in which state, each year, in recent years, the event has also featured an explosive fireball and an Anvil firing to start the event?\nAnswer:Idaho\nLevel:easy\nType:bridge"}, {"group": 8, "id": "a4177", "label": "Answer:Kentucky\nPage Rank:0.77\nLabel:8", "shape": "square", "size": 4, "title": "Page Rank:0.7681018666781829\nQuestion:Clay County is a county located in the U.S. state of South Dakota, the county is named in honor of Henry Clay, an American lawyer and planter, statesman, and skilled orator who represented which state,in both the United States Senate and House of Representatives?\nAnswer:Kentucky\nLevel:easy\nType:bridge"}, {"group": 29, "id": "a5793", "label": "Answer:Illinois\nPage Rank:0.68\nLabel:29", "shape": "square", "size": 3, "title": "Page Rank:0.6842328417650655\nQuestion:Which team won the 1914 championship of the Big Ten Conference? \nAnswer:Illinois\nLevel:hard\nType:bridge"}, {"group": 32, "id": "a3072", "label": "Answer:Maryland\nPage Rank:0.49\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.4942911641917848\nQuestion:In which state was the 1926 Navy Midshipmen football team located?\nAnswer:Maryland\nLevel:medium\nType:bridge"}, {"group": 32, "id": "a4422", "label": "Answer:Pennsylvania\nPage Rank:0.70\nLabel:32", "shape": "square", "size": 4, "title": "Page Rank:0.7043649089732934\nQuestion:Foxcatcher is a 2014 American true crime sports drama film about a wrestling team set up in what state?\nAnswer:Pennsylvania\nLevel:medium\nType:bridge"}, {"group": 32, "id": "a5779", "label": "Answer:Virginia\nPage Rank:1.51\nLabel:32", "shape": "square", "size": 8, "title": "Page Rank:1.506861202493155\nQuestion:What state is the university, in which Albert Levitt was a professor, located?\nAnswer:Virginia\nLevel:medium\nType:bridge"}, {"group": 29, "id": "a4519", "label": "Answer:Maine\nPage Rank:0.90\nLabel:29", "shape": "square", "size": 4, "title": "Page Rank:0.895817950432641\nQuestion:What state does First East Branch Magalloway River and Kennebec River have in common?\nAnswer:Maine\nLevel:medium\nType:bridge"}]);
+                  edges = new vis.DataSet([{"from": "a10652", "label": 0.25, "length": 500, "to": "a22043", "width": 1}, {"from": "a10652", "label": 0.25, "length": 500, "to": "a50844", "width": 1}, {"from": "a10652", "label": 0.25, "length": 500, "to": "a73025", "width": 1}, {"from": "a10652", "label": 0.25, "length": 500, "to": "a75587", "width": 1}, {"from": "a11053", "label": 0.5, "length": 500, "to": "a1626", "width": 1}, {"from": "a11616", "label": 0.3333333333333333, "length": 500, "to": "a3671", "width": 1}, {"from": "a11616", "label": 0.5, "length": 500, "to": "a3714", "width": 1}, {"from": "a11616", "label": 1.0, "length": 500, "to": "a4705", "width": 1}, {"from": "a1466", "label": 0.2, "length": 500, "to": "a19", "width": 1}, {"from": "a1466", "label": 0.5, "length": 500, "to": "a39", "width": 1}, {"from": "a1466", "label": 0.3333333333333333, "length": 500, "to": "a20934", "width": 1}, {"from": "a1466", "label": 0.3333333333333333, "length": 500, "to": "a3442", "width": 1}, {"from": "a1466", "label": 0.3333333333333333, "length": 500, "to": "a4745", "width": 1}, {"from": "a1626", "label": 0.5, "length": 500, "to": "a3512", "width": 1}, {"from": "a16880", "label": 0.16666666666666666, "length": 500, "to": "a184", "width": 1}, {"from": "a16880", "label": 1.0, "length": 500, "to": "a2367", "width": 1}, {"from": "a1819", "label": 0.25, "length": 500, "to": "a485", "width": 1}, {"from": "a1819", "label": 0.2, "length": 500, "to": "a22165", "width": 1}, {"from": "a1819", "label": 0.2, "length": 500, "to": "a31816", "width": 1}, {"from": "a1819", "label": 0.2, "length": 500, "to": "a3442", "width": 1}, {"from": "a1819", "label": 0.2, "length": 500, "to": "a4745", "width": 1}, {"from": "a1819", "label": 0.2, "length": 500, "to": "a6502", "width": 1}, {"from": "a18325", "label": 0.25, "length": 500, "to": "a2401", "width": 1}, {"from": "a18325", "label": 0.3333333333333333, "length": 500, "to": "a3117", "width": 1}, {"from": "a18325", "label": 0.3333333333333333, "length": 500, "to": "a3252", "width": 1}, {"from": "a18325", "label": 0.2, "length": 500, "to": "a4745", "width": 1}, {"from": "a18325", "label": 0.5, "length": 500, "to": "a8804", "width": 1}, {"from": "a18325", "label": 0.3333333333333333, "length": 500, "to": "a20934", "width": 1}, {"from": "a18325", "label": 0.3333333333333333, "length": 500, "to": "a31816", "width": 1}, {"from": "a18325", "label": 0.3333333333333333, "length": 500, "to": "a40927", "width": 1}, {"from": "a184", "label": 0.16666666666666666, "length": 500, "to": "a2367", "width": 1}, {"from": "a184", "label": 0.16666666666666666, "length": 500, "to": "a3252", "width": 1}, {"from": "a184", "label": 0.16666666666666666, "length": 500, "to": "a4177", "width": 1}, {"from": "a184", "label": 0.16666666666666666, "length": 500, "to": "a485", "width": 1}, {"from": "a184", "label": 0.16666666666666666, "length": 500, "to": "a5793", "width": 1}, {"from": "a19", "label": 0.2, "length": 500, "to": "a20934", "width": 1}, {"from": "a19", "label": 0.2, "length": 500, "to": "a3442", "width": 1}, {"from": "a19", "label": 0.2, "length": 500, "to": "a39", "width": 1}, {"from": "a19", "label": 0.2, "length": 500, "to": "a4745", "width": 1}, {"from": "a20934", "label": 0.2, "length": 500, "to": "a3442", "width": 1}, {"from": "a20934", "label": 0.2, "length": 500, "to": "a4745", "width": 1}, {"from": "a22043", "label": 0.25, "length": 500, "to": "a3512", "width": 1}, {"from": "a22043", "label": 1.0, "length": 500, "to": "a5793", "width": 1}, {"from": "a22043", "label": 1.0, "length": 500, "to": "a50844", "width": 1}, {"from": "a22165", "label": 0.2, "length": 500, "to": "a3442", "width": 1}, {"from": "a22165", "label": 0.3333333333333333, "length": 500, "to": "a3671", "width": 1}, {"from": "a22165", "label": 0.2, "length": 500, "to": "a4745", "width": 1}, {"from": "a22165", "label": 0.25, "length": 500, "to": "a485", "width": 1}, {"from": "a22165", "label": 1.0, "length": 500, "to": "a6502", "width": 1}, {"from": "a2401", "label": 0.25, "length": 500, "to": "a3117", "width": 1}, {"from": "a2401", "label": 0.25, "length": 500, "to": "a3512", "width": 1}, {"from": "a2401", "label": 0.25, "length": 500, "to": "a3671", "width": 1}, {"from": "a3072", "label": 0.5, "length": 500, "to": "a4422", "width": 1}, {"from": "a3072", "label": 0.5, "length": 500, "to": "a5779", "width": 1}, {"from": "a3117", "label": 0.25, "length": 500, "to": "a485", "width": 1}, {"from": "a3117", "label": 0.3333333333333333, "length": 500, "to": "a4177", "width": 1}, {"from": "a3117", "label": 0.3333333333333333, "length": 500, "to": "a5779", "width": 1}, {"from": "a31816", "label": 0.2, "length": 500, "to": "a4745", "width": 1}, {"from": "a3252", "label": 0.5, "length": 500, "to": "a39", "width": 1}, {"from": "a3252", "label": 0.3333333333333333, "length": 500, "to": "a40927", "width": 1}, {"from": "a3252", "label": 0.3333333333333333, "length": 500, "to": "a4519", "width": 1}, {"from": "a3442", "label": 0.2, "length": 500, "to": "a3671", "width": 1}, {"from": "a3442", "label": 0.2, "length": 500, "to": "a4745", "width": 1}, {"from": "a3442", "label": 0.2, "length": 500, "to": "a6502", "width": 1}, {"from": "a3512", "label": 0.25, "length": 500, "to": "a3714", "width": 1}, {"from": "a3512", "label": 0.25, "length": 500, "to": "a4519", "width": 1}, {"from": "a3512", "label": 0.25, "length": 500, "to": "a4705", "width": 1}, {"from": "a3671", "label": 0.3333333333333333, "length": 500, "to": "a6502", "width": 1}, {"from": "a3714", "label": 0.5, "length": 500, "to": "a4705", "width": 1}, {"from": "a40927", "label": 1.0, "length": 500, "to": "a4519", "width": 1}, {"from": "a40927", "label": 0.5, "length": 500, "to": "a8804", "width": 1}, {"from": "a4422", "label": 1.0, "length": 500, "to": "a5779", "width": 1}, {"from": "a4745", "label": 0.2, "length": 500, "to": "a6502", "width": 1}, {"from": "a485", "label": 0.25, "length": 500, "to": "a5793", "width": 1}, {"from": "a50844", "label": 0.5, "length": 500, "to": "a73025", "width": 1}, {"from": "a50844", "label": 0.5, "length": 500, "to": "a75587", "width": 1}, {"from": "a73025", "label": 1.0, "length": 500, "to": "a75587", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

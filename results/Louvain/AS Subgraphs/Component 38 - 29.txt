@@ -1,0 +1,134 @@
+p 29 104
+v 1 Miami hard bridge In which city is the southern terminus of this north–south United States highway located, which Kentucky Route 1632 connects KY 9 with?
+v 2 Indians easy bridge David Bell was a third baseman for which team?
+v 3 Eskimo easy bridge The Yup'ik or Yupiaq, etc, are are the indigenous peoples who have traditionally inhabited the northern circumpolar region from eastern Siberia (Russia), across Alaska (United States), Canada, and Greenland, people of western and southwestern Alaska, the people are traditionally called?
+v 4 Comanche easy bridge Cache is a city in Comanche County, Oklahoma, it is the location of Star House, the home of the Comanche chief Quanah Parker, was a Comanche war leader of the Quahadi ("Antelope") band of which people?
+v 5 Siouan medium bridge What language family does Red Horn and Ho-Chunk have in common?
+v 6 Kiowa hard bridge The Way to Rainy Mountain was a book by the Pulitzer Prize-winning novelist of what heritage?
+v 7 Seminole easy bridge The Muscogee language (Mvskoke in Muscogee), also known as Creek, Seminole, Maskókî or Muskogee, is a Muskogean language spoken by Muscogee (Creek) and people of which  Native American people originally from Florida, primarily in the U.S. states of Oklahoma and Florida?
+v 8 Muskogean medium bridge What language family is the language of the tribe of the man who instructed Jeff Ball in?
+v 9 Indian easy bridge What ethnicity are both Befikra and Aditi Singh Sharma?
+v 10 Algonquian hard bridge Spanish Hill was previously occupied by Native Americans who are a subdivision of a larger group speaking what language?
+v 11 Caddo medium bridge A Dush-toh is a hair ornament traditionally worn by people of which nation that is a confederacy of several Southeastern Native American tribes?
+v 12 Inuit medium bridge Who's ancestors migrated to the island that is southwest of Oodaaq?
+v 13 Ottawa medium bridge The world premiere of the movie starring a co-founder of United Artists film studio was shown at a theatre in what city?
+v 14 Paleo-Indians easy bridge The date of the start of the history of the United States is a subject of debate among historians, in recent decades American schools and universities typically have shifted back in time to include more on the colonial period and much more on the prehistory of the Native Americans, the history of Native Americans in the United States began in ancient times tens of thousands of years ago with the settlement of the Americas by who?
+v 15 Tsimshian hard bridge What is a sub-group of Indigenous peoples of the Pacific Northwest Coast in which David A. Boxley identifies with?
+v 16 Erie medium bridge What is the county seat of Neosho County, Kansas where Shaw is also a part of?
+v 17 Pocahontas medium comparison Which Disney film was released first, Eight Below or Pocahontas?
+v 18 Aztec medium bridge What group of people does Texcoco, State of Mexico and National Museum of Anthropology have in common?
+v 19 Iowa medium bridge Karl Miles Le Compte was a ten-term Republican U.S. Representative from what U.S. state in the Midwestern United States, bordered by the Mississippi River on the east and the Missouri River and the Big Sioux River on the west?
+v 20 Dakota hard bridge What was the  Native American tribes and First Nations peoples in North America were known as with whom The Battle of Dead Buffalo Lake was took place?
+v 21 Paiute medium bridge What is the name of the three groups of indigenous peoples of the Great Basin who populate Fish Lake Valley in California?
+v 22 Aleut easy bridge Eve Tuck is an Unangax scholar in the field of Indigenous studies and educational research, she is a member of which community of St. Paul Island, Alaska, called?
+v 23 Biloxi hard bridge Which is more populous, Biloxi, Mississippi or Pass Christian, Mississippi?
+v 24 Haida easy bridge Primrose Adams (born 1926 in Masset, Haida Gwaii) is a Canadian First Nations artist and member of the Raven Clan from which nation and ethnic group native to, or otherwise associated with, Haida Gwaii and the Haida language?
+v 25 Nahuatl medium bridge  Miller Hill Mall includes the restaurant whose name comes from a word in what native language?
+v 26 Shasta hard bridge What soft drink manufacturer markets a variety of soda flavors is made by National Beverage Corp.?
+v 27 Penobscot medium bridge Hexagon Barn is located in the town in which Maine county?
+v 28 Sioux medium bridge Wa-na-ta was a chief of a tribe composed of two of the three main subcultures of what people?
+v 29 Shawnee medium bridge Tracy Ann DeMeyer was an author descending from what Algonquian-speaking North American native ethnic group?
+e 2 1 1
+e 9 1 1
+e 13 1 1
+e 29 1 1
+e 2 3 1
+e 9 3 1
+e 2 4 1
+e 2 5 1
+e 9 5 1
+e 19 5 1
+e 28 5 1
+e 2 6 1
+e 5 6 1
+e 9 6 1
+e 28 6 1
+e 2 7 1
+e 9 7 1
+e 2 8 1
+e 3 8 1
+e 7 8 1
+e 9 8 1
+e 2 9 1
+e 4 9 1
+e 1 10 1
+e 2 10 1
+e 3 10 1
+e 8 10 1
+e 9 10 1
+e 13 10 1
+e 29 10 1
+e 2 11 1
+e 5 11 1
+e 6 11 1
+e 9 11 1
+e 28 11 1
+e 2 12 1
+e 3 12 1
+e 8 12 1
+e 9 12 1
+e 10 12 1
+e 2 13 1
+e 9 13 1
+e 2 14 1
+e 3 14 1
+e 8 14 1
+e 9 14 1
+e 10 14 1
+e 12 14 1
+e 2 15 1
+e 9 15 1
+e 2 16 1
+e 9 16 1
+e 10 17 1
+e 2 18 1
+e 9 18 1
+e 5 20 1
+e 19 20 1
+e 28 20 1
+e 2 21 1
+e 4 21 1
+e 9 21 1
+e 2 22 1
+e 3 22 1
+e 8 22 1
+e 9 22 1
+e 10 22 1
+e 12 22 1
+e 14 22 1
+e 5 23 1
+e 19 23 1
+e 20 23 1
+e 28 23 1
+e 2 24 1
+e 3 24 1
+e 8 24 1
+e 9 24 1
+e 10 24 1
+e 12 24 1
+e 14 24 1
+e 22 24 1
+e 2 25 1
+e 3 25 1
+e 8 25 1
+e 9 25 1
+e 10 25 1
+e 12 25 1
+e 14 25 1
+e 18 25 1
+e 22 25 1
+e 24 25 1
+e 2 26 1
+e 9 26 1
+e 1 27 1
+e 2 27 1
+e 9 27 1
+e 10 27 1
+e 13 27 1
+e 29 27 1
+e 2 28 1
+e 9 28 1
+e 19 28 1
+e 2 29 1
+e 9 29 1
+e 13 29 1

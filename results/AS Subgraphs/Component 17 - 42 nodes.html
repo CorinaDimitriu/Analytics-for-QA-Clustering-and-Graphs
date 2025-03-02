@@ -1,0 +1,438 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a90236">a90236</option>
+                                
+                                    <option value="a43488">a43488</option>
+                                
+                                    <option value="a5099">a5099</option>
+                                
+                                    <option value="a7012">a7012</option>
+                                
+                                    <option value="a74793">a74793</option>
+                                
+                                    <option value="a76081">a76081</option>
+                                
+                                    <option value="a89655">a89655</option>
+                                
+                                    <option value="a67547">a67547</option>
+                                
+                                    <option value="a1024">a1024</option>
+                                
+                                    <option value="a11523">a11523</option>
+                                
+                                    <option value="a13535">a13535</option>
+                                
+                                    <option value="a14833">a14833</option>
+                                
+                                    <option value="a20373">a20373</option>
+                                
+                                    <option value="a29648">a29648</option>
+                                
+                                    <option value="a3161">a3161</option>
+                                
+                                    <option value="a32443">a32443</option>
+                                
+                                    <option value="a35135">a35135</option>
+                                
+                                    <option value="a39859">a39859</option>
+                                
+                                    <option value="a4778">a4778</option>
+                                
+                                    <option value="a51200">a51200</option>
+                                
+                                    <option value="a51327">a51327</option>
+                                
+                                    <option value="a54285">a54285</option>
+                                
+                                    <option value="a55291">a55291</option>
+                                
+                                    <option value="a57667">a57667</option>
+                                
+                                    <option value="a58580">a58580</option>
+                                
+                                    <option value="a60192">a60192</option>
+                                
+                                    <option value="a62489">a62489</option>
+                                
+                                    <option value="a64341">a64341</option>
+                                
+                                    <option value="a75474">a75474</option>
+                                
+                                    <option value="a82875">a82875</option>
+                                
+                                    <option value="a84890">a84890</option>
+                                
+                                    <option value="a5659">a5659</option>
+                                
+                                    <option value="a12247">a12247</option>
+                                
+                                    <option value="a31752">a31752</option>
+                                
+                                    <option value="a32324">a32324</option>
+                                
+                                    <option value="a55752">a55752</option>
+                                
+                                    <option value="a58852">a58852</option>
+                                
+                                    <option value="a5991">a5991</option>
+                                
+                                    <option value="a77356">a77356</option>
+                                
+                                    <option value="a82807">a82807</option>
+                                
+                                    <option value="a11911">a11911</option>
+                                
+                                    <option value="a64740">a64740</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 32, "id": "a90236", "label": "Answer:Combretum\nPage Rank:3.94\nLabel:32", "shape": "square", "size": 20, "title": "Page Rank:3.9395914161118855\nQuestion:Which genus Combretum or Galanthus has the most species ?\nAnswer:Combretum\nLevel:hard\nType:comparison"}, {"group": 23, "id": "a43488", "label": "Answer:shrub\nPage Rank:0.73\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.7296511111941862\nQuestion:What do Eranthemum and Enkianthus have in common?\nAnswer:shrub\nLevel:easy\nType:comparison"}, {"group": 32, "id": "a5099", "label": "Answer:trees\nPage Rank:0.34\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.3390481746172099\nQuestion:Lodoicea and Nothofagus, are genus of what mutual species?\nAnswer:trees\nLevel:easy\nType:comparison"}, {"group": 23, "id": "a7012", "label": "Answer:shrubs\nPage Rank:0.39\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.39359773501005574\nQuestion:Cydista and Pachystegia, are related to what?\nAnswer:shrubs\nLevel:easy\nType:comparison"}, {"group": 23, "id": "a74793", "label": "Answer:Bush\nPage Rank:2.23\nLabel:23", "shape": "square", "size": 11, "title": "Page Rank:2.2334553455642423\nQuestion:Daisy Lowe is the daughter of the English musician and lead singer from what band?\nAnswer:Bush\nLevel:medium\nType:bridge"}, {"group": 32, "id": "a76081", "label": "Answer:tree\nPage Rank:1.63\nLabel:32", "shape": "square", "size": 8, "title": "Page Rank:1.6323527212943778\nQuestion:Maquira is a genus of what type of perennial plant with an elongated stem, or trunk, and where most species have supporting branches and leaves?\nAnswer:tree\nLevel:hard\nType:bridge"}, {"group": 32, "id": "a89655", "label": "Answer:Trees\nPage Rank:3.38\nLabel:32", "shape": "square", "size": 17, "title": "Page Rank:3.378406040920305\nQuestion:What was the name of the poem that came out in 1913 by the person who was buried in France but honored by a centaph in the Elmwood Cemetery? \nAnswer:Trees\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a67547", "label": "Answer:Honeysuckles\nPage Rank:1.43\nLabel:23", "shape": "square", "size": 7, "title": "Page Rank:1.4289234196298608\nQuestion:Does Honeysuckle or Abelia have more species?\nAnswer:Honeysuckles\nLevel:hard\nType:comparison"}, {"group": 23, "id": "a1024", "label": "Answer:mallow\nPage Rank:0.34\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.3390481746172099\nQuestion:St Estevam is an Island in Ilhas, Goa, India, it is also known as \u0027Shakecho Juvo\u0027 - the isle of vegetables - known for its long, seven-ridged, light green ladyfingers, Okra or okro, known in many English-speaking countries as ladies\u0027 fingers or ochro, is a flowering plant in which family? \nAnswer:mallow\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a11523", "label": "Answer:Mutisia\nPage Rank:0.39\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.3863335077850286\nQuestion:In between Zigadenus and Mutisia , which one is named after Jos\u00e9 Celestino Mutis?\nAnswer:Mutisia\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a13535", "label": "Answer:Mucuna\nPage Rank:0.40\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.40126002967672286\nQuestion:Which genus has more species, Mucuna or Platycarya\nAnswer:Mucuna\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a14833", "label": "Answer:Daphne\nPage Rank:0.42\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4175015070683998\nQuestion:Which genus has more known species, Chaenomeles or Daphne?\nAnswer:Daphne\nLevel:hard\nType:comparison"}, {"group": 23, "id": "a20373", "label": "Answer:Hawthorn\nPage Rank:0.44\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4352453211188068\nQuestion:Who won the Grand Final of the elite Australian rules football competition by 46 points in the same year that saw Adam Saad nominated for the Rising Star?\nAnswer:Hawthorn\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a29648", "label": "Answer:Columnea\nPage Rank:0.45\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.45471682232675337\nQuestion:Which genus contains more species: Columnea or Olneya?\nAnswer:Columnea\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a3161", "label": "Answer:Philadelphus\nPage Rank:0.35\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.350132441864311\nQuestion:Which genus contains more species, Philadelphus or Sarracenia?\nAnswer:Philadelphus\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a32443", "label": "Answer:Leucothoe\nPage Rank:0.48\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.47618956115885\nQuestion:Does Leucothoe or Pileostegia have more species?\nAnswer:Leucothoe\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a35135", "label": "Answer:Banksia\nPage Rank:0.50\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4999990392167926\nQuestion:Which genus between Borago and Banksia has the greatest number of species within the genus?\nAnswer:Banksia\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a39859", "label": "Answer:Clianthus\nPage Rank:0.53\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5265614881751848\nQuestion:Which plant the most names other than their technical name, Linnaea or Clianthus?\nAnswer:Clianthus\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a4778", "label": "Answer:Privet\nPage Rank:0.36\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.36157907938679806\nQuestion:Which of Lodoicea and Privet. has more species?\nAnswer:Privet\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a51200", "label": "Answer:Capsicum\nPage Rank:0.59\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5908557194226151\nQuestion:Which plant genus has been used in more foods, Ophiopogon or Capsicum? \nAnswer:Capsicum\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a51327", "label": "Answer:Amorpha\nPage Rank:0.63\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.629488593384863\nQuestion:What is is a genus of plants in the pea family, Fabaceae, Tansy or Amorpha ?\nAnswer:Amorpha\nLevel:easy\nType:comparison"}, {"group": 23, "id": "a54285", "label": "Answer:juniper\nPage Rank:0.67\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.6740773687496241\nQuestion:What berry does both Brinjevec and Jenever have in common?\nAnswer:juniper\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a55291", "label": "Answer:Andromeda\nPage Rank:0.73\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.7261651654257314\nQuestion:The Magog are an alien race in which science fiction television series starring Kevin Sorbo?\nAnswer:Andromeda\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a57667", "label": "Answer:Kali\nPage Rank:0.79\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.7878892044869186\nQuestion:Clinton B. Seely has translated the works of a Shakta poet and saint of eighteenth century Bengal, whose poems are usually addressed to what Hindu goddess?\nAnswer:Kali\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a58580", "label": "Answer:Carissa\nPage Rank:0.86\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.8623009626884608\nQuestion:Which genus of plant had more species identified with it in the past, Carissa or Aruncus?\nAnswer:Carissa\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a60192", "label": "Answer:Juniper\nPage Rank:0.95\nLabel:23", "shape": "square", "size": 5, "title": "Page Rank:0.9539204399741099\nQuestion:Between Purshia and Juniper, which genus has more species?\nAnswer:Juniper\nLevel:hard\nType:comparison"}, {"group": 23, "id": "a62489", "label": "Answer:Rhododendron\nPage Rank:1.07\nLabel:23", "shape": "square", "size": 5, "title": "Page Rank:1.0697536362566802\nQuestion:Which has more species, Nothofagus or Rhododendron?\nAnswer:Rhododendron\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a64341", "label": "Answer:Forsythia\nPage Rank:1.22\nLabel:23", "shape": "square", "size": 6, "title": "Page Rank:1.22130206805971\nQuestion:Which as more species Larrea and Forsythia?\nAnswer:Forsythia\nLevel:hard\nType:comparison"}, {"group": 23, "id": "a75474", "label": "Answer:Yucca\nPage Rank:2.05\nLabel:23", "shape": "square", "size": 10, "title": "Page Rank:2.048975820256141\nQuestion:Which genus has more species, Yucca or Dipteryx?\nAnswer:Yucca\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a82875", "label": "Answer:Styrax\nPage Rank:2.92\nLabel:23", "shape": "square", "size": 15, "title": "Page Rank:2.9197905438649996\nQuestion:Which genus has more species,  Styrax or Myosotidium?\nAnswer:Styrax\nLevel:medium\nType:comparison"}, {"group": 23, "id": "a84890", "label": "Answer:Fothergilla\nPage Rank:5.40\nLabel:23", "shape": "square", "size": 27, "title": "Page Rank:5.40161250615025\nQuestion:Which genus of plant consists of more species, Bruckenthalia or Fothergilla?\nAnswer:Fothergilla\nLevel:medium\nType:comparison"}, {"group": 32, "id": "a5659", "label": "Answer:Tamarind\nPage Rank:0.36\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.3582609045121851\nQuestion:What is the name of the leguminous tree that creates the flavor Imli for the digestive tablet Hajmola?\nAnswer:Tamarind\nLevel:medium\nType:bridge"}, {"group": 32, "id": "a12247", "label": "Answer:Samba\nPage Rank:0.36\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.3582609045121851\nQuestion:A British television dance contest has featured what Brazilian dancing style?\nAnswer:Samba\nLevel:hard\nType:bridge"}, {"group": 32, "id": "a31752", "label": "Answer:Laurel\nPage Rank:0.36\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.3582609045121851\nQuestion:William H. Hardy (1837\u22121917) founded the cities of Hattiesburg, Mississippi, and which other city in, and the second county seat of Jones County, Mississippi, United States?\nAnswer:Laurel\nLevel:easy\nType:bridge"}, {"group": 32, "id": "a32324", "label": "Answer:Coco\nPage Rank:0.36\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.3582609045121851\nQuestion:Which was an animated film, Coco or Secretariat?\nAnswer:Coco\nLevel:medium\nType:comparison"}, {"group": 32, "id": "a55752", "label": "Answer:Albizia\nPage Rank:0.42\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.4191652582792566\nQuestion:Which tree has the highest number of specie Albizia or  Embothrium\nAnswer:Albizia\nLevel:medium\nType:comparison"}, {"group": 32, "id": "a58852", "label": "Answer:Cassie\nPage Rank:0.36\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.3582609045121851\nQuestion:The actress who appeared in Martha, Inc.: The Story of Martha Stewart and also in \"Taxi Driver\" (1976) played which role in the television film \"The Client List\" (2010)?\nAnswer:Cassie\nLevel:medium\nType:bridge"}, {"group": 32, "id": "a5991", "label": "Answer:Kurrajong\nPage Rank:0.36\nLabel:32", "shape": "square", "size": 2, "title": "Page Rank:0.3582609045121851\nQuestion:What electorate was an Australian politician ,who was a law lecturer at a national research university located in Canberra, representing ?\nAnswer:Kurrajong\nLevel:easy\nType:bridge"}, {"group": 32, "id": "a77356", "label": "Answer:Erythrina\nPage Rank:0.86\nLabel:32", "shape": "square", "size": 4, "title": "Page Rank:0.855112828938654\nQuestion:Which has more species, Erythrina or Thalia?\nAnswer:Erythrina\nLevel:medium\nType:comparison"}, {"group": 32, "id": "a82807", "label": "Answer:Willows\nPage Rank:1.22\nLabel:32", "shape": "square", "size": 6, "title": "Page Rank:1.2185357812375819\nQuestion:Which group contains more species, Willow or Stipa?\nAnswer:Willows\nLevel:hard\nType:comparison"}, {"group": 23, "id": "a11911", "label": "Answer:Syringa\nPage Rank:0.36\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.36244331480964515\nQuestion:Which genus has more species in it, Dipteronia or Syringa?\nAnswer:Syringa\nLevel:hard\nType:comparison"}, {"group": 23, "id": "a64740", "label": "Answer:Marijuana\nPage Rank:0.39\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.38545242420466125\nQuestion:What documentary had music composed by the person who wrote \"I\u0027ll Feel a Whole Lot Better\"?\nAnswer:Marijuana\nLevel:medium\nType:bridge"}]);
+                  edges = new vis.DataSet([{"from": "a90236", "label": 0.05555555555555555, "length": 500, "to": "a43488", "width": 1}, {"from": "a90236", "label": 0.06666666666666667, "length": 500, "to": "a5099", "width": 1}, {"from": "a90236", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a90236", "label": 0.16666666666666666, "length": 500, "to": "a74793", "width": 1}, {"from": "a90236", "label": 0.25, "length": 500, "to": "a76081", "width": 1}, {"from": "a90236", "label": 1.0, "length": 500, "to": "a89655", "width": 1}, {"from": "a67547", "label": 0.038461538461538464, "length": 500, "to": "a1024", "width": 1}, {"from": "a67547", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a67547", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a67547", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a67547", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a67547", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a67547", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a67547", "label": 0.058823529411764705, "length": 500, "to": "a32443", "width": 1}, {"from": "a67547", "label": 0.0625, "length": 500, "to": "a35135", "width": 1}, {"from": "a67547", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a67547", "label": 0.05555555555555555, "length": 500, "to": "a43488", "width": 1}, {"from": "a67547", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a67547", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a67547", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a67547", "label": 0.09090909090909091, "length": 500, "to": "a54285", "width": 1}, {"from": "a67547", "label": 0.1, "length": 500, "to": "a55291", "width": 1}, {"from": "a67547", "label": 0.1111111111111111, "length": 500, "to": "a57667", "width": 1}, {"from": "a67547", "label": 0.125, "length": 500, "to": "a58580", "width": 1}, {"from": "a67547", "label": 0.14285714285714285, "length": 500, "to": "a60192", "width": 1}, {"from": "a67547", "label": 0.16666666666666666, "length": 500, "to": "a62489", "width": 1}, {"from": "a67547", "label": 0.2, "length": 500, "to": "a64341", "width": 1}, {"from": "a67547", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a67547", "label": 0.25, "length": 500, "to": "a74793", "width": 1}, {"from": "a67547", "label": 0.25, "length": 500, "to": "a75474", "width": 1}, {"from": "a67547", "label": 0.25, "length": 500, "to": "a82875", "width": 1}, {"from": "a67547", "label": 0.25, "length": 500, "to": "a84890", "width": 1}, {"from": "a5659", "label": 0.06666666666666667, "length": 500, "to": "a5099", "width": 1}, {"from": "a5659", "label": 0.5, "length": 500, "to": "a76081", "width": 1}, {"from": "a5659", "label": 0.5, "length": 500, "to": "a89655", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a12247", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a31752", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a32324", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a43488", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a55752", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a58852", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a5991", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a7012", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a74793", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a76081", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a77356", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a82807", "width": 1}, {"from": "a5099", "label": 0.06666666666666667, "length": 500, "to": "a89655", "width": 1}, {"from": "a5991", "label": 0.5, "length": 500, "to": "a76081", "width": 1}, {"from": "a5991", "label": 0.5, "length": 500, "to": "a89655", "width": 1}, {"from": "a11911", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a11911", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a11911", "label": 0.5, "length": 500, "to": "a43488", "width": 1}, {"from": "a11911", "label": 0.5, "length": 500, "to": "a74793", "width": 1}, {"from": "a64341", "label": 0.038461538461538464, "length": 500, "to": "a1024", "width": 1}, {"from": "a64341", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a64341", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a64341", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a64341", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a64341", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a64341", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a64341", "label": 0.058823529411764705, "length": 500, "to": "a32443", "width": 1}, {"from": "a64341", "label": 0.0625, "length": 500, "to": "a35135", "width": 1}, {"from": "a64341", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a64341", "label": 0.05555555555555555, "length": 500, "to": "a43488", "width": 1}, {"from": "a64341", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a64341", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a64341", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a64341", "label": 0.09090909090909091, "length": 500, "to": "a54285", "width": 1}, {"from": "a64341", "label": 0.1, "length": 500, "to": "a55291", "width": 1}, {"from": "a64341", "label": 0.1111111111111111, "length": 500, "to": "a57667", "width": 1}, {"from": "a64341", "label": 0.125, "length": 500, "to": "a58580", "width": 1}, {"from": "a64341", "label": 0.14285714285714285, "length": 500, "to": "a60192", "width": 1}, {"from": "a64341", "label": 0.16666666666666666, "length": 500, "to": "a62489", "width": 1}, {"from": "a64341", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a64341", "label": 0.2, "length": 500, "to": "a74793", "width": 1}, {"from": "a64341", "label": 0.2, "length": 500, "to": "a75474", "width": 1}, {"from": "a64341", "label": 0.2, "length": 500, "to": "a82875", "width": 1}, {"from": "a64341", "label": 0.2, "length": 500, "to": "a84890", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a11523", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a13535", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a14833", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a20373", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a29648", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a32443", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a35135", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a39859", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a43488", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a4778", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a51200", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a51327", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a54285", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a55291", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a57667", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a58580", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a60192", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a62489", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a7012", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a74793", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a75474", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a82875", "width": 1}, {"from": "a1024", "label": 0.038461538461538464, "length": 500, "to": "a84890", "width": 1}, {"from": "a31752", "label": 0.5, "length": 500, "to": "a76081", "width": 1}, {"from": "a31752", "label": 0.5, "length": 500, "to": "a89655", "width": 1}, {"from": "a75474", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a75474", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a75474", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a75474", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a75474", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a75474", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a75474", "label": 0.058823529411764705, "length": 500, "to": "a32443", "width": 1}, {"from": "a75474", "label": 0.0625, "length": 500, "to": "a35135", "width": 1}, {"from": "a75474", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a75474", "label": 0.05555555555555555, "length": 500, "to": "a43488", "width": 1}, {"from": "a75474", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a75474", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a75474", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a75474", "label": 0.09090909090909091, "length": 500, "to": "a54285", "width": 1}, {"from": "a75474", "label": 0.1, "length": 500, "to": "a55291", "width": 1}, {"from": "a75474", "label": 0.1111111111111111, "length": 500, "to": "a57667", "width": 1}, {"from": "a75474", "label": 0.125, "length": 500, "to": "a58580", "width": 1}, {"from": "a75474", "label": 0.14285714285714285, "length": 500, "to": "a60192", "width": 1}, {"from": "a75474", "label": 0.16666666666666666, "length": 500, "to": "a62489", "width": 1}, {"from": "a75474", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a75474", "label": 0.16666666666666666, "length": 500, "to": "a74793", "width": 1}, {"from": "a75474", "label": 0.5, "length": 500, "to": "a82875", "width": 1}, {"from": "a75474", "label": 0.5, "length": 500, "to": "a84890", "width": 1}, {"from": "a58852", "label": 0.5, "length": 500, "to": "a76081", "width": 1}, {"from": "a58852", "label": 0.5, "length": 500, "to": "a89655", "width": 1}, {"from": "a32443", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a32443", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a32443", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a32443", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a32443", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a32443", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a32443", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a32443", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a35135", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a39859", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a43488", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a51200", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a51327", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a54285", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a55291", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a57667", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a58580", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a60192", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a62489", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a74793", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a82875", "width": 1}, {"from": "a32443", "label": 0.058823529411764705, "length": 500, "to": "a84890", "width": 1}, {"from": "a62489", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a62489", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a62489", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a62489", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a62489", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a62489", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a62489", "label": 0.0625, "length": 500, "to": "a35135", "width": 1}, {"from": "a62489", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a62489", "label": 0.05555555555555555, "length": 500, "to": "a43488", "width": 1}, {"from": "a62489", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a62489", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a62489", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a62489", "label": 0.09090909090909091, "length": 500, "to": "a54285", "width": 1}, {"from": "a62489", "label": 0.1, "length": 500, "to": "a55291", "width": 1}, {"from": "a62489", "label": 0.1111111111111111, "length": 500, "to": "a57667", "width": 1}, {"from": "a62489", "label": 0.125, "length": 500, "to": "a58580", "width": 1}, {"from": "a62489", "label": 0.14285714285714285, "length": 500, "to": "a60192", "width": 1}, {"from": "a62489", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a62489", "label": 0.16666666666666666, "length": 500, "to": "a74793", "width": 1}, {"from": "a62489", "label": 0.16666666666666666, "length": 500, "to": "a82875", "width": 1}, {"from": "a62489", "label": 0.16666666666666666, "length": 500, "to": "a84890", "width": 1}, {"from": "a55291", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a55291", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a55291", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a55291", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a55291", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a55291", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a55291", "label": 0.0625, "length": 500, "to": "a35135", "width": 1}, {"from": "a55291", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a55291", "label": 0.05555555555555555, "length": 500, "to": "a43488", "width": 1}, {"from": "a55291", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a55291", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a55291", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a55291", "label": 0.09090909090909091, "length": 500, "to": "a54285", "width": 1}, {"from": "a55291", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a55291", "label": 0.1, "length": 500, "to": "a57667", "width": 1}, {"from": "a55291", "label": 0.1, "length": 500, "to": "a58580", "width": 1}, {"from": "a55291", "label": 0.1, "length": 500, "to": "a60192", "width": 1}, {"from": "a55291", "label": 0.1, "length": 500, "to": "a74793", "width": 1}, {"from": "a55291", "label": 0.1, "length": 500, "to": "a82875", "width": 1}, {"from": "a55291", "label": 0.1, "length": 500, "to": "a84890", "width": 1}, {"from": "a57667", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a57667", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a57667", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a57667", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a57667", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a57667", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a57667", "label": 0.0625, "length": 500, "to": "a35135", "width": 1}, {"from": "a57667", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a57667", "label": 0.05555555555555555, "length": 500, "to": "a43488", "width": 1}, {"from": "a57667", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a57667", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a57667", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a57667", "label": 0.09090909090909091, "length": 500, "to": "a54285", "width": 1}, {"from": "a57667", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a57667", "label": 0.1111111111111111, "length": 500, "to": "a58580", "width": 1}, {"from": "a57667", "label": 0.1111111111111111, "length": 500, "to": "a60192", "width": 1}, {"from": "a57667", "label": 0.1111111111111111, "length": 500, "to": "a74793", "width": 1}, {"from": "a57667", "label": 0.1111111111111111, "length": 500, "to": "a82875", "width": 1}, {"from": "a57667", "label": 0.1111111111111111, "length": 500, "to": "a84890", "width": 1}, {"from": "a43488", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a43488", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a43488", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a43488", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a43488", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a43488", "label": 0.0625, "length": 500, "to": "a35135", "width": 1}, {"from": "a43488", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a43488", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a43488", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a51200", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a51327", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a54285", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a58580", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a60192", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a64740", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a74793", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a76081", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a82875", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a84890", "width": 1}, {"from": "a43488", "label": 0.05555555555555555, "length": 500, "to": "a89655", "width": 1}, {"from": "a54285", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a54285", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a54285", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a54285", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a54285", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a54285", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a54285", "label": 0.0625, "length": 500, "to": "a35135", "width": 1}, {"from": "a54285", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a54285", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a54285", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a54285", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a54285", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a54285", "label": 0.09090909090909091, "length": 500, "to": "a58580", "width": 1}, {"from": "a54285", "label": 0.09090909090909091, "length": 500, "to": "a60192", "width": 1}, {"from": "a54285", "label": 0.09090909090909091, "length": 500, "to": "a74793", "width": 1}, {"from": "a54285", "label": 0.09090909090909091, "length": 500, "to": "a82875", "width": 1}, {"from": "a54285", "label": 0.09090909090909091, "length": 500, "to": "a84890", "width": 1}, {"from": "a35135", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a35135", "label": 0.047619047619047616, "length": 500, "to": "a13535", "width": 1}, {"from": "a35135", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a35135", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a35135", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a35135", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a35135", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a35135", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a35135", "label": 0.0625, "length": 500, "to": "a39859", "width": 1}, {"from": "a35135", "label": 0.0625, "length": 500, "to": "a51200", "width": 1}, {"from": "a35135", "label": 0.0625, "length": 500, "to": "a51327", "width": 1}, {"from": "a35135", "label": 0.0625, "length": 500, "to": "a58580", "width": 1}, {"from": "a35135", "label": 0.0625, "length": 500, "to": "a60192", "width": 1}, {"from": "a35135", "label": 0.0625, "length": 500, "to": "a74793", "width": 1}, {"from": "a35135", "label": 0.0625, "length": 500, "to": "a82875", "width": 1}, {"from": "a35135", "label": 0.0625, "length": 500, "to": "a84890", "width": 1}, {"from": "a13535", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a13535", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a13535", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a13535", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a14833", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a20373", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a29648", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a39859", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a51200", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a51327", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a58580", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a60192", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a74793", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a82875", "width": 1}, {"from": "a13535", "label": 0.047619047619047616, "length": 500, "to": "a84890", "width": 1}, {"from": "a12247", "label": 0.2, "length": 500, "to": "a55752", "width": 1}, {"from": "a12247", "label": 0.2, "length": 500, "to": "a76081", "width": 1}, {"from": "a12247", "label": 0.2, "length": 500, "to": "a77356", "width": 1}, {"from": "a12247", "label": 0.2, "length": 500, "to": "a82807", "width": 1}, {"from": "a12247", "label": 0.2, "length": 500, "to": "a89655", "width": 1}, {"from": "a74793", "label": 0.045454545454545456, "length": 500, "to": "a11523", "width": 1}, {"from": "a74793", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a74793", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a74793", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a74793", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a74793", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a74793", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a74793", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a74793", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a74793", "label": 0.125, "length": 500, "to": "a58580", "width": 1}, {"from": "a74793", "label": 0.14285714285714285, "length": 500, "to": "a60192", "width": 1}, {"from": "a74793", "label": 1.0, "length": 500, "to": "a64740", "width": 1}, {"from": "a74793", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a74793", "label": 0.16666666666666666, "length": 500, "to": "a76081", "width": 1}, {"from": "a74793", "label": 0.16666666666666666, "length": 500, "to": "a82875", "width": 1}, {"from": "a74793", "label": 0.16666666666666666, "length": 500, "to": "a84890", "width": 1}, {"from": "a74793", "label": 0.16666666666666666, "length": 500, "to": "a89655", "width": 1}, {"from": "a55752", "label": 0.25, "length": 500, "to": "a76081", "width": 1}, {"from": "a55752", "label": 0.25, "length": 500, "to": "a77356", "width": 1}, {"from": "a55752", "label": 0.25, "length": 500, "to": "a82807", "width": 1}, {"from": "a55752", "label": 0.25, "length": 500, "to": "a89655", "width": 1}, {"from": "a11523", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a11523", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a11523", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a14833", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a20373", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a29648", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a39859", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a51200", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a51327", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a58580", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a60192", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a82875", "width": 1}, {"from": "a11523", "label": 0.045454545454545456, "length": 500, "to": "a84890", "width": 1}, {"from": "a58580", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a58580", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a58580", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a58580", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a58580", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a58580", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a58580", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a58580", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a58580", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a58580", "label": 0.125, "length": 500, "to": "a60192", "width": 1}, {"from": "a58580", "label": 0.125, "length": 500, "to": "a82875", "width": 1}, {"from": "a58580", "label": 0.125, "length": 500, "to": "a84890", "width": 1}, {"from": "a82875", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a82875", "label": 0.05263157894736842, "length": 500, "to": "a20373", "width": 1}, {"from": "a82875", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a82875", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a82875", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a82875", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a82875", "label": 0.07692307692307693, "length": 500, "to": "a51200", "width": 1}, {"from": "a82875", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a82875", "label": 0.14285714285714285, "length": 500, "to": "a60192", "width": 1}, {"from": "a82875", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a82875", "label": 1.0, "length": 500, "to": "a84890", "width": 1}, {"from": "a20373", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a20373", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a20373", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a20373", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a20373", "label": 0.05263157894736842, "length": 500, "to": "a29648", "width": 1}, {"from": "a20373", "label": 0.05263157894736842, "length": 500, "to": "a39859", "width": 1}, {"from": "a20373", "label": 0.05263157894736842, "length": 500, "to": "a51200", "width": 1}, {"from": "a20373", "label": 0.05263157894736842, "length": 500, "to": "a51327", "width": 1}, {"from": "a20373", "label": 0.05263157894736842, "length": 500, "to": "a60192", "width": 1}, {"from": "a20373", "label": 0.05263157894736842, "length": 500, "to": "a84890", "width": 1}, {"from": "a51200", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a51200", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a51200", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a51200", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a51200", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a51200", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a51200", "label": 0.07692307692307693, "length": 500, "to": "a51327", "width": 1}, {"from": "a51200", "label": 0.07692307692307693, "length": 500, "to": "a60192", "width": 1}, {"from": "a51200", "label": 0.07692307692307693, "length": 500, "to": "a84890", "width": 1}, {"from": "a84890", "label": 0.05, "length": 500, "to": "a14833", "width": 1}, {"from": "a84890", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a84890", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a84890", "label": 0.06666666666666667, "length": 500, "to": "a39859", "width": 1}, {"from": "a84890", "label": 0.041666666666666664, "length": 500, "to": "a4778", "width": 1}, {"from": "a84890", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a84890", "label": 0.14285714285714285, "length": 500, "to": "a60192", "width": 1}, {"from": "a84890", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a4778", "label": 0.041666666666666664, "length": 500, "to": "a14833", "width": 1}, {"from": "a4778", "label": 0.041666666666666664, "length": 500, "to": "a29648", "width": 1}, {"from": "a4778", "label": 0.041666666666666664, "length": 500, "to": "a39859", "width": 1}, {"from": "a4778", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a4778", "label": 0.041666666666666664, "length": 500, "to": "a51327", "width": 1}, {"from": "a4778", "label": 0.041666666666666664, "length": 500, "to": "a60192", "width": 1}, {"from": "a4778", "label": 0.041666666666666664, "length": 500, "to": "a7012", "width": 1}, {"from": "a14833", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a14833", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a14833", "label": 0.05, "length": 500, "to": "a29648", "width": 1}, {"from": "a14833", "label": 0.05, "length": 500, "to": "a39859", "width": 1}, {"from": "a14833", "label": 0.05, "length": 500, "to": "a51327", "width": 1}, {"from": "a14833", "label": 0.05, "length": 500, "to": "a60192", "width": 1}, {"from": "a77356", "label": 0.25, "length": 500, "to": "a76081", "width": 1}, {"from": "a77356", "label": 0.5, "length": 500, "to": "a82807", "width": 1}, {"from": "a77356", "label": 0.5, "length": 500, "to": "a89655", "width": 1}, {"from": "a39859", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a39859", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a39859", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a39859", "label": 0.06666666666666667, "length": 500, "to": "a51327", "width": 1}, {"from": "a39859", "label": 0.06666666666666667, "length": 500, "to": "a60192", "width": 1}, {"from": "a60192", "label": 0.05555555555555555, "length": 500, "to": "a29648", "width": 1}, {"from": "a60192", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a60192", "label": 0.08333333333333333, "length": 500, "to": "a51327", "width": 1}, {"from": "a60192", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a76081", "label": 0.5, "length": 500, "to": "a32324", "width": 1}, {"from": "a76081", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a76081", "label": 0.25, "length": 500, "to": "a82807", "width": 1}, {"from": "a76081", "label": 0.25, "length": 500, "to": "a89655", "width": 1}, {"from": "a29648", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a29648", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a29648", "label": 0.05555555555555555, "length": 500, "to": "a51327", "width": 1}, {"from": "a82807", "label": 1.0, "length": 500, "to": "a89655", "width": 1}, {"from": "a32324", "label": 0.5, "length": 500, "to": "a89655", "width": 1}, {"from": "a51327", "label": 0.038461538461538464, "length": 500, "to": "a3161", "width": 1}, {"from": "a51327", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a89655", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}, {"from": "a3161", "label": 0.038461538461538464, "length": 500, "to": "a7012", "width": 1}, {"from": "a64740", "label": 0.03571428571428571, "length": 500, "to": "a7012", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

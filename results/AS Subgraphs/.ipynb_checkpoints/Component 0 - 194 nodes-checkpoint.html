@@ -1,0 +1,837 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 1700px;
+                 height: 900px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a7760">a7760</option>
+                                
+                                    <option value="a925">a925</option>
+                                
+                                    <option value="a8573">a8573</option>
+                                
+                                    <option value="a23833">a23833</option>
+                                
+                                    <option value="a15550">a15550</option>
+                                
+                                    <option value="a68552">a68552</option>
+                                
+                                    <option value="a8313">a8313</option>
+                                
+                                    <option value="a8582">a8582</option>
+                                
+                                    <option value="a35539">a35539</option>
+                                
+                                    <option value="a44090">a44090</option>
+                                
+                                    <option value="a14245">a14245</option>
+                                
+                                    <option value="a1377">a1377</option>
+                                
+                                    <option value="a25809">a25809</option>
+                                
+                                    <option value="a65602">a65602</option>
+                                
+                                    <option value="a29314">a29314</option>
+                                
+                                    <option value="a46195">a46195</option>
+                                
+                                    <option value="a23933">a23933</option>
+                                
+                                    <option value="a75211">a75211</option>
+                                
+                                    <option value="a29540">a29540</option>
+                                
+                                    <option value="a56718">a56718</option>
+                                
+                                    <option value="a77813">a77813</option>
+                                
+                                    <option value="a84801">a84801</option>
+                                
+                                    <option value="a50879">a50879</option>
+                                
+                                    <option value="a53302">a53302</option>
+                                
+                                    <option value="a193">a193</option>
+                                
+                                    <option value="a34330">a34330</option>
+                                
+                                    <option value="a25024">a25024</option>
+                                
+                                    <option value="a52568">a52568</option>
+                                
+                                    <option value="a89167">a89167</option>
+                                
+                                    <option value="a15828">a15828</option>
+                                
+                                    <option value="a7367">a7367</option>
+                                
+                                    <option value="a1552">a1552</option>
+                                
+                                    <option value="a7701">a7701</option>
+                                
+                                    <option value="a57185">a57185</option>
+                                
+                                    <option value="a48701">a48701</option>
+                                
+                                    <option value="a4196">a4196</option>
+                                
+                                    <option value="a23859">a23859</option>
+                                
+                                    <option value="a31109">a31109</option>
+                                
+                                    <option value="a83012">a83012</option>
+                                
+                                    <option value="a270">a270</option>
+                                
+                                    <option value="a13910">a13910</option>
+                                
+                                    <option value="a73457">a73457</option>
+                                
+                                    <option value="a65531">a65531</option>
+                                
+                                    <option value="a12254">a12254</option>
+                                
+                                    <option value="a323">a323</option>
+                                
+                                    <option value="a80429">a80429</option>
+                                
+                                    <option value="a21285">a21285</option>
+                                
+                                    <option value="a14733">a14733</option>
+                                
+                                    <option value="a18509">a18509</option>
+                                
+                                    <option value="a8130">a8130</option>
+                                
+                                    <option value="a5651">a5651</option>
+                                
+                                    <option value="a163">a163</option>
+                                
+                                    <option value="a1551">a1551</option>
+                                
+                                    <option value="a62185">a62185</option>
+                                
+                                    <option value="a906">a906</option>
+                                
+                                    <option value="a34818">a34818</option>
+                                
+                                    <option value="a3327">a3327</option>
+                                
+                                    <option value="a60171">a60171</option>
+                                
+                                    <option value="a25153">a25153</option>
+                                
+                                    <option value="a77470">a77470</option>
+                                
+                                    <option value="a20692">a20692</option>
+                                
+                                    <option value="a74520">a74520</option>
+                                
+                                    <option value="a71469">a71469</option>
+                                
+                                    <option value="a6400">a6400</option>
+                                
+                                    <option value="a30911">a30911</option>
+                                
+                                    <option value="a31695">a31695</option>
+                                
+                                    <option value="a29945">a29945</option>
+                                
+                                    <option value="a6993">a6993</option>
+                                
+                                    <option value="a8138">a8138</option>
+                                
+                                    <option value="a88188">a88188</option>
+                                
+                                    <option value="a24055">a24055</option>
+                                
+                                    <option value="a6243">a6243</option>
+                                
+                                    <option value="a2513">a2513</option>
+                                
+                                    <option value="a68642">a68642</option>
+                                
+                                    <option value="a35596">a35596</option>
+                                
+                                    <option value="a57885">a57885</option>
+                                
+                                    <option value="a44927">a44927</option>
+                                
+                                    <option value="a13051">a13051</option>
+                                
+                                    <option value="a12262">a12262</option>
+                                
+                                    <option value="a10734">a10734</option>
+                                
+                                    <option value="a83866">a83866</option>
+                                
+                                    <option value="a49702">a49702</option>
+                                
+                                    <option value="a13972">a13972</option>
+                                
+                                    <option value="a18205">a18205</option>
+                                
+                                    <option value="a41501">a41501</option>
+                                
+                                    <option value="a25757">a25757</option>
+                                
+                                    <option value="a31863">a31863</option>
+                                
+                                    <option value="a56471">a56471</option>
+                                
+                                    <option value="a76047">a76047</option>
+                                
+                                    <option value="a32945">a32945</option>
+                                
+                                    <option value="a78161">a78161</option>
+                                
+                                    <option value="a27517">a27517</option>
+                                
+                                    <option value="a22290">a22290</option>
+                                
+                                    <option value="a58649">a58649</option>
+                                
+                                    <option value="a27023">a27023</option>
+                                
+                                    <option value="a47763">a47763</option>
+                                
+                                    <option value="a62939">a62939</option>
+                                
+                                    <option value="a3485">a3485</option>
+                                
+                                    <option value="a64284">a64284</option>
+                                
+                                    <option value="a65400">a65400</option>
+                                
+                                    <option value="a6015">a6015</option>
+                                
+                                    <option value="a82453">a82453</option>
+                                
+                                    <option value="a4393">a4393</option>
+                                
+                                    <option value="a36028">a36028</option>
+                                
+                                    <option value="a50481">a50481</option>
+                                
+                                    <option value="a18848">a18848</option>
+                                
+                                    <option value="a59842">a59842</option>
+                                
+                                    <option value="a4435">a4435</option>
+                                
+                                    <option value="a21487">a21487</option>
+                                
+                                    <option value="a10627">a10627</option>
+                                
+                                    <option value="a51691">a51691</option>
+                                
+                                    <option value="a43089">a43089</option>
+                                
+                                    <option value="a22966">a22966</option>
+                                
+                                    <option value="a53625">a53625</option>
+                                
+                                    <option value="a10804">a10804</option>
+                                
+                                    <option value="a33434">a33434</option>
+                                
+                                    <option value="a80827">a80827</option>
+                                
+                                    <option value="a22370">a22370</option>
+                                
+                                    <option value="a4397">a4397</option>
+                                
+                                    <option value="a28095">a28095</option>
+                                
+                                    <option value="a87135">a87135</option>
+                                
+                                    <option value="a6630">a6630</option>
+                                
+                                    <option value="a2943">a2943</option>
+                                
+                                    <option value="a23730">a23730</option>
+                                
+                                    <option value="a22950">a22950</option>
+                                
+                                    <option value="a11476">a11476</option>
+                                
+                                    <option value="a85187">a85187</option>
+                                
+                                    <option value="a10028">a10028</option>
+                                
+                                    <option value="a10196">a10196</option>
+                                
+                                    <option value="a28908">a28908</option>
+                                
+                                    <option value="a4736">a4736</option>
+                                
+                                    <option value="a4148">a4148</option>
+                                
+                                    <option value="a81816">a81816</option>
+                                
+                                    <option value="a85964">a85964</option>
+                                
+                                    <option value="a1381">a1381</option>
+                                
+                                    <option value="a88038">a88038</option>
+                                
+                                    <option value="a83656">a83656</option>
+                                
+                                    <option value="a5426">a5426</option>
+                                
+                                    <option value="a4060">a4060</option>
+                                
+                                    <option value="a59815">a59815</option>
+                                
+                                    <option value="a16062">a16062</option>
+                                
+                                    <option value="a33267">a33267</option>
+                                
+                                    <option value="a340">a340</option>
+                                
+                                    <option value="a1">a1</option>
+                                
+                                    <option value="a1158">a1158</option>
+                                
+                                    <option value="a2292">a2292</option>
+                                
+                                    <option value="a40093">a40093</option>
+                                
+                                    <option value="a50328">a50328</option>
+                                
+                                    <option value="a18078">a18078</option>
+                                
+                                    <option value="a19136">a19136</option>
+                                
+                                    <option value="a6387">a6387</option>
+                                
+                                    <option value="a6480">a6480</option>
+                                
+                                    <option value="a77690">a77690</option>
+                                
+                                    <option value="a71868">a71868</option>
+                                
+                                    <option value="a3828">a3828</option>
+                                
+                                    <option value="a7516">a7516</option>
+                                
+                                    <option value="a17343">a17343</option>
+                                
+                                    <option value="a69162">a69162</option>
+                                
+                                    <option value="a79050">a79050</option>
+                                
+                                    <option value="a89865">a89865</option>
+                                
+                                    <option value="a57157">a57157</option>
+                                
+                                    <option value="a4303">a4303</option>
+                                
+                                    <option value="a4142">a4142</option>
+                                
+                                    <option value="a32251">a32251</option>
+                                
+                                    <option value="a33987">a33987</option>
+                                
+                                    <option value="a28165">a28165</option>
+                                
+                                    <option value="a3977">a3977</option>
+                                
+                                    <option value="a64780">a64780</option>
+                                
+                                    <option value="a26993">a26993</option>
+                                
+                                    <option value="a39162">a39162</option>
+                                
+                                    <option value="a3139">a3139</option>
+                                
+                                    <option value="a16061">a16061</option>
+                                
+                                    <option value="a69029">a69029</option>
+                                
+                                    <option value="a50737">a50737</option>
+                                
+                                    <option value="a13468">a13468</option>
+                                
+                                    <option value="a52380">a52380</option>
+                                
+                                    <option value="a23232">a23232</option>
+                                
+                                    <option value="a68036">a68036</option>
+                                
+                                    <option value="a23158">a23158</option>
+                                
+                                    <option value="a42455">a42455</option>
+                                
+                                    <option value="a6620">a6620</option>
+                                
+                                    <option value="a11550">a11550</option>
+                                
+                                    <option value="a1935">a1935</option>
+                                
+                                    <option value="a22161">a22161</option>
+                                
+                                    <option value="a49278">a49278</option>
+                                
+                                    <option value="a7144">a7144</option>
+                                
+                                    <option value="a10262">a10262</option>
+                                
+                                    <option value="a11041">a11041</option>
+                                
+                                    <option value="a28398">a28398</option>
+                                
+                                    <option value="a57295">a57295</option>
+                                
+                                    <option value="a76251">a76251</option>
+                                
+                                    <option value="a16455">a16455</option>
+                                
+                                    <option value="a38030">a38030</option>
+                                
+                                    <option value="a17133">a17133</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 193, "id": "a7760", "label": "Answer:Bergen\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Where are Audrey Horne and Gorgoth based?\nAnswer:Bergen\nLevel:medium\nType:bridge"}, {"group": 137, "id": "a925", "label": "Answer:cities\nPage Rank:2.42\nLabel:137", "shape": "square", "size": 12, "title": "Page Rank:2.4172753272754544\nQuestion:Andover, located in Essex County, Massachusetts, is an example of a basic unit of local government and local division of state authority in each of the six New England states, commonly referred to in other states as what?\nAnswer:cities\nLevel:easy\nType:bridge"}, {"group": 137, "id": "a8573", "label": "Answer:city\nPage Rank:26.51\nLabel:137", "shape": "square", "size": 133, "title": "Page Rank:26.512516943075525\nQuestion:What do Linqing and Luzhou have in common?\nAnswer:city\nLevel:easy\nType:comparison"}, {"group": 193, "id": "a23833", "label": "Answer:Abidjan\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Port Bouet Airport is the main hub of the flag carrier based in what city?\nAnswer:Abidjan\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a15550", "label": "Answer:Duluth\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Low is the first EP by which city in Minnesota, slowcore group Low, released in 1994, it\u0027s a major port city in the U.S. state of Minnesota and the county seat of Saint Louis County?\nAnswer:Duluth\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a68552", "label": "Answer:Reno\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Geoff Boss won a race in which city, 22 miles from Lake Tahoe?\nAnswer:Reno\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a8313", "label": "Answer:Auckland\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Wanaka Airport no longer has scheduled commercial flights, with Air New Zealand, a company based in what city, having ceased flights to the airport in 2013?\nAnswer:Auckland\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a8582", "label": "Answer:Hermosillo\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is the capital city of the Mexican state that has the municipal seat \u00cdmuris?\nAnswer:Hermosillo\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a35539", "label": "Answer:Basel\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:After graduatng college,  Andr\u00e9 Dreiding spent two years as a research assisant for a healthcare company headquartered in what city?\nAnswer:Basel\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a44090", "label": "Answer:Akron\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which city in Ohio hosted the soccer competition for Gay Games 9?\nAnswer:Akron\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a14245", "label": "Answer:Shenyang\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is the name of this provincial capital and the largest city of Liaoning Province, People\u0027s Republic of China, that developed SIASUN UAV?\nAnswer:Shenyang\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a1377", "label": "Answer:Munich\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Which footballing city beat the Netherlands in the 1974 FIFA World Cup Final?\nAnswer:Munich\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a25809", "label": "Answer:Pasadena\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What city in California does KMRB and KAZN broadcast from?\nAnswer:Pasadena\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a65602", "label": "Answer:Schenectady\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What town did Nate Leaman coach the Union Dutchmen?\nAnswer:Schenectady\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a29314", "label": "Answer:Leningrad\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The first movement of the most vast and dramatic of Dimitry Kabalevsky\u0027s three sonatas has been compared to a symphony that was dedicated by is composer to what city?  \nAnswer:Leningrad\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a46195", "label": "Answer:Charlotte\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In which city did the draft take place in which The Sixers selected Keith Van Horn with the second pick?\nAnswer:Charlotte\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a23933", "label": "Answer:Hanover\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The 1820 UK general election produced the first parliament under the reign of the King from what house?\nAnswer:Hanover\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a75211", "label": "Answer:Reims\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:At the time of its construction, Fort des Ayvelles, controlled Meuse and the railway line linking what city in the Grand Est region of France, that lies 129 km east-northeast of Paris?\nAnswer:Reims\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a29540", "label": "Answer:Cologne\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Bayenthaler SV is part of a current day football club that plays in what city?\nAnswer:Cologne\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a56718", "label": "Answer:Kumasi\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Metro FM is a station in which city, among the largest in Ghana?\nAnswer:Kumasi\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a77813", "label": "Answer:Camden\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:McLemore Avenue is a 1970 album by Booker T. \u0026 the M.G.s, consisting entirely of mostly instrumental covers of songs from the Beatles\u0027 album Abbey Road, and also is a thoroughfare in the borough of what, and the City of Westminster in London?\nAnswer:Camden\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a84801", "label": "Answer:Herat\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion: the son of Husayn Bayqarah, who was a great-great-grandson  of the man historically known as Amir Timur and Tamerlane, was the ruler of where?\nAnswer:Herat\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a50879", "label": "Answer:Samarkand\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What city on the Silk Road means \"Sandy place\" in Persian?\nAnswer:Samarkand\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a53302", "label": "Answer:Nanjing\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which Chinese city is the capital of the Jiangsu province, Nanjing or Pu\u0027er City\nAnswer:Nanjing\nLevel:medium\nType:comparison"}, {"group": 84, "id": "a193", "label": "Answer:Bihar\nPage Rank:0.68\nLabel:84", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:Jayantabhai Ki Luv Story includes a lead role for the film actress and model who is a native of what city?\nAnswer:Bihar\nLevel:medium\nType:bridge"}, {"group": 56, "id": "a34330", "label": "Answer:state\nPage Rank:4.30\nLabel:56", "shape": "square", "size": 22, "title": "Page Rank:4.302137176302069\nQuestion:What type of territory does Northern New Hampshire Correctional Facility and New Hampshire Department of Corrections have in common?\nAnswer:state\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a25024", "label": "Answer:Murmansk\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What port city and administrative center is several hours of ride from Nemetsky Peninsula?\nAnswer:Murmansk\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a52568", "label": "Answer:Chihuahua\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which breed of dog is more diverse in terms of colors, the Stephens Cur  or the Chihuahua ? \nAnswer:Chihuahua\nLevel:easy\nType:comparison"}, {"group": 193, "id": "a89167", "label": "Answer:Bangalore\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Alipur, Karnataka is 55 km away from the airport serving what capital of Karnataka?\nAnswer:Bangalore\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a15828", "label": "Answer:Karachi\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Mirza Ahmad Ispahani was the first chairman of an airline out of what main hub?\nAnswer:Karachi\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a7367", "label": "Answer:Hamburg\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:What town was evacuated in 1940-1941 and take over by the U.S. Government to create Weldon Spring Ordnance Works, a 17323 acre facility?\nAnswer:Hamburg\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a1552", "label": "Answer:Allentown\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Which city is the third most populated city in Pennsylvania and was apart of the film the Florentine? \nAnswer:Allentown\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a7701", "label": "Answer:Oakland\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:What city in California was home to a team that Robert Girard played hockey for?\nAnswer:Oakland\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a57185", "label": "Answer:Albuquerque\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:from 1911-1916 Ralph Hutchinson was the head football coach for a university located in what city?\nAnswer:Albuquerque\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a48701", "label": "Answer:Apeldoorn\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What city was the man who replaced Anouk on \"The Voice of Holland\" born in?\nAnswer:Apeldoorn\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a4196", "label": "Answer:Frankfurt\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Werner Gunter Jaff\u00e9 Fellner was born in which metropolis and the largest city in the German state of Hesse and the fifth-largest city in Germany?\nAnswer:Frankfurt\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a23859", "label": "Answer:Benghazi\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The attack on what city in Libya by members of the Islamic group Ansar al-Sharia led to the formation of a committee with Trey Gowdy as it\u0027s chairman?\nAnswer:Benghazi\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a31109", "label": "Answer:Winston-Salem\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which North Carolina city is nicknamed \"Camel City\" after the local cigarette brand, formerly a big supporter of GT and other auto racing?\nAnswer:Winston-Salem\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a83012", "label": "Answer:Milwaukee\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Hart D. Fisher created a comic book about a criminal from what city?\nAnswer:Milwaukee\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a270", "label": "Answer:Johannesburg\nPage Rank:0.68\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:What city is located in Gauteng, South Africa with a suburb called Kew?\nAnswer:Johannesburg\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a13910", "label": "Answer:Lille\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Mar\u00eda Eugenia Bielsa is the sister of the football manager in charge of what team?\nAnswer:Lille\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a73457", "label": "Answer:Lynchburg\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Before being annexed by Oroville, Center Ville was located part way between Oroville and which other city in Brutte County, California?\nAnswer:Lynchburg\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a65531", "label": "Answer:Naples\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Where did Frederick II, a memeber of the House of Hohenstaufen, invite Jacob Anatoli?\nAnswer:Naples\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a12254", "label": "Answer:Utrecht\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Mari\u00ebnhof is a defunct restaurant in what Netherland province?\nAnswer:Utrecht\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a323", "label": "Answer:Orlando\nPage Rank:0.68\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:The band that released the album \"Let\u0027s Cheers to This\" is from what Florida city?\nAnswer:Orlando\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a80429", "label": "Answer:Padua\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which city in Veneto, northern Italy is home to Codevigo?\nAnswer:Padua\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a21285", "label": "Answer:Calcutta\nPage Rank:1.58\nLabel:193", "shape": "square", "size": 8, "title": "Page Rank:1.5829326559075343\nQuestion:Of which city was the author of the poem Palestine a bishop ?\nAnswer:Calcutta\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a14733", "label": "Answer:Kolkata\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Kanchenjunga Express has songs by the playback singer based out of what city?\nAnswer:Kolkata\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a18509", "label": "Answer:Newark\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Bergen Arches is located in this city that is the second most populous after which city within the state?\nAnswer:Newark\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a8130", "label": "Answer:Detroit\nPage Rank:0.99\nLabel:193", "shape": "square", "size": 5, "title": "Page Rank:0.9865809926036472\nQuestion:Bad Meets Evil was a duo that formed because of a mutual friend from what city?\nAnswer:Detroit\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a5651", "label": "Answer:Motown\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Contract, an American album released by Freda Payne for Invictus Records, was compared to music by Diana Ross who performed under a division of what label?\nAnswer:Motown\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a163", "label": "Answer:Chicago\nPage Rank:0.68\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:Axle Whitehead was a part of an American comedy-drama television series that is a remake of the British series with the same name set in what city?\nAnswer:Chicago\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a1551", "label": "Answer:Dallas\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Metal band Crown the Empire, whose first album was called Limitless, are from which Texas city?\nAnswer:Dallas\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a62185", "label": "Answer:Chongqing\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Other than Beijing, Shanghai and Tianjin, what other major city is one of China\u0027s four direct-controlled municipalities, and is also the birthplace of Chinese rally driver, Liu Caodong?\nAnswer:Chongqing\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a906", "label": "Answer:Glasgow\nPage Rank:0.68\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:Where was the British singer-songwriter who composed The Princess Bride\u0027s soundtrack born?\nAnswer:Glasgow\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a34818", "label": "Answer:Billings\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Bracut, California has a campground run by the company that was founded in what Montana city?\nAnswer:Billings\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a3327", "label": "Answer:Verona\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Who directed the 1979 American drama film that starred the actress who won the Golden Globe Award for Best Supporting Actress for \"Psycho\"?\nAnswer:Verona\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a60171", "label": "Answer:UFA\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What major film studio did the German global banking and financial services company, Deutsche Bank, force the German film product and distribution company, National Film, to merge with? \nAnswer:UFA\nLevel:medium\nType:bridge"}, {"group": 84, "id": "a25153", "label": "Answer:Kosovo\nPage Rank:0.68\nLabel:84", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:Nick Houghton was replaced as Chief of the Defence Staff by a man who was deployed to what country in 2000?\nAnswer:Kosovo\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a77470", "label": "Answer:Morgantown\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In what city does Mike Carey coach women\u0027s basketball ?\nAnswer:Morgantown\nLevel:medium\nType:bridge"}, {"group": 84, "id": "a20692", "label": "Answer:Assam\nPage Rank:0.68\nLabel:84", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:Indian Singers Padmanav Bordoloi and Papon come from which state?\nAnswer:Assam\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a74520", "label": "Answer:Ur\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which Sumerian city was very powerful and influential during the Early Dynastic period and once a coastal city?\nAnswer:Ur\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a71469", "label": "Answer:Barranquilla\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In what city were the Los Titanes band founded and is also the fourth most populous city in Columbia?\nAnswer:Barranquilla\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a6400", "label": "Answer:Leeds\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:in which UK city is the long-running British soap opera in which Abby Mavers\u0027 farther appears as Gordon Livesy filmed?\nAnswer:Leeds\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a30911", "label": "Answer:Tulsa\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:At The 2012 Summit League Baseball Tournament, The top four regular season finishers of the league\u0027s seven teams met in the double-elimination tournament held at a university based in which city ?\nAnswer:Tulsa\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a31695", "label": "Answer:Aarhus\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is the second-largest city in Denmark, and also where the Vestergade 58 building is listed?\nAnswer:Aarhus\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a29945", "label": "Answer:Davenport\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The Cody Michelin Cup Biplane was built by a man born in what US city?\nAnswer:Davenport\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a6993", "label": "Answer:Hyderabad\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Among India\u0027s oldest universities founded in 1918, Osmania University is in which city?\nAnswer:Hyderabad\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a8138", "label": "Answer:Florence\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:What is the capital of the region of Italy in which San Raimondo is loacted?\nAnswer:Florence\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a88188", "label": "Answer:Burlington\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Ben Cohen is a co-founder of the ice cream company founded in 1978 in what Vermont town?\nAnswer:Burlington\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a24055", "label": "Answer:Brighton\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which seaside resort is 11 mi south of Bolney?\nAnswer:Brighton\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a6243", "label": "Answer:Bologna\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Reggio Emilia Cathedral is one of the three main religious buildings in the administrative region that has what city as its capital?\nAnswer:Bologna\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a2513", "label": "Answer:Rotterdam\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:In which city was this global energy and commodity trading company larger than Trafigura as an oil trader formed?\nAnswer:Rotterdam\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a68642", "label": "Answer:Knoxville\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which city in Tennessee, is the Seven Islands State Birding Park, that lies on the French Broad River, located next to?\nAnswer:Knoxville\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a35596", "label": "Answer:Pompeii\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:D. James Goodwin is an American record producer, recording engineer, musician, and filmmaker, based in Woodstock, New York, his discography includes bands and artists such as which band named after, an ancient Roman town-city near modern Naples, in the Campania region of Italy, in the territory of the comune of Pompei?\nAnswer:Pompeii\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a57885", "label": "Answer:Lubbock\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Jones AT\u0026T Stadium is on the campus of the university in what Texas city?\nAnswer:Lubbock\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a44927", "label": "Answer:Cremona\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In which city was the birthplace of Alessandro Rinaldi?\nAnswer:Cremona\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a13051", "label": "Answer:Municipality\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is another name for town?\nAnswer:Municipality\nLevel:easy\nType:bridge"}, {"group": 84, "id": "a12262", "label": "Answer:Tyrol\nPage Rank:0.68\nLabel:84", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:Two-man bobsleigh at the 1964 Winter Olympics took place on 31 January and 1 February at Bob und Rodelbahn Igls, Innsbruck, Austria, Innsbruck is the capital city of which city, in western Austria?\nAnswer:Tyrol\nLevel:easy\nType:bridge"}, {"group": 84, "id": "a10734", "label": "Answer:Bavaria\nPage Rank:0.68\nLabel:84", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:Voll-Damm is a style of beer that originated where?\nAnswer:Bavaria\nLevel:medium\nType:bridge"}, {"group": 84, "id": "a83866", "label": "Answer:Sichuan\nPage Rank:4.34\nLabel:84", "shape": "square", "size": 22, "title": "Page Rank:4.337739227258295\nQuestion:Suining and Guang\u0027an, are both cities, in which province in Southwest China?\nAnswer:Sichuan\nLevel:easy\nType:comparison"}, {"group": 193, "id": "a49702", "label": "Answer:Cincinnati\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In what Ohio city does the highway which the northern terminus of Pennsylvania Route 75 interchanges with originate?\nAnswer:Cincinnati\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a13972", "label": "Answer:Thebes\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Situated on the west bank of the Nile, opposite Luxor, the famous tomb TT34 is located in which ancient city?\nAnswer:Thebes\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a18205", "label": "Answer:Pittsburgh\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which city in the commonwealth of Pennsylvania was the song Beans in My Ears banned ?\nAnswer:Pittsburgh\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a41501", "label": "Answer:Fargo\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which Joel and Ethan Coen film was released in the same year as \"Scream\"?\nAnswer:Fargo\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a25757", "label": "Answer:Campeche\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Delfines de la Unacar is based in a city  in the southwest of the what Mexican state?\nAnswer:Campeche\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a31863", "label": "Answer:Salzburg\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In what city was Symphony No. 13, which was mistaken at one time to be created by the Father of the Symphony, written?\nAnswer:Salzburg\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a56471", "label": "Answer:Dubai\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which is the largest and most populous city in the region with the national anthem Hoyamal?\nAnswer:Dubai\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a76047", "label": "Answer:Essen\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What German city was the family that developed and built the 8.8 cm KwK 36 L/56 from?\nAnswer:Essen\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a32945", "label": "Answer:Lucknow\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Priyanka Gandhi, is an Indian politician who is the granddaughter of the publisher of \"The National Herald\" and \"The Navjivan\" newspapers from where?\nAnswer:Lucknow\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a78161", "label": "Answer:Lahore\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:where is the mosque  where  De\u0027Montmorency College of Dentistry: is  situated next to located \nAnswer:Lahore\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a27517", "label": "Answer:Rawalpindi\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In what part of Pakistan is the company owned by Malik Riaz Hussain based?\nAnswer:Rawalpindi\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a22290", "label": "Answer:Tianjin\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In which city, the largest coastal city in northern China, can Helcystogramma perelegans be found?\nAnswer:Tianjin\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a58649", "label": "Answer:Yokohama\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The 1993 Toray Pan Pacific Open took place in what city that is the second largest city in Japan by population, and is the capital city of Kanagawa Prefecture?\nAnswer:Yokohama\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a27023", "label": "Answer:Turin\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Italy has taken part in every Universiade since the first one, held in what city?\nAnswer:Turin\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a47763", "label": "Answer:Bristol\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Wallace and Gromit\u0027s Cracking Contraptions was produced by a British animation studio that is known for films made using stop-motion clay animation techniques, and that is based where?\nAnswer:Bristol\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a62939", "label": "Answer:Canton\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:New Orleans, Jackson and Great Northern began at what Madison county, Mississippi town?\nAnswer:Canton\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a3485", "label": "Answer:Tyre\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Which ancient Lebanese city issued the coins known as shekels, used to pay taxes in the Temple of Jerusalem?\nAnswer:Tyre\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a64284", "label": "Answer:Porto\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which team won the European Cup Final in which Helmut Winklhofer played ?\nAnswer:Porto\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a65400", "label": "Answer:Antwerp\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In what city is the church located that was named after the Anglo-Saxon missionary to the Frankish Empire?\nAnswer:Antwerp\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a6015", "label": "Answer:Sarajevo\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:What is the capital and largest city of Bosnia, a location were the United Nations Security Council Resolution 727 was also signed?\nAnswer:Sarajevo\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a82453", "label": "Answer:Bordeaux\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The Lords of Appellant were a group of nobles in the reign of a king that was born where?\nAnswer:Bordeaux\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a4393", "label": "Answer:Milan\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:In which city is the conglomerate that bought Ray Ban from Bausch \u0026 Lomb ?\nAnswer:Milan\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a36028", "label": "Answer:Tsaritsyn\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What was the town formerly known as that Denis Dorozhkin was born in?\nAnswer:Tsaritsyn\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a50481", "label": "Answer:Volgograd\nPage Rank:1.58\nLabel:193", "shape": "square", "size": 8, "title": "Page Rank:1.5829326559075343\nQuestion:Viktor Zholudev commanded a division during its defense of a tractor factory located in a city now know as what\nAnswer:Volgograd\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a18848", "label": "Answer:Aalborg\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In 1995 Peter Rasmussen played association football for the Danish team located in what city?\nAnswer:Aalborg\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a59842", "label": "Answer:Rio\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:As well as the Brasil \u002766 and Brasil \u002777 bands, S\u00e9rgio Mendes wrote songs for which animated film in 2012?\nAnswer:Rio\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a4435", "label": "Answer:Norfolk\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Readville, Boston is bordered on the south by the town in what Massachusetts county, the birthplace of George HW Bush?\nAnswer:Norfolk\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a21487", "label": "Answer:Chennai\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Karty was a writer in the weekly magazine published in what Indian city?\nAnswer:Chennai\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a10627", "label": "Answer:Rochester\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The wife of Leonard Lenihan works for a politician in what town?\nAnswer:Rochester\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a51691", "label": "Answer:Merida\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Mairead\u0027s fictional name is which main character from the 2012 Disney Pixar film \"Brave\"?\nAnswer:Merida\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a43089", "label": "Answer:Savannah\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Lazaretto Creek divides the creek that is 18 miles east of what Georgia city?\nAnswer:Savannah\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a22966", "label": "Answer:Syracuse\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is the name of the 2,700 year old city where the Battle of Himera River was fought?\nAnswer:Syracuse\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a53625", "label": "Answer:Aachen\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Where was Barbarossa Chandelier crowned Holy Roman Emperor?\nAnswer:Aachen\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a10804", "label": "Answer:Istanbul\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Where in Turkey are the Kuleli Military High School and the Atik Valide Mosque located?\nAnswer:Istanbul\nLevel:medium\nType:comparison"}, {"group": 193, "id": "a33434", "label": "Answer:Constantinople\nPage Rank:1.58\nLabel:193", "shape": "square", "size": 8, "title": "Page Rank:1.5829326559075343\nQuestion:Great Palace Mosaic Museum and Hirami Ahmet Pasha Mosque, have which city in common?\nAnswer:Constantinople\nLevel:easy\nType:comparison"}, {"group": 193, "id": "a80827", "label": "Answer:Hohhot\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is the capital of the region that includes the Lang Mountains?\nAnswer:Hohhot\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a22370", "label": "Answer:Mumbai\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Tata Movus is manufactured by a company headquartered in what city?\nAnswer:Mumbai\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a4397", "label": "Answer:Portsmouth\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:What team, managed by a man who is also and advisor to Central Coast Mariners, won the 2008 FA Cup?\nAnswer:Portsmouth\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a28095", "label": "Answer:Stuttgart\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Where is the headquarters of this German multinational automotive corporation, which includes Mercedes-Benz buses?\nAnswer:Stuttgart\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a87135", "label": "Answer:Kaunas\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:FC Stumbras plays its home matches in what Lithuanian town?\nAnswer:Kaunas\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a6630", "label": "Answer:Oxford\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Of which University was the co-founder, with his brother Charles Wesley, of Methodism, a fellow?\nAnswer:Oxford\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a2943", "label": "Answer:Tamale\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Which suburb in the Northern Region of Ghana that created Sagnarigu district was Yakubu II born?\nAnswer:Tamale\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a23730", "label": "Answer:Puebla\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What Mexican city had an Athletic Club whose football team played in the Primera Fuerza in 1943?\nAnswer:Puebla\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a22950", "label": "Answer:Cartagena\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What major port founded in 1533 was Nicolas De la Hoz born in?\nAnswer:Cartagena\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a11476", "label": "Answer:Northampton\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:So Rock was a comedy album by the comedian from what English town?\nAnswer:Northampton\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a85187", "label": "Answer:Nijmegen\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In what city was the football club that Mohamed Rayhi is an attacking midfielder for founded?\nAnswer:Nijmegen\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a10028", "label": "Answer:Hiroshima\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The 1994 Asian Games also known as XII Asiad were held from October 2 to October 16, 1994 in which capital of Hiroshima Prefecture and the largest city in the Ch\u016bgoku region of western Honshu - the largest island of Japan?\nAnswer:Hiroshima\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a10196", "label": "Answer:Birmingham\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion: The End is an EP by an English heavy metal band which was only available at dates with the  final show was February 4, 2017, in their home city of what?\nAnswer:Birmingham\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a28908", "label": "Answer:Brindisi\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which city in the region of Apulia in southern Italy is Cesare Braico born in \nAnswer:Brindisi\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a4736", "label": "Answer:Monterrey\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Of the cities Abdiel V\u00e1zquez has lived in, which one was the capital of Nuevo Leon?\nAnswer:Monterrey\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a4148", "label": "Answer:Durham\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:An American professional basketball player for the New York Knicks, who was born in 1983,  attended a college preparatory, non-denominational, co-educational day school in what North Carolina city?\nAnswer:Durham\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a81816", "label": "Answer:Dubrovnik\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Francesco da Mosto, is an Italian architect, author, historian, film maker and television presenter, he explored the country in an Alfa Romeo Spider, which sees him traveling from his home in Venice to which Croatian city on the Adriatic Sea, in the region of Dalmatia, that was historically Ragusa?\nAnswer:Dubrovnik\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a85964", "label": "Answer:Thessaloniki\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In what city  was a former US NBA player named MVP during the FIBA Under 19 World championship?\nAnswer:Thessaloniki\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a1381", "label": "Answer:Palermo\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:the rest of Shabbethai Donnolo\u0027s family was carried to what location that is over 2700 years old?\nAnswer:Palermo\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a88038", "label": "Answer:Shanghai\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In between  Xinji and Shanghai which one is located in the Yangtze River Delta?\nAnswer:Shanghai\nLevel:hard\nType:comparison"}, {"group": 193, "id": "a83656", "label": "Answer:Jacksonville\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Rickey Medlocke was the frontman for the southern rock band from which Florida city?\nAnswer:Jacksonville\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a5426", "label": "Answer:Bonn\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Which city on the banks of the Rhine is home to a museum of contemporary history with around one million visitors every year?\nAnswer:Bonn\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a4060", "label": "Answer:Winchester\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:SLS station was just south of those that were designed to give access to the RV park and casino in what Nevada suburb?\nAnswer:Winchester\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a59815", "label": "Answer:Osaka\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Apocalyze was an album by a Japanese band from what city?\nAnswer:Osaka\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a16062", "label": "Answer:Nagasaki\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What city featured a graduate of the Shinjuku private research university as a mayor in 1995?\nAnswer:Nagasaki\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a33267", "label": "Answer:Sparta\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What prominent city-state in ancient Greece was Gylippus expelled from?\nAnswer:Sparta\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a340", "label": "Answer:Memphis\nPage Rank:0.68\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:The 2016 Liberty Bowl was sponsored by a company based in what city?\nAnswer:Memphis\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a1", "label": "Answer:Delhi\nPage Rank:0.68\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6809226274015364\nQuestion:The Oberoi family is part of a hotel company that has a head office in what city?\nAnswer:Delhi\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a1158", "label": "Answer:Cleveland\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Excuse My French was the debut album that features a guest appearance by the American rapper and actor from what Ohio city?\nAnswer:Cleveland\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a2292", "label": "Answer:Galway\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Which city is in the Western area of Ireland which is also the home of Sean Smyth?\nAnswer:Galway\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a40093", "label": "Answer:Persepolis\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The brother of  Zlatko Ivankovi\u0107 currently manages what Pro League team?\nAnswer:Persepolis\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a50328", "label": "Answer:Huntsville\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Willie Hayes is the former college basketball head coach for a university located in which city ?\nAnswer:Huntsville\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a18078", "label": "Answer:Minneapolis\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Overcast! was the only Atmosphere album to feature the American rapper from what Minnesota city?\nAnswer:Minneapolis\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a19136", "label": "Answer:Philadelphia\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Curt Weldon represented the congressional district that involved which major city\u0027s suburbs?\nAnswer:Philadelphia\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a6387", "label": "Answer:Houston\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:From which city hails the American rapper and music producer Brad Terrence Jordan who put together the American hip hop group Facemob?\nAnswer:Houston\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a6480", "label": "Answer:Baltimore\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:IN what city were stations WAAM-TV and WJZ-TV located?\nAnswer:Baltimore\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a77690", "label": "Answer:Anaheim\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Ed Grier was previously president of the hotel located at the resort in what California city?\nAnswer:Anaheim\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a71868", "label": "Answer:Nagoya\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is the name of the city in Japan where Shingo Takeyama plays baseball?\nAnswer:Nagoya\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a3828", "label": "Answer:Manchester\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:In what city was the person that discovered British singer-songwriter Kavana based?\nAnswer:Manchester\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a7516", "label": "Answer:Trondheim\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Which city with population of 187,353 did  EV3 The Pilgrims Route run from \nAnswer:Trondheim\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a17343", "label": "Answer:Byzantium\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is the name of this Irish horror fantasy thriller film starring Jonny Lee Miller and Gemma Arterton?\nAnswer:Byzantium\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a69162", "label": "Answer:Medina\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which was a game for more than two people, Medina or Hijara?\nAnswer:Medina\nLevel:hard\nType:comparison"}, {"group": 193, "id": "a79050", "label": "Answer:Grenoble\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What city did Lebanese physicist, Rammal Hassan attend Joseph Fourier University?\nAnswer:Grenoble\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a89865", "label": "Answer:Leiden\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:The De Stijl art movement, associated with Truus Schr\u00f6der-Schr\u00e4der, grew from which Dutch city in the early 20th century?\nAnswer:Leiden\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a57157", "label": "Answer:Ferrara\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Leonardo Brescia was born and active in which comune in Emilia-Romagna?\nAnswer:Ferrara\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a4303", "label": "Answer:Geneva\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Pasquale Pistoriois the ex president of a multinational electronics and semiconductor manufacturer headquartered in which city ?\nAnswer:Geneva\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a4142", "label": "Answer:Montreal\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Campari Knoepffler competed in 3 events at the Olympics in which city?\nAnswer:Montreal\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a32251", "label": "Answer:Calgary\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:\"Working for the Weekend\" is a song by a band formed in which Canadian city ?\nAnswer:Calgary\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a33987", "label": "Answer:Portland\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Mirror Lake is south of which city?\nAnswer:Portland\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a28165", "label": "Answer:Sheffield\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Where are the duo who released the single \"Sing It Back\" from ?\nAnswer:Sheffield\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a3977", "label": "Answer:Leipzig\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:From what city was high-lying bass singer and conductor Gotthold Schwarz from?\nAnswer:Leipzig\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a64780", "label": "Answer:Haifa\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Raphael \"Raphi\" Rom is an Israeli computer scientist working at Technion \u2013 Israel Institute of Technology, a public research university in which city, in Israel?\nAnswer:Haifa\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a26993", "label": "Answer:Innsbruck\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Hans Rinn won his first gold medal during the Winter Olympics held in which city?\nAnswer:Innsbruck\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a39162", "label": "Answer:Lancaster\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What was the middle name of the author, whose secret agent, the actor, Barry Nelson, was the first to portray ?\nAnswer:Lancaster\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a3139", "label": "Answer:Tangier\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Which Virginia town speaks the High Tider dialect and has lost 67% of its landmass since 1850?\nAnswer:Tangier\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a16061", "label": "Answer:Valencia\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:For two seasons, Murat \u0160aran joined a Spanish football club based where?\nAnswer:Valencia\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a69029", "label": "Answer:Oaxaca\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which of the 31 Mexican states is home to the mountain frog Ptychohyla zophodes?\nAnswer:Oaxaca\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a50737", "label": "Answer:Barcelona\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:With which club, did the striker who played with Mark Falco and Garth Brooks at Spurs, win the Spanish league ?\nAnswer:Barcelona\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a13468", "label": "Answer:Louisville\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:James M. Long, was an American baseball player who played outfielder in the Major Leagues from 1891 to 1893, and was born in which city in Kentucky?\nAnswer:Louisville\nLevel:easy\nType:bridge"}, {"group": 193, "id": "a52380", "label": "Answer:Nantes\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Adrian Ilie\u0027s head coach at Valencia is currently the head coach of what team?\nAnswer:Nantes\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a23232", "label": "Answer:Corinth\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What North Mississippi city has ZIP code 38834?\nAnswer:Corinth\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a68036", "label": "Answer:Nanchang\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which region in China is larger, Jiutai District or Nanchang?\nAnswer:Nanchang\nLevel:medium\nType:comparison"}, {"group": 193, "id": "a23158", "label": "Answer:Mysore\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Tipu Sultan succeeded Dhondia Wagh as ruler of which Indian Kingdom, earning the soubriquet \"the Tiger of\" it?\nAnswer:Mysore\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a42455", "label": "Answer:Dortmund\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What city that was a leading member of the Hanseatic League is an independent city in North Rhine-Westphalia?\nAnswer:Dortmund\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a6620", "label": "Answer:Laredo\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Interval starred Merle Oberon who fell in love with her co-star most known for his role in what?\nAnswer:Laredo\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a11550", "label": "Answer:Seattle\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which city is host to \"The Fifty Worst Films of All Time\" writer Michael Medved\u0027s syndicated talk show?\nAnswer:Seattle\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a1935", "label": "Answer:Lyon\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Which city is the training center that a forward for Spanish side Las Palmas of La Liga located in?\nAnswer:Lyon\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a22161", "label": "Answer:Newcastle\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In which town is the university located that Stewart Wingate graduated from during his time at Black \u0026 Decker?\nAnswer:Newcastle\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a49278", "label": "Answer:Kobe\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What city in Japan did Jean Francisque Coignet become known for modernizing?\nAnswer:Kobe\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a7144", "label": "Answer:Liverpool\nPage Rank:0.69\nLabel:193", "shape": "square", "size": 3, "title": "Page Rank:0.6923375386692261\nQuestion:Bill Harry is the creator of the publication that was founded in what city?\nAnswer:Liverpool\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a10262", "label": "Answer:Genoa\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which Italian port do many of the inhabitants of La Boca in Buenos Aires originate from?\nAnswer:Genoa\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a11041", "label": "Answer:Venice\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is the birthplace of the composer of Griselda?\nAnswer:Venice\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a28398", "label": "Answer:Arlington\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Idlewild and Soak Zone has won several awards from the publication that is based in what Texas city?\nAnswer:Arlington\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a57295", "label": "Answer:Saskatoon\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:What is the name of the large city in the Canadian province of Saskatchewan, where J.D. McAskill served as mayor? \nAnswer:Saskatoon\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a76251", "label": "Answer:Toledo\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:In what city in central Spain known for its extensive cultural heritage is the Banos de Tenerias located? \nAnswer:Toledo\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a16455", "label": "Answer:Dayton\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion: W. S. McIntosh pushed for minorities to be able to work at the department store in what Ohio city?\nAnswer:Dayton\nLevel:medium\nType:bridge"}, {"group": 193, "id": "a38030", "label": "Answer:Swansea\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Which coastal city is the second largest in Wales and home to the blues band The Electric Revelators? \nAnswer:Swansea\nLevel:hard\nType:bridge"}, {"group": 193, "id": "a17133", "label": "Answer:Versailles\nPage Rank:0.86\nLabel:193", "shape": "square", "size": 4, "title": "Page Rank:0.8556392734635319\nQuestion:Bankrupt! is an album by a french band from which city ?\nAnswer:Versailles\nLevel:medium\nType:bridge"}]);
+                  edges = new vis.DataSet([{"from": "a7760", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a7760", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a23833", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a23833", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a15550", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a15550", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a68552", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a68552", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a8313", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a8313", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a8582", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a8582", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a35539", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a35539", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a44090", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a44090", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a14245", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a14245", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a1377", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a1377", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a25809", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a25809", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a65602", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a65602", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a29314", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a29314", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a46195", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a46195", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a23933", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a23933", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a75211", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a75211", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a29540", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a29540", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a56718", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a56718", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a77813", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a77813", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a84801", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a84801", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a50879", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a50879", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a53302", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a53302", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a193", "label": 1.0, "length": 500, "to": "a34330", "width": 1}, {"from": "a25024", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a25024", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a52568", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a52568", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a89167", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a89167", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a15828", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a15828", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a7367", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a7367", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a1552", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a1552", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a7701", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a7701", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a57185", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a57185", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a48701", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a48701", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a4196", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a4196", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a23859", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a23859", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a31109", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a31109", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a83012", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a83012", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a270", "label": 0.5, "length": 500, "to": "a925", "width": 1}, {"from": "a270", "label": 0.5, "length": 500, "to": "a8573", "width": 1}, {"from": "a13910", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a13910", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a73457", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a73457", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a65531", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a65531", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a12254", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a12254", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a323", "label": 0.5, "length": 500, "to": "a925", "width": 1}, {"from": "a323", "label": 0.5, "length": 500, "to": "a8573", "width": 1}, {"from": "a80429", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a80429", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a21285", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a21285", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a21285", "label": 1.0, "length": 500, "to": "a14733", "width": 1}, {"from": "a18509", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a18509", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a8130", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a8130", "label": 0.5, "length": 500, "to": "a5651", "width": 1}, {"from": "a8130", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a163", "label": 0.5, "length": 500, "to": "a925", "width": 1}, {"from": "a163", "label": 0.5, "length": 500, "to": "a8573", "width": 1}, {"from": "a1551", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a1551", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a62185", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a62185", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a906", "label": 0.5, "length": 500, "to": "a925", "width": 1}, {"from": "a906", "label": 0.5, "length": 500, "to": "a8573", "width": 1}, {"from": "a34818", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a34818", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a3327", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a3327", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a60171", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a60171", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a25153", "label": 1.0, "length": 500, "to": "a34330", "width": 1}, {"from": "a77470", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a77470", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a20692", "label": 1.0, "length": 500, "to": "a34330", "width": 1}, {"from": "a74520", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a74520", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a71469", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a71469", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a6400", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a6400", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a30911", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a30911", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a31695", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a31695", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a14733", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a14733", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a29945", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a29945", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a6993", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a6993", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a8138", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a8138", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a88188", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a88188", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a24055", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a24055", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a6243", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a6243", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a2513", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a2513", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a68642", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a68642", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a35596", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a35596", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a57885", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a57885", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a44927", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a44927", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a34330", "label": 1.0, "length": 500, "to": "a13051", "width": 1}, {"from": "a34330", "label": 1.0, "length": 500, "to": "a12262", "width": 1}, {"from": "a34330", "label": 1.0, "length": 500, "to": "a10734", "width": 1}, {"from": "a34330", "label": 1.0, "length": 500, "to": "a83866", "width": 1}, {"from": "a49702", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a49702", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a13972", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a13972", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a18205", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a18205", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a41501", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a41501", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a25757", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a25757", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a31863", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a31863", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a56471", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a56471", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a76047", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a76047", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a32945", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a32945", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a78161", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a78161", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a27517", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a27517", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a22290", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a22290", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a58649", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a58649", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a27023", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a27023", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a47763", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a47763", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a62939", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a62939", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a3485", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a3485", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a64284", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a64284", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a65400", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a65400", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a6015", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a6015", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a82453", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a82453", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a4393", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a4393", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a36028", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a36028", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a36028", "label": 1.0, "length": 500, "to": "a50481", "width": 1}, {"from": "a18848", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a18848", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a59842", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a59842", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a4435", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a4435", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a21487", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a21487", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a10627", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a10627", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a51691", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a51691", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a43089", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a43089", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a22966", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a22966", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a53625", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a53625", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a10804", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a10804", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a10804", "label": 1.0, "length": 500, "to": "a33434", "width": 1}, {"from": "a80827", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a80827", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a22370", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a22370", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a4397", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a4397", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a28095", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a28095", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a87135", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a87135", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a6630", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a6630", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a2943", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a2943", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a23730", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a23730", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a50481", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a50481", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a22950", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a22950", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a11476", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a11476", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a85187", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a85187", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a10028", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a10028", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a10196", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a10196", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a28908", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a28908", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a4736", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a4736", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a4148", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a4148", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a81816", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a81816", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a85964", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a85964", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a1381", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a1381", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a88038", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a88038", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a83656", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a83656", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a5426", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a5426", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a4060", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a4060", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a59815", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a59815", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a16062", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a16062", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a33267", "label": 0.005555555555555556, "length": 500, "to": "a925", "width": 1}, {"from": "a33267", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a925", "label": 0.5, "length": 500, "to": "a340", "width": 1}, {"from": "a925", "label": 0.5, "length": 500, "to": "a1", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a1158", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a2292", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a40093", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a50328", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a18078", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a19136", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a6387", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a6480", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a77690", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a71868", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a3828", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a7516", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a17343", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a69162", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a79050", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a89865", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a57157", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a4303", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a4142", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a8573", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a32251", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a33987", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a28165", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a3977", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a64780", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a26993", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a39162", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a3139", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a16061", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a69029", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a50737", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a5651", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a13051", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a13468", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a52380", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a23232", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a68036", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a23158", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a42455", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a6620", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a11550", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a1935", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a22161", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a49278", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a7144", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a10262", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a11041", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a28398", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a57295", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a76251", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a16455", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a33434", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a38030", "width": 1}, {"from": "a925", "label": 0.005555555555555556, "length": 500, "to": "a17133", "width": 1}, {"from": "a1158", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a2292", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a40093", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a50328", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a18078", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a19136", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a6387", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a6480", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a77690", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a71868", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a3828", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a7516", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a17343", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a69162", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a1", "label": 0.5, "length": 500, "to": "a8573", "width": 1}, {"from": "a79050", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a89865", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a57157", "label": 0.007246376811594203, "length": 500, "to": "a8573", "width": 1}, {"from": "a4303", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a4142", "label": 1.0, "length": 500, "to": "a8573", "width": 1}, {"from": "a8573", "label": 1.0, "length": 500, "to": "a7144", "width": 1}, {"from": "a8573", "label": 1.0, "length": 500, "to": "a6620", "width": 1}, {"from": "a8573", "label": 0.5, "length": 500, "to": "a5651", "width": 1}, {"from": "a8573", "label": 1.0, "length": 500, "to": "a3977", "width": 1}, {"from": "a8573", "label": 0.5, "length": 500, "to": "a340", "width": 1}, {"from": "a8573", "label": 1.0, "length": 500, "to": "a3139", "width": 1}, {"from": "a8573", "label": 1.0, "length": 500, "to": "a1935", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a32251", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a33987", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a28165", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a64780", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a26993", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a39162", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a16061", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a69029", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a50737", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a13051", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a13468", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a52380", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a23232", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a68036", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a23158", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a42455", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a11550", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a22161", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a49278", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a10262", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a11041", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a28398", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a57295", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a76251", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a16455", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a33434", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a38030", "width": 1}, {"from": "a8573", "label": 0.007246376811594203, "length": 500, "to": "a17133", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

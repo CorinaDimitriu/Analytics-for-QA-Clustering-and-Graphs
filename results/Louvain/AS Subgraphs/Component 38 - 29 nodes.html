@@ -1,0 +1,412 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a10720">a10720</option>
+                                
+                                    <option value="a1352">a1352</option>
+                                
+                                    <option value="a2302">a2302</option>
+                                
+                                    <option value="a2885">a2885</option>
+                                
+                                    <option value="a9780">a9780</option>
+                                
+                                    <option value="a24205">a24205</option>
+                                
+                                    <option value="a87936">a87936</option>
+                                
+                                    <option value="a14182">a14182</option>
+                                
+                                    <option value="a1530">a1530</option>
+                                
+                                    <option value="a16634">a16634</option>
+                                
+                                    <option value="a17323">a17323</option>
+                                
+                                    <option value="a17745">a17745</option>
+                                
+                                    <option value="a21847">a21847</option>
+                                
+                                    <option value="a24887">a24887</option>
+                                
+                                    <option value="a26136">a26136</option>
+                                
+                                    <option value="a29622">a29622</option>
+                                
+                                    <option value="a30478">a30478</option>
+                                
+                                    <option value="a32325">a32325</option>
+                                
+                                    <option value="a5068">a5068</option>
+                                
+                                    <option value="a59867">a59867</option>
+                                
+                                    <option value="a61227">a61227</option>
+                                
+                                    <option value="a74828">a74828</option>
+                                
+                                    <option value="a80569">a80569</option>
+                                
+                                    <option value="a81629">a81629</option>
+                                
+                                    <option value="a9119">a9119</option>
+                                
+                                    <option value="a5606">a5606</option>
+                                
+                                    <option value="a58145">a58145</option>
+                                
+                                    <option value="a62521">a62521</option>
+                                
+                                    <option value="a39786">a39786</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 23, "id": "a10720", "label": "Answer:Miami\nPage Rank:0.85\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.8465968760825924\nQuestion:In which city is the southern terminus of this north\u2013south United States highway located, which Kentucky Route 1632 connects KY 9 with?\nAnswer:Miami\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a1352", "label": "Answer:Indians\nPage Rank:0.50\nLabel:23", "shape": "square", "size": 2, "title": "Page Rank:0.4980402469327245\nQuestion:David Bell was a third baseman for which team?\nAnswer:Indians\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a2302", "label": "Answer:Indian\nPage Rank:0.73\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.7348428205915184\nQuestion:What ethnicity are both Befikra and Aditi Singh Sharma?\nAnswer:Indian\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a2885", "label": "Answer:Ottawa\nPage Rank:0.54\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5440708267768701\nQuestion:The world premiere of the movie starring a co-founder of United Artists film studio was shown at a theatre in what city?\nAnswer:Ottawa\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a9780", "label": "Answer:Shawnee\nPage Rank:0.66\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.6596858774669551\nQuestion:Tracy Ann DeMeyer was an author descending from what Algonquian-speaking North American native ethnic group?\nAnswer:Shawnee\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a24205", "label": "Answer:Algonquian\nPage Rank:1.42\nLabel:23", "shape": "square", "size": 7, "title": "Page Rank:1.4244175011475686\nQuestion:Spanish Hill was previously occupied by Native Americans who are a subdivision of a larger group speaking what language?\nAnswer:Algonquian\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a87936", "label": "Answer:Penobscot\nPage Rank:1.38\nLabel:23", "shape": "square", "size": 7, "title": "Page Rank:1.379365530699899\nQuestion:Hexagon Barn is located in the town in which Maine county?\nAnswer:Penobscot\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a14182", "label": "Answer:Eskimo\nPage Rank:0.54\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5440708267768701\nQuestion:The Yup\u0027ik or Yupiaq, etc, are are the indigenous peoples who have traditionally inhabited the northern circumpolar region from eastern Siberia (Russia), across Alaska (United States), Canada, and Greenland, people of western and southwestern Alaska, the people are traditionally called?\nAnswer:Eskimo\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a1530", "label": "Answer:Comanche\nPage Rank:0.52\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5156791723449251\nQuestion:Cache is a city in Comanche County, Oklahoma, it is the location of Star House, the home of the Comanche chief Quanah Parker, was a Comanche war leader of the Quahadi (\"Antelope\") band of which people?\nAnswer:Comanche\nLevel:easy\nType:bridge"}, {"group": 8, "id": "a16634", "label": "Answer:Siouan\nPage Rank:0.76\nLabel:8", "shape": "square", "size": 4, "title": "Page Rank:0.7603881237225867\nQuestion:What language family does Red Horn and Ho-Chunk have in common?\nAnswer:Siouan\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a17323", "label": "Answer:Kiowa\nPage Rank:0.82\nLabel:8", "shape": "square", "size": 4, "title": "Page Rank:0.8161370475404324\nQuestion:The Way to Rainy Mountain was a book by the Pulitzer Prize-winning novelist of what heritage?\nAnswer:Kiowa\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a17745", "label": "Answer:Seminole\nPage Rank:0.54\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5440708267768701\nQuestion:The Muscogee language (Mvskoke in Muscogee), also known as Creek, Seminole, Mask\u00f3k\u00ee or Muskogee, is a Muskogean language spoken by Muscogee (Creek) and people of which  Native American people originally from Florida, primarily in the U.S. states of Oklahoma and Florida?\nAnswer:Seminole\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a21847", "label": "Answer:Muskogean\nPage Rank:1.07\nLabel:23", "shape": "square", "size": 5, "title": "Page Rank:1.0725967727886867\nQuestion:What language family is the language of the tribe of the man who instructed Jeff Ball in?\nAnswer:Muskogean\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a24887", "label": "Answer:Caddo\nPage Rank:1.51\nLabel:8", "shape": "square", "size": 8, "title": "Page Rank:1.5098535379497997\nQuestion:A Dush-toh is a hair ornament traditionally worn by people of which nation that is a confederacy of several Southeastern Native American tribes?\nAnswer:Caddo\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a26136", "label": "Answer:Inuit\nPage Rank:0.94\nLabel:23", "shape": "square", "size": 5, "title": "Page Rank:0.9350527617889492\nQuestion:Who\u0027s ancestors migrated to the island that is southwest of Oodaaq?\nAnswer:Inuit\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a29622", "label": "Answer:Paleo-Indians\nPage Rank:1.13\nLabel:23", "shape": "square", "size": 6, "title": "Page Rank:1.133751473669101\nQuestion:The date of the start of the history of the United States is a subject of debate among historians, in recent decades American schools and universities typically have shifted back in time to include more on the colonial period and much more on the prehistory of the Native Americans, the history of Native Americans in the United States began in ancient times tens of thousands of years ago with the settlement of the Americas by who?\nAnswer:Paleo-Indians\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a30478", "label": "Answer:Tsimshian\nPage Rank:0.54\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5440708267768701\nQuestion:What is a sub-group of Indigenous peoples of the Pacific Northwest Coast in which David A. Boxley identifies with?\nAnswer:Tsimshian\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a32325", "label": "Answer:Erie\nPage Rank:0.54\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5440708267768701\nQuestion:What is the county seat of Neosho County, Kansas where Shaw is also a part of?\nAnswer:Erie\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a5068", "label": "Answer:Aztec\nPage Rank:0.54\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5440708267768701\nQuestion:What group of people does Texcoco, State of Mexico and National Museum of Anthropology have in common?\nAnswer:Aztec\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a59867", "label": "Answer:Paiute\nPage Rank:0.76\nLabel:23", "shape": "square", "size": 4, "title": "Page Rank:0.7632344750234633\nQuestion:What is the name of the three groups of indigenous peoples of the Great Basin who populate Fish Lake Valley in California?\nAnswer:Paiute\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a61227", "label": "Answer:Aleut\nPage Rank:1.45\nLabel:23", "shape": "square", "size": 7, "title": "Page Rank:1.4549810578753462\nQuestion:Eve Tuck is an Unangax scholar in the field of Indigenous studies and educational research, she is a member of which community of St. Paul Island, Alaska, called?\nAnswer:Aleut\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a74828", "label": "Answer:Haida\nPage Rank:2.07\nLabel:23", "shape": "square", "size": 10, "title": "Page Rank:2.0733480074723687\nQuestion:Primrose Adams (born 1926 in Masset, Haida Gwaii) is a Canadian First Nations artist and member of the Raven Clan from which nation and ethnic group native to, or otherwise associated with, Haida Gwaii and the Haida language?\nAnswer:Haida\nLevel:easy\nType:bridge"}, {"group": 23, "id": "a80569", "label": "Answer:Nahuatl\nPage Rank:4.30\nLabel:23", "shape": "square", "size": 21, "title": "Page Rank:4.2981540165842205\nQuestion: Miller Hill Mall includes the restaurant whose name comes from a word in what native language?\nAnswer:Nahuatl\nLevel:medium\nType:bridge"}, {"group": 23, "id": "a81629", "label": "Answer:Shasta\nPage Rank:0.54\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.5440708267768701\nQuestion:What soft drink manufacturer markets a variety of soda flavors is made by National Beverage Corp.?\nAnswer:Shasta\nLevel:hard\nType:bridge"}, {"group": 8, "id": "a9119", "label": "Answer:Sioux\nPage Rank:0.65\nLabel:8", "shape": "square", "size": 3, "title": "Page Rank:0.649904379250074\nQuestion:Wa-na-ta was a chief of a tribe composed of two of the three main subcultures of what people?\nAnswer:Sioux\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a5606", "label": "Answer:Iowa\nPage Rank:0.50\nLabel:8", "shape": "square", "size": 2, "title": "Page Rank:0.4980402469327245\nQuestion:Karl Miles Le Compte was a ten-term Republican U.S. Representative from what U.S. state in the Midwestern United States, bordered by the Mississippi River on the east and the Missouri River and the Big Sioux River on the west?\nAnswer:Iowa\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a58145", "label": "Answer:Dakota\nPage Rank:0.88\nLabel:8", "shape": "square", "size": 4, "title": "Page Rank:0.8759400201694907\nQuestion:What was the  Native American tribes and First Nations peoples in North America were known as with whom The Battle of Dead Buffalo Lake was took place?\nAnswer:Dakota\nLevel:hard\nType:bridge"}, {"group": 8, "id": "a62521", "label": "Answer:Biloxi\nPage Rank:1.62\nLabel:8", "shape": "square", "size": 8, "title": "Page Rank:1.6204890373135576\nQuestion:Which is more populous, Biloxi, Mississippi or Pass Christian, Mississippi?\nAnswer:Biloxi\nLevel:hard\nType:bridge"}, {"group": 23, "id": "a39786", "label": "Answer:Pocahontas\nPage Rank:0.67\nLabel:23", "shape": "square", "size": 3, "title": "Page Rank:0.6710052292149292\nQuestion:Which Disney film was released first, Eight Below or Pocahontas?\nAnswer:Pocahontas\nLevel:medium\nType:comparison"}]);
+                  edges = new vis.DataSet([{"from": "a10720", "label": 0.041666666666666664, "length": 500, "to": "a1352", "width": 1}, {"from": "a10720", "label": 0.045454545454545456, "length": 500, "to": "a2302", "width": 1}, {"from": "a10720", "label": 0.25, "length": 500, "to": "a2885", "width": 1}, {"from": "a10720", "label": 0.3333333333333333, "length": 500, "to": "a9780", "width": 1}, {"from": "a10720", "label": 0.5, "length": 500, "to": "a24205", "width": 1}, {"from": "a10720", "label": 0.5, "length": 500, "to": "a87936", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a14182", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a1530", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a16634", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a17323", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a17745", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a21847", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a2302", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a24205", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a24887", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a26136", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a2885", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a29622", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a30478", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a32325", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a5068", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a59867", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a61227", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a74828", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a80569", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a81629", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a87936", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a9119", "width": 1}, {"from": "a1352", "label": 0.041666666666666664, "length": 500, "to": "a9780", "width": 1}, {"from": "a14182", "label": 0.045454545454545456, "length": 500, "to": "a2302", "width": 1}, {"from": "a14182", "label": 0.14285714285714285, "length": 500, "to": "a21847", "width": 1}, {"from": "a14182", "label": 0.14285714285714285, "length": 500, "to": "a24205", "width": 1}, {"from": "a14182", "label": 0.14285714285714285, "length": 500, "to": "a26136", "width": 1}, {"from": "a14182", "label": 0.14285714285714285, "length": 500, "to": "a29622", "width": 1}, {"from": "a14182", "label": 0.14285714285714285, "length": 500, "to": "a61227", "width": 1}, {"from": "a14182", "label": 0.14285714285714285, "length": 500, "to": "a74828", "width": 1}, {"from": "a14182", "label": 0.14285714285714285, "length": 500, "to": "a80569", "width": 1}, {"from": "a1530", "label": 0.5, "length": 500, "to": "a2302", "width": 1}, {"from": "a1530", "label": 0.5, "length": 500, "to": "a59867", "width": 1}, {"from": "a16634", "label": 0.045454545454545456, "length": 500, "to": "a2302", "width": 1}, {"from": "a16634", "label": 0.25, "length": 500, "to": "a5606", "width": 1}, {"from": "a16634", "label": 0.2, "length": 500, "to": "a9119", "width": 1}, {"from": "a16634", "label": 0.25, "length": 500, "to": "a17323", "width": 1}, {"from": "a16634", "label": 0.25, "length": 500, "to": "a24887", "width": 1}, {"from": "a16634", "label": 0.25, "length": 500, "to": "a58145", "width": 1}, {"from": "a16634", "label": 0.25, "length": 500, "to": "a62521", "width": 1}, {"from": "a17323", "label": 0.045454545454545456, "length": 500, "to": "a2302", "width": 1}, {"from": "a17323", "label": 0.2, "length": 500, "to": "a9119", "width": 1}, {"from": "a17323", "label": 1.0, "length": 500, "to": "a24887", "width": 1}, {"from": "a17745", "label": 0.045454545454545456, "length": 500, "to": "a2302", "width": 1}, {"from": "a17745", "label": 1.0, "length": 500, "to": "a21847", "width": 1}, {"from": "a21847", "label": 0.045454545454545456, "length": 500, "to": "a2302", "width": 1}, {"from": "a21847", "label": 0.16666666666666666, "length": 500, "to": "a24205", "width": 1}, {"from": "a21847", "label": 0.16666666666666666, "length": 500, "to": "a26136", "width": 1}, {"from": "a21847", "label": 0.16666666666666666, "length": 500, "to": "a29622", "width": 1}, {"from": "a21847", "label": 0.16666666666666666, "length": 500, "to": "a61227", "width": 1}, {"from": "a21847", "label": 0.16666666666666666, "length": 500, "to": "a74828", "width": 1}, {"from": "a21847", "label": 0.16666666666666666, "length": 500, "to": "a80569", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a24205", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a24887", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a26136", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a2885", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a29622", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a30478", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a32325", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a5068", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a59867", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a61227", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a74828", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a80569", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a81629", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a87936", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a9119", "width": 1}, {"from": "a2302", "label": 0.045454545454545456, "length": 500, "to": "a9780", "width": 1}, {"from": "a24205", "label": 0.25, "length": 500, "to": "a2885", "width": 1}, {"from": "a24205", "label": 0.3333333333333333, "length": 500, "to": "a9780", "width": 1}, {"from": "a24205", "label": 0.14285714285714285, "length": 500, "to": "a26136", "width": 1}, {"from": "a24205", "label": 0.14285714285714285, "length": 500, "to": "a29622", "width": 1}, {"from": "a24205", "label": 0.14285714285714285, "length": 500, "to": "a39786", "width": 1}, {"from": "a24205", "label": 0.14285714285714285, "length": 500, "to": "a61227", "width": 1}, {"from": "a24205", "label": 0.14285714285714285, "length": 500, "to": "a74828", "width": 1}, {"from": "a24205", "label": 0.14285714285714285, "length": 500, "to": "a80569", "width": 1}, {"from": "a24205", "label": 0.14285714285714285, "length": 500, "to": "a87936", "width": 1}, {"from": "a24887", "label": 0.2, "length": 500, "to": "a9119", "width": 1}, {"from": "a26136", "label": 0.25, "length": 500, "to": "a29622", "width": 1}, {"from": "a26136", "label": 0.25, "length": 500, "to": "a61227", "width": 1}, {"from": "a26136", "label": 0.25, "length": 500, "to": "a74828", "width": 1}, {"from": "a26136", "label": 0.25, "length": 500, "to": "a80569", "width": 1}, {"from": "a2885", "label": 0.25, "length": 500, "to": "a87936", "width": 1}, {"from": "a2885", "label": 0.25, "length": 500, "to": "a9780", "width": 1}, {"from": "a29622", "label": 0.3333333333333333, "length": 500, "to": "a61227", "width": 1}, {"from": "a29622", "label": 0.3333333333333333, "length": 500, "to": "a74828", "width": 1}, {"from": "a29622", "label": 0.3333333333333333, "length": 500, "to": "a80569", "width": 1}, {"from": "a5068", "label": 1.0, "length": 500, "to": "a80569", "width": 1}, {"from": "a5606", "label": 0.25, "length": 500, "to": "a58145", "width": 1}, {"from": "a5606", "label": 0.25, "length": 500, "to": "a62521", "width": 1}, {"from": "a5606", "label": 0.25, "length": 500, "to": "a9119", "width": 1}, {"from": "a58145", "label": 0.2, "length": 500, "to": "a9119", "width": 1}, {"from": "a58145", "label": 1.0, "length": 500, "to": "a62521", "width": 1}, {"from": "a61227", "label": 0.5, "length": 500, "to": "a74828", "width": 1}, {"from": "a61227", "label": 0.5, "length": 500, "to": "a80569", "width": 1}, {"from": "a62521", "label": 0.2, "length": 500, "to": "a9119", "width": 1}, {"from": "a74828", "label": 1.0, "length": 500, "to": "a80569", "width": 1}, {"from": "a87936", "label": 0.3333333333333333, "length": 500, "to": "a9780", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

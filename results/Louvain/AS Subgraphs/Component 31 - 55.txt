@@ -1,0 +1,333 @@
+p 55 277
+v 1 McCartney hard bridge What album from Paul McCartney did the song Maybe I'm Amazed appear in?
+v 2 Energizer medium bridge Mark Jackson made an appearance in the television commercial for what American battery company?
+v 3 Chevalier easy bridge Robert NIchols wrote about a composer who received what honor in 1903?
+v 4 Norman medium bridge Lynn McGruder attended college in what town?
+v 5 accordionist medium bridge Didi Tera Devar Deewana is a 1994 Bollywood song composed by an Indian composer, pianist, musician and what?
+v 6 guitarist easy comparison What insturument type did Dickie Peterson and Ely Buendia have in common?
+v 7 soprano medium bridge Roger Vignoles has accompanied singer Sylvia McNair, what redister does she sing in?
+v 8 Herbert medium bridge What was the middle name of the creator of the show The Honeymooners ?
+v 9 Guinness easy bridge Mustang television and cinema promoted which brand of Irish dry stout beer?
+v 10 Extras medium bridge Terence Beesley is married to an actress that was nominated for an Emmy for her role on what television show?
+v 11 contralto hard bridge What voice type does Sonny Bono's collaborator on the album Chér have?
+v 12 Sutherland hard bridge What is the name of the partner of the american engineer and inventor born January 30,1925?
+v 13 musician easy comparison Miki Berenyi and Phil Anselmo, are in which industry?
+v 14 Soprano medium bridge What type of opera singer was this Egyptian singer born in 1931 and performed in more than 500 opera performances and had a vocal range from approximately middle C to about two octaves above middle C?
+v 15 Extra medium bridge The year directly after Splash was first broadcasted, what was the name of the syndicated entertainment news show that Charissa Thompson co-hosted in?
+v 16 percussionist medium bridge The man who played with the Canadian singer-songwriter and is noted for his work with Weather Report is known as what type of musician?
+v 17 actor easy comparison Billy Bob Thornton and Gene Saks, are Americans that have which occupation in common?
+v 18 countertenor medium bridge Michael Maniaci is the type of voice that is a specific type of what?
+v 19 cellist medium bridge What was Troels Svane and Daniil Shafran musical profession?
+v 20 accompanist medium bridge Donald Corren created a role of a character best known as what? 
+v 21 Ravel hard bridge Robert Nagy once performed in whose second opera?
+v 22 Melba hard bridge What is the middle name of the singer who released The Double EP: A Sea of Split Peas ?
+v 23 Coloratura easy bridge Nikki Einfeld, is a Canadian born Soprano of Lyric of which kind, which is originally from Italian, literally meaning "coloring", and derives from the Latin word "colorare" ("to color")? 
+v 24 Debussy easy bridge Sarabande and Danse is a ballet made by Jacques d'Amboise to which song, by who?
+v 25 Harrison hard bridge Long Lake is located in which town?
+v 26 coloratura hard bridge Hjördis Gunborg Schymberg was what type of operatic soprano voice that specializes in music that is distinguished by agile runs, leaps and trills?
+v 27 Shankar easy bridge Who is the director of the 1994 Tamil film which has the soundtrack Kadhalan, featuring 9 songs composed by an Indian composer, singer-songwriter, and philanthropist born as A. S. Dileep Kumar?
+v 28 Monroe medium bridge Named for a signer of the Declaration of Independence, the George Walton Academy is a private school in which Georgia town?
+v 29 Fairbanks medium bridge Red Flag – Alaska is held at the Air Force Base 26 miles southeast of what Alaska city?
+v 30 Lillie medium bridge Under the Cherry Moon stars the English Actress who won a 1979 BAFTA for what serial?
+v 31 Jackson hard bridge What area does WOAD and Ridgeland, Mississippi have in common?
+v 32 Williams easy bridge What team did the Canadian professional race driver and musician finish second in in 1996?
+v 33 saxophonist medium bridge What was the occupation of Manikanth Kadri's father?
+v 34 Vaughan medium bridge What is the middle name of the co-founder of a doughnut chain named after a Canadian ice hockey player?
+v 35 composer easy comparison What do Alessandro Scarlatti and Nikolai Rimsky-Korsakov have in common?
+v 36 Howard medium bridge What is the middle name of the author of Only Time Will Tell?
+v 37 drummer medium bridge What musical instrument did Jasen Rauch play for the band he left?
+v 38 baritone medium bridge What range did Hüsker Dü's frontman contribute?
+v 39 actress medium bridge What profession do both Milla Jovovich and Takako Honda share?
+v 40 Crosby medium bridge The Limehouse Declaration was issued, in part, by the Baroness of what constituency?
+v 41 vocalists easy comparison Moonbabies and We Are the Ocean, have which occupation in common?
+v 42 Domino medium comparison Which magazine has been in print longer, Meatpaper or Domino?
+v 43 Caruso medium bridge What is the name of the song that was written by Lucio Dalla and was covered on Maria Farantouri's album titled 17 Songs?
+v 44 Pistons easy bridge Which other sports team plays its home games at the Little Caesars Arena, a multi-purpose arena in Midtown Detroit, where the National Hockey League team the Detroit Red Wings play?
+v 45 mezzo-soprano medium bridge What is the vocal range of the performer on the 2010 album "Laws of Illusion"?
+v 46 songwriter easy comparison What do Lonnie Wilson and Dave Gahan have in common?
+v 47 Moore medium bridge What is the middle name of the U.S. Representative interviewed for the documentary Aristide and the Endless Revolution ?
+v 48 Oliver medium bridge What is the middle name of Benjamin O. Davis Sr.'s son?
+v 49 bassist easy bridge What position did Melvin George Schacher play in the American rock band popular during the 1970s?
+v 50 vocalist medium comparison What role in their respective bands do Stephen Christian and Jonathan Davis share?
+v 51 Grieg hard bridge Minken Fosheim had success writing books for children about which Norwegian Composer ?
+v 52 barnstormer medium bridge Gelatine was an airship piloted on September 19, 1905 by a pioneer American aviator and what?
+v 53 violinist medium bridge Symphony No. 3 was written by a musician who was proficient on what instrument?
+v 54 rapper medium bridge What kind of artist does I Mean It and These Things Happen have in common?
+v 55 singer easy comparison Steve Jones and Blag Dahlia, have which occupation in common?
+e 46 1 1
+e 42 1 1
+e 41 1 1
+e 55 1 1
+e 32 1 1
+e 50 1 1
+e 35 1 1
+e 52 2 1
+e 55 3 1
+e 38 3 1
+e 34 3 1
+e 32 3 1
+e 14 3 1
+e 11 3 1
+e 17 3 1
+e 36 3 1
+e 54 3 1
+e 39 3 1
+e 7 3 1
+e 10 3 1
+e 29 3 1
+e 13 3 1
+e 52 3 1
+e 9 3 1
+e 50 3 1
+e 55 4 1
+e 45 4 1
+e 7 4 1
+e 50 4 1
+e 12 4 1
+e 55 5 1
+e 6 5 1
+e 13 5 1
+e 33 5 1
+e 50 5 1
+e 20 5 1
+e 55 6 1
+e 13 6 1
+e 33 6 1
+e 50 6 1
+e 55 7 1
+e 13 7 1
+e 50 7 1
+e 35 8 1
+e 17 9 1
+e 52 9 1
+e 17 10 1
+e 29 10 1
+e 52 10 1
+e 9 10 1
+e 55 11 1
+e 54 11 1
+e 7 11 1
+e 13 11 1
+e 50 11 1
+e 55 12 1
+e 45 12 1
+e 7 12 1
+e 50 12 1
+e 55 13 1
+e 33 13 1
+e 50 13 1
+e 22 14 1
+e 55 14 1
+e 26 14 1
+e 45 14 1
+e 11 14 1
+e 54 14 1
+e 7 14 1
+e 13 14 1
+e 50 14 1
+e 4 14 1
+e 12 14 1
+e 40 15 1
+e 25 15 1
+e 3 15 1
+e 17 15 1
+e 36 15 1
+e 39 15 1
+e 10 15 1
+e 29 15 1
+e 52 15 1
+e 9 15 1
+e 55 16 1
+e 19 16 1
+e 6 16 1
+e 37 16 1
+e 5 16 1
+e 13 16 1
+e 33 16 1
+e 50 16 1
+e 20 16 1
+e 30 17 1
+e 52 17 1
+e 55 18 1
+e 50 18 1
+e 55 19 1
+e 6 19 1
+e 5 19 1
+e 13 19 1
+e 33 19 1
+e 50 19 1
+e 20 19 1
+e 55 20 1
+e 6 20 1
+e 13 20 1
+e 33 20 1
+e 50 20 1
+e 46 21 1
+e 44 21 1
+e 51 21 1
+e 35 21 1
+e 24 21 1
+e 47 21 1
+e 7 22 1
+e 22 23 1
+e 55 23 1
+e 14 23 1
+e 26 23 1
+e 45 23 1
+e 7 23 1
+e 50 23 1
+e 4 23 1
+e 12 23 1
+e 3 25 1
+e 17 25 1
+e 36 25 1
+e 39 25 1
+e 10 25 1
+e 29 25 1
+e 52 25 1
+e 9 25 1
+e 22 26 1
+e 55 26 1
+e 45 26 1
+e 7 26 1
+e 50 26 1
+e 4 26 1
+e 12 26 1
+e 13 27 1
+e 17 28 1
+e 30 28 1
+e 17 29 1
+e 52 29 1
+e 9 29 1
+e 17 31 1
+e 30 31 1
+e 39 31 1
+e 28 31 1
+e 46 32 1
+e 55 32 1
+e 14 32 1
+e 11 32 1
+e 54 32 1
+e 7 32 1
+e 13 32 1
+e 50 32 1
+e 35 32 1
+e 55 33 1
+e 50 33 1
+e 55 34 1
+e 32 34 1
+e 14 34 1
+e 11 34 1
+e 54 34 1
+e 7 34 1
+e 13 34 1
+e 50 34 1
+e 24 35 1
+e 17 36 1
+e 39 36 1
+e 10 36 1
+e 29 36 1
+e 52 36 1
+e 9 36 1
+e 13 37 1
+e 55 38 1
+e 34 38 1
+e 32 38 1
+e 14 38 1
+e 11 38 1
+e 54 38 1
+e 7 38 1
+e 13 38 1
+e 50 38 1
+e 17 39 1
+e 30 39 1
+e 10 39 1
+e 29 39 1
+e 28 39 1
+e 52 39 1
+e 9 39 1
+e 55 40 1
+e 25 40 1
+e 17 40 1
+e 36 40 1
+e 39 40 1
+e 10 40 1
+e 29 40 1
+e 52 40 1
+e 9 40 1
+e 50 40 1
+e 23 41 1
+e 55 41 1
+e 40 41 1
+e 16 41 1
+e 43 41 1
+e 3 41 1
+e 19 41 1
+e 38 41 1
+e 34 41 1
+e 32 41 1
+e 14 41 1
+e 26 41 1
+e 45 41 1
+e 11 41 1
+e 6 41 1
+e 54 41 1
+e 5 41 1
+e 7 41 1
+e 13 41 1
+e 33 41 1
+e 50 41 1
+e 4 41 1
+e 20 41 1
+e 12 41 1
+e 18 41 1
+e 46 42 1
+e 32 42 1
+e 13 42 1
+e 35 42 1
+e 55 43 1
+e 50 43 1
+e 46 44 1
+e 51 44 1
+e 35 44 1
+e 24 44 1
+e 47 44 1
+e 55 45 1
+e 7 45 1
+e 50 45 1
+e 35 46 1
+e 24 46 1
+e 46 47 1
+e 35 47 1
+e 24 47 1
+e 13 48 1
+e 53 49 1
+e 41 49 1
+e 55 49 1
+e 16 49 1
+e 19 49 1
+e 6 49 1
+e 5 49 1
+e 13 49 1
+e 33 49 1
+e 50 49 1
+e 20 49 1
+e 55 50 1
+e 46 51 1
+e 35 51 1
+e 24 51 1
+e 47 51 1
+e 41 53 1
+e 55 53 1
+e 16 53 1
+e 19 53 1
+e 6 53 1
+e 5 53 1
+e 13 53 1
+e 33 53 1
+e 50 53 1
+e 20 53 1
+e 55 54 1
+e 7 54 1
+e 13 54 1
+e 50 54 1

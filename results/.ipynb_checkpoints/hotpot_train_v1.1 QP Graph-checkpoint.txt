@@ -1,0 +1,913 @@
+Total no questions: 90447
+No vertices: 196017
+No edges: 180894
+
+Max no paragraphs that are relevant to a question: 2
+Min no paragraphs that are relevant to a question: 2
+
+Max no question that consider a paragraph: 36
+Min no questions that consider a paragraph: 1
+
+Finding 2 question that have a common relevant paragraph
+
+Question 1: Were Erich Fromm and R. S. Thomas both priests?
+Question 2: Were both Charles Nordhoff and Erich Fromm American writers?
+Paragraph title: Erich Fromm
+
+Question 1: The 2008–09 Genoa C.F.C. season, was its best season in recent history and finished fifth in Serie A, Topscorer Diego Milito hit the back of the net how many times?
+Question 2: What is the name of this Argentine former footballer, who played with Internazionale Milano and made a single goal in the 2010 Coppa Italia Final?
+Paragraph title: Diego Milito
+
+Question 1: in the 2010 FIFA World Cup Final, Spain defeated the Netherlands 1–0 with a goal from a player who was born in which year ?
+Question 2: The 2010 FIFA World Cup Final had a single goal by a player who plays for what team?
+Paragraph title: Andrés Iniesta
+
+Question 1: What is the nationality of the striker who scored 19 league goals for Blackburn Rovers in the 2007-08 season ?
+Question 2: What nationality is the striker who scored 19 goals in the 2007–08 Blackburn Rovers F.C. season ?
+Paragraph title: 2007–08 Blackburn Rovers F.C. season
+
+Question 1: In which country was the attack where Ali Awni al-Harzi was a suspect in 2012?
+Question 2: Ali Awni al-Harzi was a suspect in a coordinated attack against two United States government facilities in which country?
+Paragraph title: 2012 Benghazi attack
+
+Question 1: What film was Céline Buckens involved in that involved one of the co-founders of DreamWorks Studios?
+Question 2:  Steven Spielberg and Bill Bixby are both actors and directors, is this true?
+Paragraph title: Steven Spielberg
+
+Question 1: Who is the president of the university which is represented by the Oklahoma Sooners?
+Question 2: Which university has the most people enrolled, University of Oklahoma or University of Delaware?
+Paragraph title: University of Oklahoma
+
+Question 1: Who operates The AXIS Theater?
+Question 2: The AXIS is an auditorium in the hotel and casino in what Las Vegas suburb?
+Paragraph title: The AXIS
+
+Question 1: John Foxe (1516/17 – 18 April 1587) was an English historian and martyrologist, the author of "Actes and Monuments", an account of Christian martyrs throughout Western history but emphasizing the sufferings of English Protestants and proto-Protestants from the fourteenth century through the reign of which Queen of England and Ireland from July 1553 until her death?
+Question 2: George Marsh was a Protestant martyr born in the parish of Deane near Bolton in which year, he died in Boughton, Chester, on 24 April 1555 as a result of the Marian Persecutions carried out against Protestant Reformers and other dissenters during the reign of Mary I of England?
+Paragraph title: Mary I of England
+
+Question 1: Are Mamoru Oshii and Pam Veasey of different nationalities?
+Question 2: Peter Jackson and Pam Veasey, have which mutual occupations?
+Paragraph title: Pam Veasey
+
+Question 1: Which Scottish rock band was featured in the game Dancing Stage Max?
+Question 2: Which band was formed first, Franz Ferdinand or Moist?
+Paragraph title: Franz Ferdinand (band)
+
+Question 1: Do They Know It's Christmas? was the biggest selling single in the UK until the singer who worked with which lyricist took over the title in 1997?
+Question 2: What is the nationality of the person released the song "Have Mercy on the Criminal"?
+Paragraph title: Elton John
+
+Question 1: Brannen Temple was the drummer for the singer-songwriter and vocalist of what R&B/rock band?
+Question 2: Are singers Spider One and Eric Burdon both members of bands?
+Paragraph title: Eric Burdon
+
+Question 1: Taylor Swift released a music video from the song that was released on September 12, 2008 on what record label?
+Question 2: Taylor Swift song You belong with me was the 3rd single from what album?
+Paragraph title: Taylor Swift videography
+
+Question 1: What Argentinian singer sang Volveré?
+Question 2: When was the singer who had the album Pensando En Ti born?
+Paragraph title: Diego Verdaguer
+
+Question 1: What song first released on the British version of the band's 1965 album was later released on a compilation album?
+Question 2: Rock 'n' Roll Music was an American compilation of album tracks, including the 1965 album opener, with cover versions released by which iconic band?
+Paragraph title: Rock 'n' Roll Music (album)
+
+Question 1: What pivotal event in the Texas Revolution occurred between February 23 and March 6, 1836 and involved Damacio Jiménez serving under Juan Seguín?
+Question 2: Which pivotal event in the Texas Revolution did  George C. Kimble did at 
+Paragraph title: Battle of the Alamo
+
+Question 1: In what year was the narrator of "The Subconscious Art of Graffiti Removal" born?
+Question 2: Are Miranda July and Ron Clements both screenwriters?
+Paragraph title: Miranda July
+
+Question 1: Who directed the film in which Bipasha Basu starred opposite John Abraham ?
+Question 2: Bipasha Basu earned her first Filmfare Award nomination for Best Actress in film by what director?
+Paragraph title: Bipasha Basu filmography
+
+Question 1: Devil's gardens was named by a man popularly known as what?
+Question 2: What field marshal in the Wehrmacht wrote Infrantry Attacks?
+Paragraph title: Erwin Rommel
+
+Question 1: Which game has more variations Ghosts or Capitol? 
+Question 2: Ghosts and Lost Cities, are which type of entertainment?
+Paragraph title: Ghosts (board game)
+
+Question 1: Lucrezia Orsina Vizzana was influenced by which Italian composer?
+Question 2: David Thomas has been acclaimed for his performances of works by which composer who died in 1643 ?
+Paragraph title: Claudio Monteverdi
+
+Question 1: Who was the first citizen of Italy to travel to space, Franco Malerba or Philippe Perrin?
+Question 2: Are European astronauts Pedro Duque and Franco Malerba both from Italy?
+Paragraph title: Franco Malerba
+
+Question 1: What year did a popular song release that was accompanied by dancing by a famous American dancer?
+Question 2: When was the film, in which Lucille Bremer is most known for, released?
+Paragraph title: Lucille Bremer
+
+Question 1: What is the name of the partner of the american engineer and inventor born January 30,1925?
+Question 2: What computer accessory was the result of the work on human-computer interaction by the creator of hypertext?  
+Paragraph title: Douglas Engelbart
+
+Question 1: What job do both Tommy Wiseau and Henry Winkler have in common?
+Question 2: are Peter Segal and Henry Winkler both authors ?
+Paragraph title: Henry Winkler
+
+Question 1: Which 1995 movie depicts an accomplishment of Fred Haise? 
+Question 2: Which astronaut depicted in the movie "Apollo 13" retired from NASA in 1979?
+Paragraph title: Fred Haise
+
+Question 1: The Penn Center provided critical educational facilities to Gullah slaves, who are are the descendants of enslaved Africans in what US states?
+Question 2: What is special about the African-American cultural and educational center the descendants of enslaved Africans from South Carolina attended?
+Paragraph title: Penn Center (Saint Helena Island, South Carolina)
+
+Question 1: Is the University of Southern California or the University of Florida public land granted? 
+Question 2: Which university is older, Brown University or University of Southern California?
+Paragraph title: University of Southern California
+
+Question 1: What Ivy League research university is home to the secret society The Pacifica House?
+Question 2: Which university is older, Brown University or University of Southern California?
+Paragraph title: Brown University
+
+Question 1: What does the L stand for in Patriot Games star Samuel L. Jackson's name?
+Question 2: Was White Sands a reason Samuel L. Jackson was made prominent in culture?
+Paragraph title: Samuel L. Jackson
+
+Question 1: Two Lanes of Freedom includes the single that features which other singer-songwriter on vocals?
+Question 2: Which song from Two Lanes of Freedom features Taylor Swift on vocals, as well as Keith Urban on guitar ?
+Paragraph title: Highway Don't Care
+
+Question 1: Do Cabomba and Aeonium both belong to the same family?
+Question 2: Which genus has more species, Stenotus or Aeonium?
+Paragraph title: Aeonium
+
+Question 1: Which is a type of card game, CirKis or Twilight Struggle?
+Question 2: Which game, Rummoli or CirKis, is a piece placing board game, for two to four players, invented by Phil E. Orbanes and developed by Winning Moves Games USA in 2009?
+Paragraph title: CirKis
+
+Question 1: What is one word that describes the main subject of the 2003 Canadian film Owning Mahowny?
+Question 2: What type of urge to gamble continuously despite harmful negative consequences is Owning Mahowny about?
+Paragraph title: Owning Mahowny
+
+Question 1: Who portrays James Gordon in the Gotham episode, Rise of the Villains: Knock, Knock?
+Question 2: Who developed the series on which Zabryna Guevara played Sarah Essen?
+Paragraph title: Gotham (TV series)
+
+Question 1: Sara Jordan Powell, is an American gospel musician, she performed in 1979 for President Jimmy Carter, and she was joined by who, which was an American singer, songwriter, musician, and one of the pioneers of rock and roll music?
+Question 2: Which pioneer of rock and roll music released a compilation album on Chess Records in 1982 that was later ranked by Rolling Stone as one of the greatest albums of all time?
+Paragraph title: Chuck Berry
+
+Question 1:  Jagdgeschwader 52 was an aircraft used by the flying ace nicknamed what?
+Question 2: Which German fighter pilot was dubbed the most successful fighter ace in the history of aerial warfare and had the book The Blond Knight of Germany written about their life and career?
+Paragraph title: Erich Hartmann
+
+Question 1: Are Vincenzo Bellini and Nikolai Rimsky-Korsakov both composers?
+Question 2: Are Jean-Philippe Rameau and Nikolai Rimsky-Korsakov both composers?
+Paragraph title: Nikolai Rimsky-Korsakov
+
+Question 1: Ballad of Seodong is a South Korean television series starring Jo Hyun-jae, Ryu Jin and Lee Bo-young, a South Korean actress, born when?
+Question 2: What television network did the 2005 series starring Lee Bo-young air on?
+Paragraph title: Ballad of Seodong
+
+Question 1: Which battle took place first, the Battle of Stones River or the Battle of the Bulge?
+Question 2: which battle took place first Battle of Stones River or Battle of Belleau Wood ?
+Paragraph title: Battle of Stones River
+
+Question 1: What old, Catholic university is home to a radio station with its antenna atop the Montefiore Medical Center?
+Question 2: Amy Aronson is a professor at a private independent research university in New York City, that was founded by members of what religion?
+Paragraph title: Fordham University
+
+Question 1: Tha Smokin' Nephew, featuring singles such as "Shorty DooWop" and "Suga Suga", was the first major label album by which rapper?
+Question 2: Da Bidness 2 features an appearance by Ronald Ray Bryant, who is known better by what name?
+Paragraph title: Baby Bash
+
+Question 1: Benita Valente was lauded for her interpretations of which German, later British, baroque composer?
+Question 2: Alessandro is an opera composed by George Frideric Handel, who composed in what style?
+Paragraph title: George Frideric Handel
+
+Question 1: What is the permanent seating capacity of the stadium in which the 2006 USC Trojans football team played its home games?
+Question 2: Exposition Park, Los Angeles includes which NFL football stadium?
+Paragraph title: Los Angeles Memorial Coliseum
+
+Question 1: Are Dashiell Hammett and Julio Cortázar both nationals of the same country ?
+Question 2: When was the author of "Blow-up and Other Stories" born? 
+Paragraph title: Julio Cortázar
+
+Question 1: which musican has the greatest instrumental skill  Matt Thiessen or  Steve Marriott:
+Question 2: Matt Thiessen and Lowell George, both are Americans of which common occupation?
+Paragraph title: Matt Thiessen
+
+Question 1: Do both CQ Amateur Radio and Electronic Gaming Monthly both review video games?
+Question 2: Are both Latina and Electronic Gaming Monthly American magazines?
+Paragraph title: Electronic Gaming Monthly
+
+Question 1: Max Ophüls and Lloyd Bacon are both what?
+Question 2: Robert Clouse and Max Ophüls, have which mutual occupation?
+Paragraph title: Max Ophüls
+
+Question 1: Both Wynn Resorts and Wynn Macau share who as their CEO?
+Question 2: The Hotel Employees and Restaurant Employees Union has contacted with the Nevada hotel that was founded by which Mirage Resorts CEO?
+Paragraph title: Wynn Resorts
+
+Question 1: The 98th Southern Range Support Squadron is responsible for the day-to-day support of Creech Air Force Base, the Point Bravo logistics site and which military training area used by the United States Air Force Warfare Center at Nellis Air Force Base in Nevada?
+Question 2: The 99th Range Group is an inactive United States Air Force (USAF) unit that was responsible for military training area that includes what ?
+Paragraph title: Nevada Test and Training Range
+
+Question 1: hat is the position played by Djalma Campos most responsible for?
+Question 2: What nationalities were player Djeny Bembo-Leta, who played the frontmost position in football?
+Paragraph title: Forward (association football)
+
+Question 1: What team was the current assistant coach for the South Florida Bulls re-signed to after being released from the Washington Wizards?
+Question 2: Rod Strickland is the godfather of an NBA player who won an NBA championship with the cavaliers in which year ?
+Paragraph title: Rod Strickland
+
+Question 1: Svetlana Kuznetsova and Marin Čilić both play which sport?
+Question 2: Are John Austin and Marin Čilić are professional tennis players from different countries?
+Paragraph title: Marin Čilić
+
+Question 1: what year did the winner of the 1992 South African Grand Prix with the CART Indy Car World Series?
+Question 2: When was the British former racing driver which finishes the race in second position, behind McLaren's Ayrton Senna.in 1992 Hungarian Grand Prix born
+Paragraph title: Nigel Mansell
+
+Question 1: The SS Atlantic Causeway was a container ship requisitioned by the British government to support British forces in what ten-week war between Argentina and the United Kingdom?
+Question 2: How long did the war which Clive Ponting leaked documents about last?
+Paragraph title: Falklands War
+
+Question 1: When was the album containing the song "1-800-273-8255" by an American hip hop artist released?
+Question 2: What song from April 28, 2017 that was number 3 on the "Billboard" Hot 100 is Alessia Cara featured in?
+Paragraph title: 1-800-273-8255 (song)
+
+Question 1: When  is the  41st President of the United States which Mark J. Albrecht was his advisor born 
+Question 2: What relation was Samuel P. Bush to the 41st President of the USA, George H. W. Bush?
+Paragraph title: George H. W. Bush
+
+Question 1: The Chief Mouser to the Cabinet Office is the title of the official resident cat, of the Prime Minister of the United Kingdom, which tabby cat, with this title, is owned by the former Chancellor of the Exchequer of the United Kingdom George Osborne and his family?
+Question 2: Larry is the official resident cat of whom?
+Paragraph title: Chief Mouser to the Cabinet Office
+
+Question 1: Rudranath is a Hindu temple is in a country located where?
+Question 2: Acrocercops allactopa is a moth of the Gracillariidae family, known from Karnataka, India, officially the Republic of India, a country in which region?
+Paragraph title: India
+
+Question 1: Robert Ian McNabb has performed with an English drummer who gained worldwide fame as the drummer for who?
+Question 2: When was the Beatle whose second song ever written was Octopus's Garden born?
+Paragraph title: Ringo Starr
+
+Question 1: What is the name of this former French footballer and footballing coach, who beat Michael Svensson in the 2003 FA Cup Final with a 1-0 strike?
+Question 2: When was the French footballer and footballing coach born based on who's courtesy goal Arsenal won with a 1–0 victory in The 2002–03 FA Cup?
+Paragraph title: Robert Pirès
+
+Question 1: USS Mahan was laid down at which shipyard located at Hunters Point?
+Question 2: Located in a shipyard to the southeast corner of San Francisco, the USS Mahan was a "Farragut"-class guided missile destroyer that was launched on what date?
+Paragraph title: USS Mahan (DDG-42)
+
+Question 1: Demonic is a 2015 American supernatural horror film starring an American actor best known for appearing in what 2007 movie?
+Question 2: Aaron Yoo is an American actor that starred in "Friday the 13th" in 2009 and what other 2015 horror film?
+Paragraph title: Demonic (film)
+
+Question 1: The City of Onkaparinga has a council that has area offices situated in the suburb approximately how far from the city center?
+Question 2: What is the city where the The Circle of Oak and Mistletoe (O&M) resides named after?
+Paragraph title: City of Onkaparinga
+
+Question 1: The author of "The Origins of Totalitarianism" was born in what country?
+Question 2: One of the two writers, Hannah Arendt and Guillermo Cabrera Infante, changed to which nationality in his lifetime?
+Paragraph title: Hannah Arendt
+
+Question 1: Guillermo Cabrera Infante and George S. Kaufman were both what?
+Question 2: One of the two writers, Hannah Arendt and Guillermo Cabrera Infante, changed to which nationality in his lifetime?
+Paragraph title: Guillermo Cabrera Infante
+
+Question 1:  Dohonna Malik Scott holds notable wins over a boxer that has been challenged twice by who?
+Question 2:  Malik Scott holds a notable win over a Samoan australian boxer who lost a fight against Wladimir Klitschko by knockout in which round?
+Paragraph title: Malik Scott
+
+Question 1: Vanessa Kirby played Joanna Richard Curtis' movie released on what date?
+Question 2: Vanessa Kirby starred as Joanna in the 2013 comedy-drama about a man with what ability?
+Paragraph title: Vanessa Kirby
+
+Question 1: In what year was the screenwriter who co-wrote "Dark Star" with John Carpenter born?
+Question 2: Which company produced the science fiction hit that the American screenwriter born on September 30, 1946 was involved with? 
+Paragraph title: Dan O'Bannon
+
+Question 1: Neonopolis is located on which pedestrian mall and attraction in Las Vegas?
+Question 2: What Las Vegas location, a $100 million entertainment complex containing 3 miles of neon lights, was scheduled to host Star Trek:The Experience in 2009?
+Paragraph title: Neonopolis
+
+Question 1: Who developed the Arena Located between West Manchester Boulevard, across Pincay Drive and Kareem Court ?
+Question 2: When was the arena which hosted the Call of Duty: Experience 2016 opened ?
+Paragraph title: The Forum (Inglewood, California)
+
+Question 1: Spaceballs, a 1987 American film, starred which actor that was best known for his role in "Eight is Enough"?
+Question 2: Spaceballs is a 1987 American comic science fiction film co-written, produced and directed by Mel Brooks, the film also features which American actor, businessman, and animal welfare advocate, best known for his role as patriarch Tom Bradford on the ABC television comedy-drama "Eight Is Enough"?
+Paragraph title: Dick Van Patten
+
+Question 1: Until what year was the king who Æthelgeard was an official for King of England?
+Question 2: Æthelgeard was likely an official of a king usually called by what nickname?
+Paragraph title: Æthelgeard
+
+Question 1: What superfund site is the base for the "Snipers" Marine Corps squadron
+Question 2: Marine Aircraft Group 13 is based at what air station that is a designated Superfund site?
+Paragraph title: Marine Corps Air Station Yuma
+
+Question 1: Which hospital has the most beds, George Washington University Hospital or Psychiatric Institute of Washington?
+Question 2: Which psychiatric hospital has a larger capacity, The Psychiatric Institute of Washington or St. Elizabeths Hospital?
+Paragraph title: Psychiatric Institute of Washington
+
+Question 1: What is the nationality of the principal conductor for the 2004 German documentary film Rhythm Is It!?
+Question 2: What Stravinsky ballet featured in a 2004 documentary caused a near-riot when it was first performed in 1913?
+Paragraph title: Rhythm Is It!
+
+Question 1: When was the helmet, that the M63 replaced, patented ?
+Question 2: The M63, is a combat helmet of South African origin, based on the French Modèle 1951 helmet, the M63 replaced the Brodie helmet, a British type, and steel combat helmet designed and patented in London in which year, by John Leopold Brodie?
+Paragraph title: Brodie helmet
+
+Question 1: Does Ammi or Geranium have more species?
+Question 2: To which taxonomic category do both Geranium and Fargesia belong?
+Paragraph title: Geranium
+
+Question 1: Who is younger, Dennis Locorriere or Crispian Mills?
+Question 2: Between Les Claypool and Dennis Locorriere, who had more diverse job experiences?
+Paragraph title: Dennis Locorriere
+
+Question 1: What was founded first, Playboy or Goldmine?
+Question 2: Playboy and QEX are both what?
+Paragraph title: Playboy
+
+Question 1: Which magazine was published first, Giant Robot or Civil War Times?
+Question 2: Which was published first, Gospel Advocate or Civil War Times?
+Paragraph title: Civil War Times
+
+Question 1: What is a monthly women's interest magazine launched by Time Inc. in 2000, Real Simple or Gospel Advocate?
+Question 2: Which was published first, Gospel Advocate or Civil War Times?
+Paragraph title: Gospel Advocate
+
+Question 1: What do Anthony Green and Serj Tankian have in common?
+Question 2: Who has more scope of profession, Serj Tankian or John Reis?
+Paragraph title: Serj Tankian
+
+Question 1: Which New England university has a larger main campus, University of Hartford or University of Massachusetts Amherst?
+Question 2: Are the campuses of University of Hartford and Valparaiso University similar in size?
+Paragraph title: University of Hartford
+
+Question 1: The Ausrian primary school teacher,church organist and composer of the song which was first heard 24 December, 1818 lived in what village?
+Question 2: What year was the composer honored by the Silent Night Chapel born?
+Paragraph title: Silent-Night-Chapel
+
+Question 1: When was this British professional boxer born who, besides Gavin Rees, beat John Watson for the British lightweight title?
+Question 2: When did the professional boxer who John Watson lost to hold the WBA lightweight title?
+Paragraph title: Anthony Crolla
+
+Question 1: Owen Chamberlain's collaborator was awarded the Nobel Prize in what year?
+Question 2: Thomas "Tom" John Ypsilantis was known for the co-discovery of the antiproton along with an Italian physicist who was awarded what in 1959?
+Paragraph title: Emilio Segrè
+
+Question 1: One of the stars of the Hunchback of Notre Dame also starred in "Murphy Brown" as which character?
+Question 2: Which show did the actor, who also appeared in "The Hunchback of Notre Dame," earn a nomination for an Emmy Award?
+Paragraph title: The Hunchback of Notre Dame (1996 film)
+
+Question 1: This  social justice leadership training school and cultural center was founded in 1932 by an American educator and socialist  famous for its role in what?
+Question 2: Guy Carawan served as what at the school secondarily known as Highlander Folk School?
+Paragraph title: Highlander Research and Education Center
+
+Question 1: Are Jan Bucquoy and Richard Linklater of the same nationality?
+Question 2: Are Chris Menges and Jan Bucquoy both anarchists?
+Paragraph title: Jan Bucquoy
+
+Question 1: Carlos Caetano Bledorn Verri, commonly known as Dunga, is a Brazilian football manager and former professional footballer, and along with Xavi, he is one of only two men to have played in multiple cup finals, Xavier "Xavi" Hernández Creus, a Spanish professional footballer who plays for which club organization?
+Question 2: What nationality is the player thought to be the most possessive in recent years?
+Paragraph title: Xavi
+
+Question 1: Where did the band that created the song "Extra Ordinary" get formed?
+Question 2: Which band formed first, Better Than Ezra or The Breeders?
+Paragraph title: Better Than Ezra
+
+Question 1: What was the original name of the rock band whose lead singer was associated with music promoter Annik Honoré?
+Question 2: Nine Lashes and Joy Division are names of what kind of groups?
+Paragraph title: Joy Division
+
+Question 1: Park Min-ha appeared in a South Korean disaster film about an outbreak of a deadly strain of H5N1 that kills its victims within what amount of time?
+Question 2: Who was the director of the 2013 South Korean disaster film in which Park Min-ha plays a role?
+Paragraph title: Flu (film)
+
+Question 1: Florey electoral district takes in what suburb in Tea Tree Gully, Adelaide, South Australia?
+Question 2: What penicillin developing scientist had an electoral district ,which includes a residential suburb split between the City of Salisbury and the City of Tea Tree Gully, named after him in South Australia?
+Paragraph title: Electoral district of Florey
+
+Question 1: Tomáš Šmíd and Barbara Jordan are both former what?
+Question 2: Who had the highest singles ranking Tomáš Šmíd or Ross Case?
+Paragraph title: Tomáš Šmíd
+
+Question 1: Which clause of the United States constitution prohibits the 18th United States Secretary of Transortation from holding the office of President of the United States?
+Question 2: When was the secretary under which Paul T. Conway served as chief of staff for the U.S. Department of Labor born? 
+Paragraph title: Elaine Chao
+
+Question 1:  Which board game, Java or Twin Tin Bots, was designed by Philippe Keyaerts and published by Flatlined Games?
+Question 2: Both Twin Tin Bots and Star Wars Epic Duels are what type of games?
+Paragraph title: Twin Tin Bots
+
+Question 1: The Spy Who Loved Me is the ninth novel in the James Bond series authored by Ian Fleming, who was educated at Eton, Sandhurst, Munich, and what other university?
+Question 2: Where was the father of the author of the novel on which The Man with the Golden Gun is based a Member of Parliament for?
+Paragraph title: Ian Fleming
+
+Finding 2 questions that have the same 2 paragraphs as common
+
+Question 1: The Oberoi family is part of a hotel company that has a head office in what city?
+Question 2: Which Indian family founded the Trident Hotel brand?
+Paragraph 1 Title: The Oberoi Group
+Paragraph 2 Title: Oberoi family
+
+Question 1: In which 2015 British-American romantic drama film directed by Todd Haynes did John Magaro star in?
+Question 2: The American film, television and stage actor John Magaro appeared in which film directed by Todd Haynes alongside with Rooney Mara?
+Paragraph 1 Title: Carol (film)
+Paragraph 2 Title: John Magaro
+
+Question 1: In which 2015 British-American romantic drama film directed by Todd Haynes did John Magaro star in?
+Question 2: who wrote the movie which John Magaro starred alongside
+Paragraph 1 Title: Carol (film)
+Paragraph 2 Title: John Magaro
+
+Question 1: Which actress, known for her role as Denise Huxtable, directed the video to "It Never Rains (In Southern California)"?
+Question 2:  "It Never Rains (In Sourthern California)" was directed by Lisa Bonet, what sitcom did she play Denise Huxtable?
+Paragraph 1 Title: It Never Rains (In Southern California)
+Paragraph 2 Title: Lisa Bonet
+
+Question 1: What position did both Dave Rayner and Billy Cundiff play in the National Football League?
+Question 2: What former Drake college player has played for eleven NFL teams?
+Paragraph 1 Title: Billy Cundiff
+Paragraph 2 Title: Dave Rayner
+
+Question 1: What position did both Dave Rayner and Billy Cundiff play in the National Football League?
+Question 2: Dave Rayner shares the record for most NFL teams played for with the placekicker who played for what college?
+Paragraph 1 Title: Billy Cundiff
+Paragraph 2 Title: Dave Rayner
+
+Question 1: "Houston, we have a problem" was an erroneous quote between "Huston" and an American test pilot, NASA astronaut and one of how many people who have flown to the moon?
+Question 2: Who one of the 24 people who have flown to the Moon., and said a popular but erroneous quote from the radio communications between the Apollo 13 astronaut and the NASA Mission Control Center ?
+Paragraph 1 Title: Jack Swigert
+Paragraph 2 Title: Houston, we have a problem
+
+Question 1: "Houston, we have a problem" was an erroneous quote between "Huston" and an American test pilot, NASA astronaut and one of how many people who have flown to the moon?
+Question 2: What American test pilot born August 30, 1931 erroneously made the famous "Houston, we have a problem" quote?
+Paragraph 1 Title: Jack Swigert
+Paragraph 2 Title: Houston, we have a problem
+
+Question 1: What host of Mind of a Man is also the older brother of R&B singer Steph Jones?
+Question 2: Where was the host of "Mind of a Man" born?
+Paragraph 1 Title: Mind of a Man
+Paragraph 2 Title: DeRay Davis
+
+Question 1: Who was mentored by Arnold Schoenberg and worked on the album "At the Grave of Richard Wagner"?
+Question 2: Who was mentor to the man whose works, along with those of Alban Berg, were included in the studio album entitled At the Grave of Richard Wagner?
+Paragraph 1 Title: Anton Webern
+Paragraph 2 Title: At the Grave of Richard Wagner
+
+Question 1: What star of Screwed was inducted into the American Theater Hall of Fame in 1995?
+Question 2: What 2000 American comedy directed by Scott Alexander co-starred a Broadway actress that was inducted into the American Theater Hall of Fame in 1995?
+Paragraph 1 Title: Screwed (2000 film)
+Paragraph 2 Title: Elaine Stritch
+
+Question 1: What is the country of origin of Brian Stepanek and the film The Island?
+Question 2: Who directed the film in which Brian Patrick Stepanek had a supporting role in, which was released on July 22, 2005?
+Paragraph 1 Title: Brian Stepanek
+Paragraph 2 Title: The Island (2005 film)
+
+Question 1: Which film was released first, "The Battle of San Pietro" or "Pond Hockey"?
+Question 2: What was released first, Pond Hockey or The Battle of San Pietro?
+Paragraph 1 Title: The Battle of San Pietro
+Paragraph 2 Title: Pond Hockey (film)
+
+Question 1: Fruktime is made in which flavor that commonly comes from rye bread?
+Question 2: What is the name of this traditional Slavic and Baltic fermented beverage that is used for a flavor in Fruktime and commonly made from rye bread whose colour contributes to the resulting colour of the drink?
+Paragraph 1 Title: Kvass
+Paragraph 2 Title: Fruktime
+
+Question 1: Team Halfords Bikehut was the team of the British female cyclist who now works in what capacity?
+Question 2: Who was the British Former professional Cyclist who was part of Team Halfords Bikehut?
+Paragraph 1 Title: Sharon Laws
+Paragraph 2 Title: Team Halfords Bikehut
+
+Question 1: Team Halfords Bikehut was the team of the British female cyclist who now works in what capacity?
+Question 2: What is the current work of the British cyclist who was one of the Team Halfords Bikehut?
+Paragraph 1 Title: Sharon Laws
+Paragraph 2 Title: Team Halfords Bikehut
+
+Question 1: Team Halfords Bikehut was the team of the British female cyclist who now works in what capacity?
+Question 2: What is the birthday of the former member of Team Halfords Bikehut who currently works as an environmental consultant?
+Paragraph 1 Title: Sharon Laws
+Paragraph 2 Title: Team Halfords Bikehut
+
+Question 1: Team Halfords Bikehut was the team of the British female cyclist who now works in what capacity?
+Question 2: What type of cyclists were teammates of a former professional cyclist born in 1974 who is currently an environmental consultant?
+Paragraph 1 Title: Sharon Laws
+Paragraph 2 Title: Team Halfords Bikehut
+
+Question 1: When was the amusement zone founded at which the mummified body of Elmer McCurdy was positively identified in 1976, founded ?
+Question 2: What is the name of the amusement zone in Long Beach, California where Elmer J. McCurdy's remains eventually wound up?
+Paragraph 1 Title: The Pike
+Paragraph 2 Title: Elmer McCurdy
+
+Question 1: The daughter of John Aniston appeared in which 1998 motion picture alongside Paul Rudd?
+Question 2: The Object of My Affection was made into a 1998 motion picture starring an American actress, producer, and businesswoman who gained worldwide recognition for portraying Rachel Green on what television sitcom?
+Paragraph 1 Title: The Object of My Affection (novel)
+Paragraph 2 Title: Jennifer Aniston
+
+Question 1: What is the first name the founders of Hotel Baxter and Ted's Montana Grill have in common?
+Question 2: What American eating establishment that specializes in bison is located on the ground floor of the Hotel Baxter?
+Paragraph 1 Title: Hotel Baxter
+Paragraph 2 Title: Ted's Montana Grill
+
+Question 1: Which one is located in Northern California Iron Mountain Mine or Spring Creek Dam?
+Question 2: What Geologically classified as a "massive sulfide ore deposit", uses an earthfill dam on Spring Creek primarily to collect severe acid mine drainage stemming?
+Paragraph 1 Title: Iron Mountain Mine
+Paragraph 2 Title: Spring Creek Dam
+
+Question 1: Papa, is a 2012 South Korean comedy-drama film written and directed by Han Ji-seung, Park Yong-woo stars as a talent manager who persuades his step-daughter from a contract marriage, played by which South Korean actress and model, she is best known for starring in the television series "Reply 1994" (2013)?
+Question 2: The 2012 South Korean comedy-drama film "Papa" stars which South Korean actress and model who also appeared in "Reply 1994" (2013) ?
+Paragraph 1 Title: Papa (2012 film)
+Paragraph 2 Title: Go Ara
+
+Question 1: Anna Hamilton Phelan was nominated for an Oscar for the depiction of what naturalist's life?
+Question 2: Who does Sigourney Weaver play in the movie for which Anna Hamilton Phelan was nominated for an Oscar?
+Paragraph 1 Title: Gorillas in the Mist
+Paragraph 2 Title: Anna Hamilton Phelan
+
+Question 1: Anna Hamilton Phelan was nominated for an Oscar for the depiction of what naturalist's life?
+Question 2: Anna Phelan received a Oscar nomination for Gorillas in the Mist, but Michael Apted was nominated for how many Academy Awards?  
+Paragraph 1 Title: Gorillas in the Mist
+Paragraph 2 Title: Anna Hamilton Phelan
+
+Question 1: When was the American fitness guru, actor, and comedian born who is known for his eccentric, flamboyant, and energetic personality and also a star of Rudolph the Red-Nosed Reindeer: The Movie?
+Question 2: Rudolph the Red-Nosed Reindeer: The Movie stars an American fitness guru who promotes weight-loss programs, prominently through what line of videos?
+Paragraph 1 Title: Richard Simmons
+Paragraph 2 Title: Rudolph the Red-Nosed Reindeer: The Movie
+
+Question 1: The company responsible for the Rattler at Six Flags Fiesta Texas later designed a wooden hypercoaster with a 214 ft drop.  What was the coaster named?
+Question 2: What day did the company that built The Rattler unveil its most popular ride?
+Paragraph 1 Title: Son of Beast
+Paragraph 2 Title: Roller Coaster Corporation of America
+
+Question 1: Lewis Moran was murdered a week after the death of the hitman from what Australian city?
+Question 2: Which convicted car thief was murdered one week before Lewis Moran?
+Paragraph 1 Title: Lewis Moran
+Paragraph 2 Title: Andrew Veniamin
+
+Question 1: Which patriotic show tune occupied the UK Singles Chart for 17 weeks in 1967?
+Question 2: For which character was the song that Vince Hill is best known for created?
+Paragraph 1 Title: Vince Hill
+Paragraph 2 Title: Edelweiss (song)
+
+Question 1: Jack Wall worked on which 2005 action role-playing game developed by Bioware?
+Question 2: Jade Empire, released in 2005 on Xbox, is one of over 20 games soundtracked by which Pennsylvania music artist?
+Paragraph 1 Title: Jade Empire
+Paragraph 2 Title: Jack Wall (composer)
+
+Question 1: Roger Duane "Zeke" Smith, was an American football player in the National Football League, other Auburn greats, include Bo Jackson, one of the few athletes to be named an All-Star in two major sports, and the only one to do so in both baseball, and what sport?
+Question 2: Roger Duane "Zeke" Smith, was an American football player in which sports organization, for the Baltimore Colts and the New York Giants, his banner, along with four other Auburn greats, including Bo Jackson,  a former baseball and American football player?
+Paragraph 1 Title: Zeke Smith
+Paragraph 2 Title: Bo Jackson
+
+Question 1: When did the show starring former American football tight end who played for the Denver Broncos and Baltimore Ravens of the National Football League premier?
+Question 2: What show does the former American football tight end from the Broncos and Ravens that was also an analyst appear on?
+Paragraph 1 Title: Shannon Sharpe
+Paragraph 2 Title: Skip and Shannon: Undisputed
+
+Question 1: Who directed this romantic comedy-sports film that stars Felicity Jones and the English actor and musician from "Gossip Girl" (2007–2012)?
+Question 2: What year was Ed Westwick, star of both "Gossip Girl" and "Chalet Girl", born?
+Paragraph 1 Title: Chalet Girl
+Paragraph 2 Title: Ed Westwick
+
+Question 1: Who directed this romantic comedy-sports film that stars Felicity Jones and the English actor and musician from "Gossip Girl" (2007–2012)?
+Question 2: Edward Jack Peter "Ed" Westwick, is an English actor and musician, he has appeared in which 2011 British-German-Austrian romantic comedy-sports film directed by Phil Traill?
+Paragraph 1 Title: Chalet Girl
+Paragraph 2 Title: Ed Westwick
+
+Question 1: Where is the online retailer which has Fred Chang as it's CEO based ?
+Question 2: Fred Chang is the founder, chairman, and CEO of an online computer hardware and software store based in what state?
+Paragraph 1 Title: Newegg
+Paragraph 2 Title: Fred Chang
+
+Question 1: Where is the online retailer which has Fred Chang as it's CEO based ?
+Question 2: Where is an online computer hardware and software store of the Taiwanese-born American entrepreneur Fred Chang based? 
+Paragraph 1 Title: Newegg
+Paragraph 2 Title: Fred Chang
+
+Question 1: In what year was the home of the General buried in the Christ Episcopal Church built?
+Question 2: Buried in the crypt of the Christ Episcopal Church is the owner of a  2-story, five-bay, rectangular frame residence whose roof is pierced by what?
+Paragraph 1 Title: Christ Episcopal Church (Duanesburg, New York)
+Paragraph 2 Title: North Mansion and Tenant House
+
+Question 1: When did the former U.S. Secretary of Homeland Security assume the office of White House Chief of Staff?
+Question 2: On January 30, 2017, Elaine Duke was nominated by President Donald Trump to become the United States Deputy Secretary of Homeland Security under a man born in which year ?
+Paragraph 1 Title: Elaine Duke
+Paragraph 2 Title: John F. Kelly
+
+Question 1: Thomas Rickman is an American film director and screenwriter known for a biographical film which tells the story of what country music singer? 
+Question 2: What actress earned a nomination to for an Academy Award for a movie directed by an American who also was known for, "hooper," tuesdays with morrie" and Truman?
+Paragraph 1 Title: Coal Miner's Daughter (film)
+Paragraph 2 Title: Thomas Rickman (writer)
+
+Question 1: Who is a Spanish professional footballer who plays for and captains both Real Madrid and the Spain national team, who has a Finnish footballer nicknamed "Sergio" because his style of play was similar?  
+Question 2: Kalle Makinen is nicknamed 'Sergio' after another famous footballer; what teams does the original Sergio play for?
+Paragraph 1 Title: Sergio Ramos
+Paragraph 2 Title: Kalle Mäkinen
+
+Question 1: Who is a Spanish professional footballer who plays for and captains both Real Madrid and the Spain national team, who has a Finnish footballer nicknamed "Sergio" because his style of play was similar?  
+Question 2: Kalle Mäkinen is nicknamed after a professional footballer that plays for what two teams?
+Paragraph 1 Title: Sergio Ramos
+Paragraph 2 Title: Kalle Mäkinen
+
+Question 1: Who is a Spanish professional footballer who plays for and captains both Real Madrid and the Spain national team, who has a Finnish footballer nicknamed "Sergio" because his style of play was similar?  
+Question 2: What is the nationality of the player that has a style similar to that of the captain of the Real Madrid team?
+Paragraph 1 Title: Sergio Ramos
+Paragraph 2 Title: Kalle Mäkinen
+
+Question 1: Who is a Spanish professional footballer who plays for and captains both Real Madrid and the Spain national team, who has a Finnish footballer nicknamed "Sergio" because his style of play was similar?  
+Question 2: Who was nicknamed Sergio, because his style was similar to someone who captains Real Madrid and the Spain national team?
+Paragraph 1 Title: Sergio Ramos
+Paragraph 2 Title: Kalle Mäkinen
+
+Question 1: Karan Kapoor is the grandson of which Shakespearean actor-manager?
+Question 2: In what country did Karan Kapoor and Geoffrey Kendal perform most?
+Paragraph 1 Title: Geoffrey Kendal
+Paragraph 2 Title: Karan Kapoor
+
+Question 1: Franklin Seaver Pratt (November 1, 1829 – January 11, 1894), also known as Franklyn or Frank S. Pratt, was an American settler, businessman, public servant and diplomat of the Kingdom of Hawaii, he married who, that was a great grandniece of Kamehameha I, being a great granddaughter of Kalokuokamaile, the older brother of Kamehameha I, founder of the Kingdom of Hawaii?
+Question 2: Who defended the great grandniece of Kamehameha I's claims to the Hawaiian crown lands?
+Paragraph 1 Title: Elizabeth Kekaaniau
+Paragraph 2 Title: Franklin Seaver Pratt
+
+Question 1: Franklin Seaver Pratt (November 1, 1829 – January 11, 1894), also known as Franklyn or Frank S. Pratt, was an American settler, businessman, public servant and diplomat of the Kingdom of Hawaii, he married who, that was a great grandniece of Kamehameha I, being a great granddaughter of Kalokuokamaile, the older brother of Kamehameha I, founder of the Kingdom of Hawaii?
+Question 2: How was Franklin Seaver Pratt's wife related to Kamehameha I?
+Paragraph 1 Title: Elizabeth Kekaaniau
+Paragraph 2 Title: Franklin Seaver Pratt
+
+Question 1: On which record label did the band who released the single Feel It Still release their eighth full-length album Woodstock?
+Question 2: What type of group does Feel It Still and Woodstock have in common?
+Paragraph 1 Title: Woodstock (Portugal. The Man album)
+Paragraph 2 Title: Feel It Still
+
+Question 1: What year was the firstprofessional golf  tournament sponsored by the producers of Noilly Pratt held?
+Question 2: Which alcoholic beverage company sponsored the Martini International professional golf tournament?
+Paragraph 1 Title: Martini &amp; Rossi
+Paragraph 2 Title: Martini International
+
+Question 1: Of what country's origin is the subject of The Man Who Predicted 9/11?
+Question 2: The man featured in the documentary The Man Who Predicted 9/11 led hundreds out of which tower before its collapse?
+Paragraph 1 Title: The Man Who Predicted 9/11
+Paragraph 2 Title: Rick Rescorla
+
+Question 1: Of what country's origin is the subject of The Man Who Predicted 9/11?
+Question 2: What United States television channel aired the film about a man who died on September 11, 2001 and led hundreds out of the South Tower before dying in its collapse?
+Paragraph 1 Title: The Man Who Predicted 9/11
+Paragraph 2 Title: Rick Rescorla
+
+Question 1: Of what country's origin is the subject of The Man Who Predicted 9/11?
+Question 2: In what year was the director of security of Morgan Stanley in 2001 born?
+Paragraph 1 Title: The Man Who Predicted 9/11
+Paragraph 2 Title: Rick Rescorla
+
+Question 1: Of what country's origin is the subject of The Man Who Predicted 9/11?
+Question 2: Of what origin was the director of security of Morgan Stanley in the film The Man Who Predicted 9/11?
+Paragraph 1 Title: The Man Who Predicted 9/11
+Paragraph 2 Title: Rick Rescorla
+
+Question 1: Of what country's origin is the subject of The Man Who Predicted 9/11?
+Question 2: Which of the army officer on which "The Man Who Predicted 9/11" programme is centered was born May 27, 1939?
+Paragraph 1 Title: The Man Who Predicted 9/11
+Paragraph 2 Title: Rick Rescorla
+
+Question 1: In what year did Gerrit Rietveld, a Dutch furniture designer and architect build the Rietveld Schröder House?
+Question 2: What is the name of the house built in 1924 by a principal member of the De Stijl?
+Paragraph 1 Title: Gerrit Rietveld
+Paragraph 2 Title: Rietveld Schröder House
+
+Question 1: Who was a founding member of the world's second alliance (after the U-FLY Alliance) to consist only of low-cost carriers (LCCs)?
+Question 2: Jeju Air is a founding member of the air alliance formed in what month?
+Paragraph 1 Title: Value Alliance
+Paragraph 2 Title: Jeju Air
+
+Question 1: Who was a founding member of the world's second alliance (after the U-FLY Alliance) to consist only of low-cost carriers (LCCs)?
+Question 2: Jeju Air is a founding member of the alliance formed in which month?
+Paragraph 1 Title: Value Alliance
+Paragraph 2 Title: Jeju Air
+
+Question 1: Whar did Sarfraz Ahmed do after Azhar Ali stepped down?
+Question 2: Which former player for Huntly in Scotland was followed as Pakistan one-day cricket captain by Sarfraz Ahmed?
+Paragraph 1 Title: Azhar Ali
+Paragraph 2 Title: Sarfraz Ahmed
+
+Question 1: Kim Ki-duk's most widely known feature came out in which year ?
+Question 2: Kim Ki-duk created what 2003 film about a Buddhist monastery?
+Paragraph 1 Title: Kim Ki-duk
+Paragraph 2 Title: Spring, Summer, Fall, Winter... and Spring
+
+Question 1:  The End is an EP by an English heavy metal band which was only available at dates with the  final show was February 4, 2017, in their home city of what?
+Question 2: The End is an EP by English heavy metal band Black Sabbath, released on which date, it was only available at dates on their final tour The End Tour, the farewell tour of the heavy metal band Black Sabbath?
+Paragraph 1 Title: The End Tour
+Paragraph 2 Title: The End (EP)
+
+Question 1:  The End is an EP by an English heavy metal band which was only available at dates with the  final show was February 4, 2017, in their home city of what?
+Question 2: What was the name of the farewell tour of the heavy metal band Black Sabbath which shares its name with their EP released on January 2016 and was only available on this tour?
+Paragraph 1 Title: The End Tour
+Paragraph 2 Title: The End (EP)
+
+Question 1: What State has a Disney Resort & Spa that is a beachside hotel, resort and vacation destination offering complimentary children's activities and programs and that Djuan Rivers was a General Manager at?
+Question 2: When did the resort at which Djuan Rivers served as a General Manager open? 
+Paragraph 1 Title: Aulani
+Paragraph 2 Title: Djuan Rivers
+
+Question 1: The 2007 FIFA U-20 World Cup was the sixteenth edition of the FIFA U-20 World Cup (formerly called FIFA World Youth Championship), hosted by Canada held during which span of dates, Argentine player Sergio Agüero was given the FIFA U-20 Golden Shoe?
+Question 2: Which premier league team does the recipient of the FIFA U-20 Golden Shoe play for ?
+Paragraph 1 Title: Sergio Agüero
+Paragraph 2 Title: 2007 FIFA U-20 World Cup
+
+Question 1: The 2007 FIFA U-20 World Cup was the sixteenth edition of the FIFA U-20 World Cup (formerly called FIFA World Youth Championship), hosted by Canada held during which span of dates, Argentine player Sergio Agüero was given the FIFA U-20 Golden Shoe?
+Question 2: The 2007 FIFA U-20 World Cup featured the Golden Shoe given to the Argentine footballer who now plays as striker for which Premier League team?
+Paragraph 1 Title: Sergio Agüero
+Paragraph 2 Title: 2007 FIFA U-20 World Cup
+
+Question 1: The 2007 FIFA U-20 World Cup was the sixteenth edition of the FIFA U-20 World Cup (formerly called FIFA World Youth Championship), hosted by Canada held during which span of dates, Argentine player Sergio Agüero was given the FIFA U-20 Golden Shoe?
+Question 2: What position did the receiver of the 2007 FIFA U-20 Golden Shoe play?
+Paragraph 1 Title: Sergio Agüero
+Paragraph 2 Title: 2007 FIFA U-20 World Cup
+
+Question 1: What is the name of the 2017 movie, which is also the name of the navel by Dave Evers was the last performance by Bill Paxton?
+Question 2: What is the nationality of the author on which the film The Circle is based?
+Paragraph 1 Title: The Circle (2017 film)
+Paragraph 2 Title: The Circle (Eggers novel)
+
+Question 1: Which Cardiff City footballer played during the 2009 Houphouët-Boigny stampede?
+Question 2: The 2009 Houphouët-Boigny stampede occurred on 29 March 2009 in the Stade Félix Houphouët-Boigny in Abidjan, Côte d'Ivoire before a 2010 FIFA World Cup qualification match, the match was particularly popular among locals, with world stars such as which professional footballer who plays for Championship side Cardiff City and the Ivory Coast national team, as a centre-back?
+Paragraph 1 Title: 2009 Houphouët-Boigny stampede
+Paragraph 2 Title: Sol Bamba
+
+Question 1: What is the nickname for this United States drag racer who drove Brutus?
+Question 2: What state was the driver of Brutus from?
+Paragraph 1 Title: Brutus (Funny Car)
+Paragraph 2 Title: Jim Liberman
+
+Question 1: What is the nickname for this United States drag racer who drove Brutus?
+Question 2: Brutus is a pioneering funny car driven by a drag racer known as what?
+Paragraph 1 Title: Brutus (Funny Car)
+Paragraph 2 Title: Jim Liberman
+
+Question 1: What is the nickname for this United States drag racer who drove Brutus?
+Question 2: What is the nickname of the driver of the funny car, Brutus?
+Paragraph 1 Title: Brutus (Funny Car)
+Paragraph 2 Title: Jim Liberman
+
+Question 1: Which American war film starring Brad Pit and Jason Isaacs did David Ayer write and direct?
+Question 2: Which movie was written by the writer of "Traning Day" is based on World War II?
+Paragraph 1 Title: Fury (2014 film)
+Paragraph 2 Title: David Ayer
+
+Question 1: What storm was noted for being more severe than the December 1992 nor'easter and is nicknamed the No-Name Storm?
+Question 2: Which hurricane did this nor'easter that happened a year before the December 1992 nor'easter absorb and evolve back into a small hurricane?
+Paragraph 1 Title: 1991 Perfect Storm
+Paragraph 2 Title: December 1992 nor'easter
+
+Question 1: What storm was noted for being more severe than the December 1992 nor'easter and is nicknamed the No-Name Storm?
+Question 2: The December 1992 nor'easter produced record high tides and snowfall across which country's northeastern region, along the Maryland coast, the storm was less severe than the Perfect Storm in the previous year, 1991, also known as The No-Name Storm (especially in the years immediately after it took place) and the Halloween Gale, was a nor'easter that absorbed Hurricane Grace and ultimately evolved back into a small unnamed hurricane late in its life cycle?
+Paragraph 1 Title: 1991 Perfect Storm
+Paragraph 2 Title: December 1992 nor'easter
+
+Question 1: In what year was the Carmel Authors and Ideas Festival, which has featured the Pulitzer Prize winning author of the book "Angela's Ashes" and other top authors and thinkers, first held?
+Question 2: In what year was the Californian festival, which has featured a presenter who won a Pulitzer Prize for his book "Angela's Ashes," first held?
+Paragraph 1 Title: Frank McCourt
+Paragraph 2 Title: Carmel Authors and Ideas Festival
+
+Question 1: The untitled "Fantastic Beasts" sequel is an upcoming fantasy drama film produced by Heyday Films, it will serve as the second film instalment in the "Fantastic Beasts" series and the tenth overall in J. K. Rowling's Wizarding World, the franchise that began with which series?
+Question 2: "Fantastic Beasts" and J. K. Rowling's Wizarding World were both created based on what fantasy novels?
+Paragraph 1 Title: J. K. Rowling's Wizarding World
+Paragraph 2 Title: Untitled Fantastic Beasts sequel
+
+Question 1: Which actress that was a member of South Korean girl group is co-staring in Unexpected Love?
+Question 2: What are some shows and films Krystal Jung has been in 
+Paragraph 1 Title: Krystal Jung
+Paragraph 2 Title: Unexpected Love (2017 film)
+
+Question 1: Where was the captain that the USS Elrod is named after born?
+Question 2: The World War II hero whom the USS Elrod was named after, graduated from what two Universities?
+Paragraph 1 Title: Henry T. Elrod
+Paragraph 2 Title: USS Elrod (FFG-55)
+
+Question 1: Where was the captain that the USS Elrod is named after born?
+Question 2: The USS "Elrod" was named after a captain born in what state?
+Paragraph 1 Title: Henry T. Elrod
+Paragraph 2 Title: USS Elrod (FFG-55)
+
+Question 1: Where was the captain that the USS Elrod is named after born?
+Question 2: USS "Elrod" (FFG-55), an "Oliver Hazard Perry"-class frigate, is a ship of the United States Navy named after which Marine, born on September 27, 1905, from Turner County, Georgia?
+Paragraph 1 Title: Henry T. Elrod
+Paragraph 2 Title: USS Elrod (FFG-55)
+
+Question 1: Where was the captain that the USS Elrod is named after born?
+Question 2:  USS Elrod was named after the Captain who enlisted in what part of the armed forces in 1927?
+Paragraph 1 Title: Henry T. Elrod
+Paragraph 2 Title: USS Elrod (FFG-55)
+
+Question 1: Where was the captain that the USS Elrod is named after born?
+Question 2: What Yale alumni had an "Oliver Hazard Perry"-class frigate named after him?
+Paragraph 1 Title: Henry T. Elrod
+Paragraph 2 Title: USS Elrod (FFG-55)
+
+Question 1: Where was the captain that the USS Elrod is named after born?
+Question 2: The USS Elrod is named after a captain that attended what 2 universities?
+Paragraph 1 Title: Henry T. Elrod
+Paragraph 2 Title: USS Elrod (FFG-55)
+
+Question 1: Who directed the film that had all the same stars as That One night?
+Question 2: Who directed the horror film that stars the same actors as the comedy That One Night?
+Paragraph 1 Title: Final Destination 3
+Paragraph 2 Title: That One Night
+
+Question 1: In which year was the farming simulation video game published by Chucklefish released for Microsoft Windows?
+Question 2: What is the name of the indie farming simulation role-playing video game produced by the same British video game developer who published "Starbound" (2016) and "Risk of Rain" (2013)?
+Paragraph 1 Title: Chucklefish
+Paragraph 2 Title: Stardew Valley
+
+Question 1: H. Lee Peterson is a veteran animation editor, having worked on such titles as "Aladdin", "Pocahontas", and "Home on the Range" as well as which 2000 American CGI animated adventure film produced by Walt Disney?
+Question 2: What prehistoric animated adventure film did Walt Disney Pictures produce in 2000, led by the editor who worked on Aladdin and Pocahontas?
+Paragraph 1 Title: Dinosaur (film)
+Paragraph 2 Title: H. Lee Peterson
+
+Question 1: Fall River Heritage State Park is next to the home of the battleship with what nickname?
+Question 2: What was the term used by crew members in reference to the battleship at Fall River Heritage State Park?
+Paragraph 1 Title: Fall River Heritage State Park
+Paragraph 2 Title: USS Massachusetts (BB-59)
+
+Question 1: Former French professional football player, who made three goals in the 1989 Coupe de France Final, was named European Footballer of the Year in what year?
+Question 2: Two years after the Coupe de France Final where Olympique de Marseille defeats AS Monaco, what honor did the man with the most goals that match receive?
+Paragraph 1 Title: 1989 Coupe de France Final
+Paragraph 2 Title: Jean-Pierre Papin
+
+Question 1: Former French professional football player, who made three goals in the 1989 Coupe de France Final, was named European Footballer of the Year in what year?
+Question 2: During the 1989 Coupe de France Final, which former French professional football player born in 1963 contributed a great deal to the victory of Olympique de Marseille?
+Paragraph 1 Title: 1989 Coupe de France Final
+Paragraph 2 Title: Jean-Pierre Papin
+
+Question 1: What record producer has produced records from an English tenor and actor born 29 September 1973?
+Question 2: Which English tenor born in 1973 had a record produced by a Welsh husband-wife team?
+Paragraph 1 Title: Juliette Pochin
+Paragraph 2 Title: Alfie Boe
+
+Question 1: What was the number one-single by an English singer from her eponymous debut studio album?
+Question 2: Who handled the production of the number-one single from Dua Lipa's self-titled debut studio album?
+Paragraph 1 Title: Dua Lipa
+Paragraph 2 Title: New Rules (song)
+
+Question 1: What was the number one-single by an English singer from her eponymous debut studio album?
+Question 2: Along with "New Rules," which other single made top 10 in a self-titled debut album by Engliash singer Dua Lipa?
+Paragraph 1 Title: Dua Lipa
+Paragraph 2 Title: New Rules (song)
+
+Question 1: What was the number one-single by an English singer from her eponymous debut studio album?
+Question 2: Dua Lipa, an English singer, songwriter and model, the album spawned the number-one single "New Rules" is a song by English singer Dua Lipa from her eponymous debut studio album, released in what year?
+Paragraph 1 Title: Dua Lipa
+Paragraph 2 Title: New Rules (song)
+
+Question 1: What was the number one-single by an English singer from her eponymous debut studio album?
+Question 2: What song, by English singer, songwriter and model born 22 August 1995, was written by Caroline Ailin, Emily Warren and Ian Kirkpatrick?
+Paragraph 1 Title: Dua Lipa
+Paragraph 2 Title: New Rules (song)
+
+Question 1: What was the number one-single by an English singer from her eponymous debut studio album?
+Question 2: What song written by Caroline Ailin, Emily Warren, and Ian Kirkpatrick, was performed by the featured artist in the documentary "See in Blue"?
+Paragraph 1 Title: Dua Lipa
+Paragraph 2 Title: New Rules (song)
+
+Question 1: ND Črnuče was managed in the mid-90s by the football coach of what nationality?
+Question 2: ND Črnuče is a football club who was managed in the mid-1990s by which midfielder?
+Paragraph 1 Title: ND Črnuče
+Paragraph 2 Title: Branko Oblak
+
+Question 1: ND Črnuče was managed in the mid-90s by the football coach of what nationality?
+Question 2: In which country was the coach of ND Črnuče, during the mid 1900s, born?
+Paragraph 1 Title: ND Črnuče
+Paragraph 2 Title: Branko Oblak
+
+Question 1: ND Črnuče was managed in the mid-90s by the football coach of what nationality?
+Question 2: Who s a Slovenian football coach and former international player who managed a Slovenian football club from the town of Črnuče in their golden years?
+Paragraph 1 Title: ND Črnuče
+Paragraph 2 Title: Branko Oblak
+
+Question 1: ND Črnuče was managed in the mid-90s by the football coach of what nationality?
+Question 2: What is the birthdate of this Slovenian football coach and former international player, who managed ND Črnuče in their golden years?
+Paragraph 1 Title: ND Črnuče
+Paragraph 2 Title: Branko Oblak
+
+Question 1: ND Črnuče was managed in the mid-90s by the football coach of what nationality?
+Question 2: The person who came to Črnuče as manager in 1994 was born on what date?
+Paragraph 1 Title: ND Črnuče
+Paragraph 2 Title: Branko Oblak
+
+Question 1: ND Črnuče was managed in the mid-90s by the football coach of what nationality?
+Question 2: Q: Which former international football player managed the Črnuče football club during their golden years in the mid-1990s? A: Branko Oblak
+Paragraph 1 Title: ND Črnuče
+Paragraph 2 Title: Branko Oblak
+
+Question 1: ND Črnuče was managed in the mid-90s by the football coach of what nationality?
+Question 2: In what year was the Nogometno Društvo Črnuče's manager in 1994 born?
+Paragraph 1 Title: ND Črnuče
+Paragraph 2 Title: Branko Oblak

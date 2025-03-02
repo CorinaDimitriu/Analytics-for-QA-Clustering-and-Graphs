@@ -1,0 +1,589 @@
+p 129 459
+v 1 Euripides hard bridge Who was born first, Arthur Woollgar Verral or Euripides?
+v 2 Stoker medium bridge Lucas Danial Till appeared in what 2013 British-American psychological thriller-drama film written by Wentworth Miller?
+v 3 Realist medium bridge The Black Riders and Other Lines was written by the poet who wrote in what tradition?
+v 4 Mencken hard comparison Which writer was born earliest, Mary Gordon or H. L. Mencken? 
+v 5 Sherman hard bridge What is the last name of the brothers who wrote a song sung by one of Mowgli's mentors in The Jungle Book?
+v 6 general medium bridge What was the position in the Wehrmacht of the deputy head of the counter-espionage bureau in the Abwehr who worked with Otto Armster?
+v 7 Montgomery medium bridge What is the middle name of the composer of the "American Beauty: Original Motion Picture Score"?
+v 8 inventor easy bridge how is Guglielmo Marconi and Karl Ferdinand Braun connected?
+v 9 Gandhi hard bridge Which film starring Ben Kingsley gained Tom Smith his 1982 Academy Award nomination?
+v 10 Villard medium bridge What is the publisher for the autobiography of the executive producer for "The Howard Stern Show"?
+v 11 poet easy bridge A Suitable Girl is an upcoming novel by Vikram Seth, which is a sequel to his 1993 book "A Suitable Boy", Vikram Seth ( born June 20, 1952) is an Indian novelist and what ?
+v 12 Erasmus easy bridge  Christoph Hegendorff, of Leipzig, was a Protestant theological scholar and expert of law, an educator and a great, public admirer of which Dutch Renaissance humanist?
+v 13 historian medium comparison What kind of scholar were American writers Stephen E. Ambrose and Will Durant? 
+v 14 Hipparchus easy bridge Which Greek astronomer first recorded the NGC 869 and 884 clusters?
+v 15 Plato medium bridge Atlantica Online is a MORPG set in the mythical land of Atlantis, which was first described by what western philosopher?
+v 16 Brutus medium bridge Which role did Tom Powers play in the Orson Welles's 1937 adaptation of William Shakespeare's "Julius Caesar"?
+v 17 Talbots medium bridge What retailer of women's clothing, shoes and fashion accessories is located in an open-air shopping center which opened in September 2007?
+v 18 Wright easy bridge What town has a  24.8 mi tributary of Schoharie Creek in Schoharie and Albany counties in the U.S. state of New York, and was named after governor Silas Wright?
+v 19 Madison hard bridge University of Alabama in Huntsville is a college located in what county?
+v 20 Poet hard comparison What profession did Karl Shapiro and Brendan Behan have in common?
+v 21 Sade medium comparison Who is older, Kirk Windstein or Sade?
+v 22 Hamilton easy bridge Jordan Fished played the role of John Laurens in which Broadway production?
+v 23 Grey easy bridge Starving, is a song by American actress and singer Hailee Steinfeld, and which American electronic music duo group?
+v 24 Ovid medium bridge Who wrote a Latin narrative poem of history from the cosmogonic myth to Caesar?
+v 25 Arthur medium bridge Paranoia 1.0 includes an actor who began acting as what character in "My Little Girl"?
+v 26 Stilwell medium bridge Which community is part of the county in Kansas whose most populous city is Overland Park?
+v 27 Franklin medium bridge Shane Drake was a director of a video for an American rock band from what Tennessee city?
+v 28 choreographer medium bridge Alex Joseph "AJ" Pritchard reached the simi-finals of "Britain's Got Talent" with his partner a 1995 born dancer and what?
+v 29 Saki hard comparison Who was born first Sarah Waters or Saki?
+v 30 Aeschylus medium bridge Tony Harrison created renditions of the ancient Greek dramatic work Oresteia written by which author?
+v 31 Perry medium bridge What Canada US border town is located in the third-least populous Maine county and houses a population of 889 people?
+v 32 statesman medium bridge What type of political leader does George Goschen, 1st Viscount Goschen and Lord Randolph Churchill have in common?
+v 33 transcendentalist hard bridge Which movement was lead by the poet who is included among those David S. Reynolds is an expert on?
+v 34 Luther medium bridge In what drama did the Saving Mr Banks and Saul Dibb's 2015 WW2 romance actress portray Alice Morgan?
+v 35 Daimler easy bridge Kaya (rock, in Turkish) is designed and developed by Otokar as a mine-protected vehicle (MRAP), it is based on the proven Unimog 500 chassis for high level cross country mobility, Unimog is a range of multi-purpose all-wheel drive medium trucks, produced by which organization?
+v 36 Baraka medium comparison Which documentary was released first, Baraka or Born Rich?
+v 37 Bismarck easy bridge The Imperator-class ocean liners were a series of three ocean liners designed for the Hamburg America Line, which included the RMS Majestic, originally launched in 1914 as the SS what?
+v 38 Sophocles medium bridge A work of what one of the three ancient Greek tragedians was discovered by Grenfell and Hunt?
+v 39 Whitehead medium bridge What was the maiden name of the designer of the sign requested by Ted Rogich?
+v 40 lawyer medium bridge What profession was the independent candidate who ran in the race to replace John Baldacci and also in Maine's 2014 gubernatorial race
+v 41 Hawthorne medium bridge "Cuckoo Clock" is a song written by Brian Wilson and Gary Usher for a band formed in what California city?
+v 42 astronomers hard comparison What do Al-Nayrizi and Avicenna have in common?
+v 43 Aristotle easy bridge Giulio Pace de Beriga, was a well-known Italian scholar, of which ancient Greek philosopher and scientist born in the city of Stagira, Chalkidice, on the northern periphery of Classical Greece, and jurist?
+v 44 physicist hard bridge What type of profession does Physikalische Zeitschrift and Peter Debye have in common?
+v 45 journalist medium comparison What profession does H. L. Mencken and Arturo Uslar Pietri have in common?
+v 46 Gregory medium bridge What is the middle name of the Associate Justice of the Supreme Court who John F. Duffy served as clerk?
+v 47 Themistocles medium bridge Who was a populist politician and the effective ruler of Athens when Admetus was King of the Molossians?
+v 48 Herodotus easy bridge The Herodotus Machine was a machine described by Herodotus, a Greek historian born in Halicarnassus, Caria, modern-day Bodrum, Turkey, who claims this invention enabled the Ancient Egyptians to construct the pyramids, the Egyptian pyramids are ancient pyramid-shaped masonry structures located in Egypt?
+v 49 Stoic hard bridge Diodorus of Alexandria was a pupil of the philosopher in what tradition?
+v 50 Heinz medium bridge Which company is ranked first in ketchup in the United States and   is distributed through Sun Mark?
+v 51 Goodyear easy bridge Of the four largest tire manufacturers in the world, which one was founded in 1898 by Frank Seiberling and is based in Akron, Ohio?
+v 52 Stanley medium bridge What is the name of the capital of the island on which Wickham Heights are located ?
+v 53 Hypatia medium bridge Who was an inventor and philospher and had her death predicted by Orestes?
+v 54 Brooks medium comparison Which writer is American, Michel Leiris or Gwendolyn Brooks?
+v 55 Arnold medium bridge What Solid Angle application did Anthony Hemingway use in his feature film directorial debut?
+v 56 Coolidge hard bridge What is the middle name of the man who composed John's Book of Alleged Dances?
+v 57 Tyler medium bridge What town holds a celebration the name of which literally means "apple slices"?
+v 58 Maitland easy bridge Mount Sugarloaf overlooks what city situated on the Hunter River approximately 166 km by road north of Sydney and 35 km north-west of Newcastle?
+v 59 Jefferson medium bridge The Portsmouth Gaseous Diffusion Plant is located in a town that was originally called what?
+v 60 Carroll medium bridge Kennett High School serves the students of a town in what New Hampshire county?
+v 61 playwright easy comparison What profession do Kōbō Abe and Agatha Christie share?
+v 62 Cumberland medium bridge Richard Hewes was a politician from a town in what Maine county?
+v 63 astronomer easy comparison What do Ibn al-Shatir and Ibn Tufail have in common?
+v 64 attorney easy bridge What is the main occupation of the American football official Ed Hochuli who was part of the officiating crew for the 2009 NFL season which selected Tim Podraza as a line judge?
+v 65 Pompey medium bridge Which important Roman figure did Matthias Gelzer write a biography for, besides Julius Caesar and Cicero?
+v 66 Lincoln medium bridge What is the capital of the only triply landlocked U.S. state wherein one can find Maianthemum canadense?
+v 67 Smith medium bridge What was the middle name of the General who commanded the US forces at the Battle of Fort Driant ? 
+v 68 Leonard medium bridge What is the middle name of the male star of Mysterious Creatures?
+v 69 Bede medium bridge Cearl is the first Mercian king mentioned by which English monk at the monastery of St. Peter and its companion monastery of St. Paul in the Kingdom of Northumbria of the Angles?
+v 70 philosopher easy bridge Who is Ronald Dworkin?
+v 71 Woolworths medium bridge What was one of the British companies was housed in the Alhambra Shopping Centre?
+v 72 Demetrius medium bridge Which character did British actor Christian Bale play in the 1999 film A Midsummer Night's Dream?
+v 73 Eliot medium bridge The Portsmouth Herald covers what area that had a population of 6,204 at the 2010 census?
+v 74 Anaximander medium bridge The Ionian school produced which scholar who was a pre-Socratic Greek philosopher who lived in Miletus?
+v 75 Nixon hard bridge Cinergi Pictures, production company behind Judge Dredd, also produced a major hit film relating to ex-president Richard Nixon called what?
+v 76 More medium comparison Which magazine has been published in more countries, More or My Weekly?
+v 77 author medium bridge The recording of a musical released as an album on April 2 starred an English actress, singer, and what?
+v 78 Socrates medium bridge During which time was Callixeinus alive for during 400 BCE?
+v 79 Paul medium bridge Which movie, starring Simon Pegg and Nick Frost, did Gregory J. "Greg" Mottola produce?
+v 80 Paparazzi medium bridge Which Lady Gaga song wwhich appeared on her debut album Fame describes a stalker following somebody?
+v 81 Attorney medium bridge Gary Cole the character who plays what role on an Adult Swim program?
+v 82 Conrad hard bridge John of Arsuf was the regent of Jerusalem under which memberof the Hohenstaufen dynasty?
+v 83 Herricks easy bridge A school district located in western Nassau County on Long Island, in New York State serves what hamlet with a population of 4,295 at the 2010 census?
+v 84 critic medium comparison Guillermo Cabrera Infante and George S. Kaufman were both what?
+v 85 Baldwin medium bridge Dollhouse is the debut extended play by a singer raised in what New York city?
+v 86 Irving hard bridge In which city is the conference, where Texas Longhorns women's volleyball competes, headquartered?
+v 87 Sheridan hard bridge This city is known as the "heart of the Ruby Valley" and contains Gordon Peak which has an elevation of 8478ft?
+v 88 Suharto medium bridge Which president of Indonesia created a series of extrajudicial government executions between 1983 and 1985?
+v 89 Dante easy bridge The 2012–13 FC Bayern Munich season was the 114th season in the club's history and the 48th consecutive season in the top flight of German football, the Bundesliga, since the promotion of the team from the Regionalliga Süd in 1965, before the start of the season, Bayern signed which Brazilian professional footballer who plays for French Ligue 1 club Nice, commonly known as who?
+v 90 Melville medium bridge Which suburb in southern Hamilton, New Zealand contains streets named after war heroes including Douglas Bader?
+v 91 philologist easy bridge Luko Zore, was a Serb, Slavist from Dubrovnik, and which occupation?
+v 92 writers hard comparison What was the profession of both Ellery Queen and John Fowles?
+v 93 Eugene medium bridge What was the middle name of the player who broke Babe Ruth's 34-year-old single-season record for home runs?
+v 94 mathematician medium comparison What occupation did Eugene Dynkin and Anatoly Maltsev both have in common?
+v 95 Caesar easy bridge The Woodstock Opera House is a historical venue for performing arts and receptions located in Woodstock, Illinois, perhaps the most notable performer to grace the stage was Orson Welles, he was an American actor, director, writer, and producer who worked in theatre, radio, and film, and is remembered for his innovative work in most notably, which 1937 Broadway adaptation of William Shakespeare's "Julius Caesar"?
+v 96 Whitman easy bridge State Road 922 (SR 922) is a 5.548 mi east–west road built in 1951, passing through the cities of North Miami, Bay Harbor Islands, and Bal Harbour, Florida, with stores lining much of the route, including the Bal Harbour Shops, is an upscale, open-air shopping mall in Bal Harbour, a wealthy suburb of Miami Beach, Florida, known internationally for its luxury retail, and is owned by which family?
+v 97 Caldwell easy bridge Cassius M. "Cash" Hollister (December 7, 1845 – October 18, 1884) was a 19th-century American law enforcement officer and deputy U.S. marshal who served as mayor and sheriff of which city in Kansas, during his career, he worked with several well-known lawmen including Henry Newton Brown (1857 – April 30, 1884) was an American Old West gunman who played the roles of both lawman and outlaw during his life?
+v 98 Hesse hard bridge In which German federal state was did Walter Schlesinger born?
+v 99 Colette easy comparison Which of these indviduals lived in France, Colette or Winston Churchill?
+v 100 Napoleon medium bridge John Fox Burgoyne served under the duke who defeated whom at Waterloo?
+v 101 Wellington medium bridge What is the seat of the county that includes Belle Plaine, Kansas?
+v 102 dramatist medium comparison What job do both Ramón del Valle-Inclán and Friedrich Dürrenmatt have in common?
+v 103 biophysicist medium bridge What profession does Andrew Huxley and Alan Lloyd Hodgkin have in common?
+v 104 entrepreneur medium bridge  Beverley Knight MBE is an English recording artist heavily influenced by an American singer, songwriter, and what?
+v 105 Grimm medium bridge David Barrera appeared in what television series that was created by Stephen Carpenter and Jim Kouf?
+v 106 Beauvoir medium bridge What is the name of Jefferson Davis's estate in Biloxi, Mississippi, where there is a Tomb of the Unknown Confederate Soldier?
+v 107 Gorky medium bridge What was the city where Mikhail Tetyaev was born known as from 1932 to 1990?
+v 108 Einstein hard bridge What person does Wormholes in fiction and Nathan Rosen have in common?
+v 109 astrophysicist medium comparison Michael Foale and Dirk Frimout are both what type of physicist?
+v 110 Augustus hard bridge What was the middle name of the aviator featured in "The Smithsonian Institution"?
+v 111 Middleton medium bridge Kenny Clements was from which town in the Borough of Rochdale?
+v 112 restaurateur medium bridge The Miss Chinese International Pageant 1993 ended in a winner who is now an actress who is of what other profession?
+v 113 Hannibal medium bridge What television series developed by Bryan Fuller has David Slade directed for?
+v 114 Laplace easy bridge Who is a French scholar that specialized in Physics and astronomy?
+v 115 Gillette easy bridge Henry Wilbur Palmer was a Republican member of the U.S. House of Representatives from Pennsylvania, he was the father of Bradley Palmer, a Boston lawyer known for his involvement with which brand of men's and women's safety razors, and other personal care products?
+v 116 Warwick easy bridge George William John Reston was a member of both St Albans and than for who
+v 117 Heron hard bridge Rogers Pass  is traversed by a highway that begins near what Montana city?
+v 118 Aristophanes medium bridge Who wrote the plays "The Birds" and "Lysistrata"?
+v 119 Mansfield hard bridge Frank Freshwaters pled guilty to voluntary manslaughter and, after a brief sentence at a prison located in which city ?
+v 120 Democritus medium bridge Which one for the first thinkers to form Free will in antiquity was also well-known for formulation of an atomic theory of the universe?
+v 121 Sukarno medium bridge Bukit Jalil National Stadium is the second largest stadium in Southeast Asia behind the stadium named after which first President of Indonesia?
+v 122 Eisenhower hard bridge Which president-elect did the French international cabaret singer Édith Piaf sing for in 1952, performing "Simply a Waltz"?
+v 123 Walpole hard bridge Where was the subject of Godric born?
+v 124 Stanford easy bridge Andrew Luck played for the 2014 Indianapolis Colts and what college team?
+v 125 businessman hard bridge The South Side Writers Group was a circle of African-American writers and poets formed in the 1930s which included an an American journalist, poet, political and labor movement activist and what? 
+v 126 novelist medium comparison What profession does Thornton Wilder and Richard Llewellyn have in common?
+v 127 Jensen easy comparison Which player has played tennis longer, Luke Jensen or Zheng Jie?
+v 128 Voltaire medium bridge Who wrote a work that described European history until the dawn of the age of the longest serving monarch in European history?
+v 129 writer easy comparison Paul Auster and Jodi Picoult, have which occupation in common?
+e 118 1 1
+e 111 1 1
+e 87 1 1
+e 102 1 1
+e 73 1 1
+e 61 1 1
+e 38 1 1
+e 77 2 1
+e 129 2 1
+e 70 3 1
+e 53 3 1
+e 15 3 1
+e 39 3 1
+e 43 3 1
+e 49 3 1
+e 120 3 1
+e 54 4 1
+e 45 4 1
+e 55 4 1
+e 62 5 1
+e 26 5 1
+e 122 5 1
+e 113 5 1
+e 100 5 1
+e 101 5 1
+e 72 5 1
+e 6 5 1
+e 62 6 1
+e 77 7 1
+e 129 7 1
+e 28 8 1
+e 52 8 1
+e 51 8 1
+e 117 8 1
+e 115 8 1
+e 17 8 1
+e 88 9 1
+e 67 9 1
+e 101 9 1
+e 32 9 1
+e 76 9 1
+e 71 10 1
+e 124 10 1
+e 125 10 1
+e 46 12 1
+e 123 13 1
+e 109 14 1
+e 94 14 1
+e 70 15 1
+e 39 15 1
+e 43 15 1
+e 49 15 1
+e 120 15 1
+e 121 16 1
+e 95 16 1
+e 47 16 1
+e 65 16 1
+e 110 16 1
+e 88 16 1
+e 116 16 1
+e 37 16 1
+e 9 16 1
+e 67 16 1
+e 101 16 1
+e 32 16 1
+e 76 16 1
+e 77 18 1
+e 129 18 1
+e 75 19 1
+e 122 19 1
+e 56 19 1
+e 25 19 1
+e 59 19 1
+e 66 19 1
+e 83 20 1
+e 89 20 1
+e 11 20 1
+e 96 20 1
+e 77 20 1
+e 55 20 1
+e 129 20 1
+e 77 21 1
+e 129 21 1
+e 77 23 1
+e 129 23 1
+e 83 24 1
+e 89 24 1
+e 11 24 1
+e 96 24 1
+e 73 24 1
+e 20 24 1
+e 55 24 1
+e 75 25 1
+e 59 25 1
+e 66 25 1
+e 62 26 1
+e 122 26 1
+e 113 26 1
+e 100 26 1
+e 101 26 1
+e 72 26 1
+e 6 26 1
+e 69 27 1
+e 58 27 1
+e 13 27 1
+e 123 27 1
+e 77 29 1
+e 129 29 1
+e 1 30 1
+e 118 30 1
+e 111 30 1
+e 87 30 1
+e 102 30 1
+e 73 30 1
+e 61 30 1
+e 38 30 1
+e 70 31 1
+e 74 31 1
+e 3 31 1
+e 53 31 1
+e 15 31 1
+e 39 31 1
+e 43 31 1
+e 49 31 1
+e 120 31 1
+e 88 32 1
+e 76 32 1
+e 70 33 1
+e 78 33 1
+e 31 33 1
+e 74 33 1
+e 3 33 1
+e 53 33 1
+e 15 33 1
+e 39 33 1
+e 43 33 1
+e 49 33 1
+e 120 33 1
+e 12 34 1
+e 46 34 1
+e 50 35 1
+e 115 35 1
+e 125 35 1
+e 77 36 1
+e 129 36 1
+e 88 37 1
+e 9 37 1
+e 67 37 1
+e 101 37 1
+e 32 37 1
+e 76 37 1
+e 61 38 1
+e 70 39 1
+e 94 39 1
+e 43 39 1
+e 49 39 1
+e 120 39 1
+e 64 40 1
+e 66 40 1
+e 77 41 1
+e 129 41 1
+e 44 42 1
+e 109 42 1
+e 63 42 1
+e 14 42 1
+e 70 43 1
+e 49 43 1
+e 120 43 1
+e 77 45 1
+e 129 45 1
+e 65 47 1
+e 110 47 1
+e 88 47 1
+e 116 47 1
+e 37 47 1
+e 9 47 1
+e 67 47 1
+e 101 47 1
+e 32 47 1
+e 76 47 1
+e 27 48 1
+e 69 48 1
+e 58 48 1
+e 13 48 1
+e 123 48 1
+e 70 49 1
+e 120 49 1
+e 115 50 1
+e 125 50 1
+e 109 53 1
+e 70 53 1
+e 15 53 1
+e 42 53 1
+e 63 53 1
+e 14 53 1
+e 39 53 1
+e 43 53 1
+e 49 53 1
+e 120 53 1
+e 55 54 1
+e 83 55 1
+e 89 55 1
+e 11 55 1
+e 96 55 1
+e 75 56 1
+e 25 56 1
+e 59 56 1
+e 66 56 1
+e 19 57 1
+e 75 57 1
+e 122 57 1
+e 56 57 1
+e 25 57 1
+e 59 57 1
+e 66 57 1
+e 13 58 1
+e 123 58 1
+e 75 59 1
+e 66 59 1
+e 77 60 1
+e 129 60 1
+e 44 63 1
+e 109 63 1
+e 14 63 1
+e 66 64 1
+e 62 65 1
+e 5 65 1
+e 26 65 1
+e 122 65 1
+e 113 65 1
+e 110 65 1
+e 88 65 1
+e 116 65 1
+e 37 65 1
+e 100 65 1
+e 9 65 1
+e 67 65 1
+e 101 65 1
+e 32 65 1
+e 72 65 1
+e 76 65 1
+e 6 65 1
+e 88 67 1
+e 101 67 1
+e 32 67 1
+e 76 67 1
+e 77 68 1
+e 129 68 1
+e 58 69 1
+e 13 69 1
+e 123 69 1
+e 34 69 1
+e 12 69 1
+e 124 71 1
+e 125 71 1
+e 62 72 1
+e 6 72 1
+e 83 73 1
+e 89 73 1
+e 11 73 1
+e 96 73 1
+e 20 73 1
+e 61 73 1
+e 38 73 1
+e 55 73 1
+e 109 74 1
+e 70 74 1
+e 3 74 1
+e 53 74 1
+e 15 74 1
+e 42 74 1
+e 63 74 1
+e 14 74 1
+e 39 74 1
+e 43 74 1
+e 49 74 1
+e 120 74 1
+e 66 75 1
+e 88 76 1
+e 77 76 1
+e 129 76 1
+e 129 77 1
+e 70 78 1
+e 31 78 1
+e 74 78 1
+e 3 78 1
+e 53 78 1
+e 15 78 1
+e 39 78 1
+e 43 78 1
+e 49 78 1
+e 120 78 1
+e 106 79 1
+e 17 80 1
+e 40 81 1
+e 64 81 1
+e 66 81 1
+e 77 82 1
+e 129 82 1
+e 89 83 1
+e 11 83 1
+e 96 83 1
+e 4 84 1
+e 54 84 1
+e 55 84 1
+e 92 85 1
+e 77 85 1
+e 129 85 1
+e 77 86 1
+e 129 86 1
+e 102 87 1
+e 73 87 1
+e 61 87 1
+e 38 87 1
+e 11 89 1
+e 96 89 1
+e 77 90 1
+e 129 90 1
+e 12 91 1
+e 77 92 1
+e 129 92 1
+e 62 93 1
+e 95 93 1
+e 65 93 1
+e 5 93 1
+e 26 93 1
+e 122 93 1
+e 113 93 1
+e 100 93 1
+e 101 93 1
+e 72 93 1
+e 6 93 1
+e 22 94 1
+e 62 95 1
+e 47 95 1
+e 65 95 1
+e 5 95 1
+e 26 95 1
+e 122 95 1
+e 113 95 1
+e 110 95 1
+e 88 95 1
+e 116 95 1
+e 37 95 1
+e 100 95 1
+e 9 95 1
+e 67 95 1
+e 101 95 1
+e 32 95 1
+e 72 95 1
+e 76 95 1
+e 6 95 1
+e 11 96 1
+e 77 97 1
+e 129 97 1
+e 77 98 1
+e 129 98 1
+e 77 99 1
+e 129 99 1
+e 62 100 1
+e 101 100 1
+e 72 100 1
+e 6 100 1
+e 62 101 1
+e 88 101 1
+e 32 101 1
+e 72 101 1
+e 76 101 1
+e 6 101 1
+e 73 102 1
+e 77 102 1
+e 61 102 1
+e 38 102 1
+e 129 102 1
+e 126 102 1
+e 44 103 1
+e 77 105 1
+e 129 105 1
+e 70 106 1
+e 77 106 1
+e 129 106 1
+e 77 107 1
+e 129 107 1
+e 44 108 1
+e 88 110 1
+e 116 110 1
+e 37 110 1
+e 9 110 1
+e 67 110 1
+e 101 110 1
+e 32 110 1
+e 76 110 1
+e 87 111 1
+e 102 111 1
+e 73 111 1
+e 61 111 1
+e 38 111 1
+e 125 112 1
+e 62 113 1
+e 100 113 1
+e 101 113 1
+e 72 113 1
+e 6 113 1
+e 109 114 1
+e 74 114 1
+e 53 114 1
+e 94 114 1
+e 42 114 1
+e 63 114 1
+e 14 114 1
+e 88 116 1
+e 37 116 1
+e 9 116 1
+e 67 116 1
+e 101 116 1
+e 32 116 1
+e 76 116 1
+e 94 117 1
+e 111 118 1
+e 87 118 1
+e 102 118 1
+e 73 118 1
+e 61 118 1
+e 38 118 1
+e 77 119 1
+e 129 119 1
+e 70 120 1
+e 95 121 1
+e 47 121 1
+e 65 121 1
+e 110 121 1
+e 88 121 1
+e 116 121 1
+e 37 121 1
+e 9 121 1
+e 67 121 1
+e 101 121 1
+e 32 121 1
+e 76 121 1
+e 62 122 1
+e 75 122 1
+e 113 122 1
+e 56 122 1
+e 25 122 1
+e 59 122 1
+e 100 122 1
+e 66 122 1
+e 101 122 1
+e 72 122 1
+e 6 122 1
+e 77 123 1
+e 129 123 1
+e 125 124 1
+e 115 125 1
+e 104 125 1
+e 61 126 1
+e 77 127 1
+e 129 127 1
+e 129 128 1

@@ -1,0 +1,3 @@
+
+Max no nodes in a component: 194
+Min no nodes in a component: 2

@@ -1,0 +1,162 @@
+p 33 128
+v 1 Wayne Title
+v 2 Wayne Sentence
+v 3 American Sentence
+v 4 New York City Sentence
+v 5 Chris Collingwood Sentence
+v 6 Adam Schlesinger Sentence
+v 7 Jody Porter Sentence
+v 8 Brian Young Sentence
+v 9 Grammy-nominated Sentence
+v 10 Stacy's Mom Sentence
+v 11 Stacy's Mom Title
+v 12 Stacy's Mom Sentence
+v 13 American Sentence
+v 14 Fountains of Wayne Sentence
+v 15 Welcome Interstate Managers Sentence
+v 16 Stacy's Mom Sentence
+v 17 Stacy's Mom Sentence
+v 18 Adam Schlesinger Sentence
+v 19 Chris Collingwood Sentence
+v 20 Mike Denneen Sentence
+v 21 Hoobastank Title
+v 22 Hoobastank Sentence
+v 23 American Sentence
+v 24 Agoura Hills Sentence
+v 25 California Sentence
+v 26 Doug Robb Sentence
+v 27 Dan Estrin Sentence
+v 28 Chris Hesse Sentence
+v 29 Markku Lappalainen Sentence
+v 30 Wayne Title
+v 31 Wayne Sentence
+v 32 American Sentence
+v 33 New York City Sentence
+e 30 1 1
+e 1 2 1
+e 3 2 1
+e 4 2 1
+e 2 3 1
+e 4 3 1
+e 13 3 1
+e 2 4 1
+e 3 4 1
+e 6 5 1
+e 7 5 1
+e 8 5 1
+e 19 5 1
+e 5 6 1
+e 7 6 1
+e 8 6 1
+e 18 6 1
+e 5 7 1
+e 6 7 1
+e 8 7 1
+e 5 8 1
+e 6 8 1
+e 7 8 1
+e 10 9 1
+e 9 10 1
+e 12 10 1
+e 16 10 1
+e 17 10 1
+e 10 12 1
+e 11 12 1
+e 13 12 1
+e 14 12 1
+e 15 12 1
+e 3 13 1
+e 12 13 1
+e 14 13 1
+e 15 13 1
+e 12 14 1
+e 13 14 1
+e 15 14 1
+e 12 15 1
+e 13 15 1
+e 14 15 1
+e 10 16 1
+e 11 16 1
+e 10 17 1
+e 11 17 1
+e 18 17 1
+e 19 17 1
+e 20 17 1
+e 6 18 1
+e 17 18 1
+e 19 18 1
+e 20 18 1
+e 5 19 1
+e 17 19 1
+e 18 19 1
+e 20 19 1
+e 17 20 1
+e 18 20 1
+e 19 20 1
+e 21 22 1
+e 23 22 1
+e 24 22 1
+e 25 22 1
+e 26 22 1
+e 27 22 1
+e 28 22 1
+e 29 22 1
+e 22 23 1
+e 24 23 1
+e 25 23 1
+e 26 23 1
+e 27 23 1
+e 28 23 1
+e 29 23 1
+e 32 23 1
+e 22 24 1
+e 23 24 1
+e 25 24 1
+e 26 24 1
+e 27 24 1
+e 28 24 1
+e 29 24 1
+e 22 25 1
+e 23 25 1
+e 24 25 1
+e 26 25 1
+e 27 25 1
+e 28 25 1
+e 29 25 1
+e 22 26 1
+e 23 26 1
+e 24 26 1
+e 25 26 1
+e 27 26 1
+e 28 26 1
+e 29 26 1
+e 22 27 1
+e 23 27 1
+e 24 27 1
+e 25 27 1
+e 26 27 1
+e 28 27 1
+e 29 27 1
+e 22 28 1
+e 23 28 1
+e 24 28 1
+e 25 28 1
+e 26 28 1
+e 27 28 1
+e 29 28 1
+e 22 29 1
+e 23 29 1
+e 24 29 1
+e 25 29 1
+e 26 29 1
+e 27 29 1
+e 28 29 1
+e 1 30 1
+e 30 31 1
+e 32 31 1
+e 33 31 1
+e 23 32 1
+e 31 32 1
+e 33 32 1
+e 31 33 1
+e 32 33 1

@@ -1,0 +1,173 @@
+Total no questions: 7405
+No vertices: 13695
+No edges: 7405
+
+Max no questions with the same answer: 233
+Min no questions with the same answer: 1
+
+Max no answers for a question: 1
+Min no answers for a question: 1
+
+Finding 2 questions with the same answer
+
+Question 1: Do the operas Vanessa and Le roi malgré lui contain that same number of acts?
+Question 2: Are Peter Balakian and James Der Derian both teachers?
+Answer: yes
+
+Question 1: Naseer & Shahab is a Pakistani band playing a genre that dominated radio in what decade?
+Question 2: As a Nazi hunter, Simon Wiesenthal, was apart of a fued in what time frame?
+Answer: 1970s
+
+Question 1: Who is the album "Look What You Made Me Do" is on being released through?
+Question 2: who released the 2012 record of red?
+Answer: Big Machine Records
+
+Question 1: At which public research university founded in 1881 Ralph Fielding served as the head football coach?
+Question 2: What school did the team, whose only sophomore starter went on to play eleven seasons with the Atlanta Falcons, represent in the 1963 college football season?
+Answer: University of Texas at Austin
+
+Question 1: Suicide's 1977 released album features a song based on what brand's comic character?
+Question 2: Which publisher produced the comic books featuring both Spider-Man and the Daredevils?
+Answer: Marvel
+
+Question 1: Before going to the London School of Theology, John Burges spent six years working for a company headquartered in what country?
+Question 2: Dance and Laugh Amongst the Rotten is a studio Album by a band from which country ?
+Answer: the Netherlands
+
+Question 1: Anna Lewandowska is married to a footballer who plays for what club?
+Question 2: What football team did Mario Gomez and Javi Martinez both play for?
+Answer: Bayern Munich
+
+Question 1:  The Nantahala National Forest and the Croatan National Forest are both located in which state?
+Question 2: The plateau region between the Atlantic Coastal Plain and the main Appalachian Mountains is in what state?
+Answer: North Carolina
+
+Question 1: What was the career that Sidney Lumet and Albert Ward share in common?
+Question 2: Worker: What professional title to both Christopher Nolan and Paul Schrader boast?
+Answer: screenwriter
+
+Question 1: What type of sport does Sergio Casal and Manuel Orantes have in common?
+Question 2: What sport is played by both Justin Gimelstob and Angelique Kerber?
+Answer: tennis
+
+Question 1: A former Australian rules football player who played with the Port Adelaide in the South Australian National Football League is the vice president of a video game company based where?
+Question 2: Where is the airline company that operated United Express Flight 3411 on April 9, 2017 on behalf of United Express headquartered?
+Answer: Indianapolis, Indiana
+
+Question 1: The 2015 Austrian thriller film Jack tells the story of a serial killer who died in what year?
+Question 2: What year did the actor, who appeared in "One Life to Live" and "General Hospital" in 2012, earn a Daytime Emmy Award?
+Answer: 1994
+
+Question 1: What year did the largest convention center in the U.S. state of Georgia open?
+Question 2: Dr. Saleha Mahmood Abedin's daughter was born in what year ?
+Answer: 1976
+
+Question 1:  Jaroslav Seifert and John McGahern were both part of what shared profession? 
+Question 2: Havelock Ellis and Arnold Bennett were both what?
+Answer: writer
+
+Question 1: Liaocheng and Shayang County are both located in which country?
+Question 2: What country are both Dafeng District and Jixi in?
+Answer: China
+
+Question 1: How many times has the author of Negotiating with the Dead been shortlisted for the Booker Prize ?
+Question 2: How many times has the author of Writing with Intent been shortlisted for the Booker Prize ? 
+Answer: five times
+
+Question 1: The Duke Steps Out stars an actress who was ranked tenth on a list of greatest female Hollywood stars in what year?
+Question 2: The actress that played  Pearl Gallagher on the tv sitcom "Diff'rent Strokes" is also the voice of an animated character that debuted in what year?
+Answer: 1999
+
+Question 1: In what year was the mathematician husband of Anneli Cahn Lax born?
+Question 2: In what year did the Irish Politician who led the Introduction of the Constitution of Ireland resign as President of the legitimatist government, the Council of State?
+Answer: 1926
+
+Question 1: When was the father of Princess Mafalda of Savoy born ?
+Question 2: What is the birthdate of this King of Italy, claiming thrones of Ethiopia and Albania and father of Princess Yolanda of Savoy?
+Answer: 11 November 1869
+
+Question 1: British Airways and EasyJet are both based out of where?
+Question 2: What country does Haringey Heartlands and The Mall Wood Green have in common?
+Answer: London
+
+Questions with the same answer,type and level
+
+Question 1: Were both the One, Inc. v. Olesen and  Erie Railroad Co. v. Tompkins cases ones that included a ruling by the United States Supreme Court?
+Question 2: Were both of the following rock groups formed in California: Dig and Thinking Fellers Union Local 282?
+Answer: yes
+
+Question 1: Naseer & Shahab is a Pakistani band playing a genre that dominated radio in what decade?
+Question 2: As a Nazi hunter, Simon Wiesenthal, was apart of a fued in what time frame?
+Answer: 1970s
+
+Question 1: American singer-songwriter, Taylor Swift, self-penned the song, Change, alongside Nathan Chapman, which was featured on her second studio album released by who?
+Question 2: who released the 2012 record of red?
+Answer: Big Machine Records
+
+Question 1: At which public research university founded in 1881 Ralph Fielding served as the head football coach?
+Question 2: What school did the team, whose only sophomore starter went on to play eleven seasons with the Atlanta Falcons, represent in the 1963 college football season?
+Answer: University of Texas at Austin
+
+Question 1: Which comic series involves characters such as Nick Fury and Baron von Strucker?
+Question 2: Which publisher produced the comic books featuring both Spider-Man and the Daredevils?
+Answer: Marvel
+
+Question 1: Before going to the London School of Theology, John Burges spent six years working for a company headquartered in what country?
+Question 2: Dance and Laugh Amongst the Rotten is a studio Album by a band from which country ?
+Answer: the Netherlands
+
+Question 1: Anna Lewandowska is married to a footballer who plays for what club?
+Question 2: What football team did Mario Gomez and Javi Martinez both play for?
+Answer: Bayern Munich
+
+Question 1:  The Nantahala National Forest and the Croatan National Forest are both located in which state?
+Question 2: The plateau region between the Atlantic Coastal Plain and the main Appalachian Mountains is in what state?
+Answer: North Carolina
+
+Question 1: What was the career that Sidney Lumet and Albert Ward share in common?
+Question 2: Worker: What professional title to both Christopher Nolan and Paul Schrader boast?
+Answer: screenwriter
+
+Question 1: What type of sport does Sergio Casal and Manuel Orantes have in common?
+Question 2: What sport is played by both Justin Gimelstob and Angelique Kerber?
+Answer: tennis
+
+Question 1: A former Australian rules football player who played with the Port Adelaide in the South Australian National Football League is the vice president of a video game company based where?
+Question 2: Where is the airline company that operated United Express Flight 3411 on April 9, 2017 on behalf of United Express headquartered?
+Answer: Indianapolis, Indiana
+
+Question 1: The song "Only a Pawn in Their Game" was based on a crime whose perpetrator was convicted in this year.
+Question 2: In which year was the American politician, that both represented New York in the United States Senate and served as an adviser to President Richard Nixon, re-elected for a fourth term as U.S. Senator?
+Answer: 1994
+
+Question 1: What year did the largest convention center in the U.S. state of Georgia open?
+Question 2: Dr. Saleha Mahmood Abedin's daughter was born in what year ?
+Answer: 1976
+
+Question 1:  Jaroslav Seifert and John McGahern were both part of what shared profession? 
+Question 2: Havelock Ellis and Arnold Bennett were both what?
+Answer: writer
+
+Question 1: Dandong and Hotan are located in what country?
+Question 2: What country are both Dafeng District and Jixi in?
+Answer: China
+
+Question 1: How many times has the author of Negotiating with the Dead been shortlisted for the Booker Prize ?
+Question 2: How many times has the author of Writing with Intent been shortlisted for the Booker Prize ? 
+Answer: five times
+
+Question 1: In what year did the conference in which the 2005 Air Force Falcons participated begin operations?
+Question 2: The actress that played  Pearl Gallagher on the tv sitcom "Diff'rent Strokes" is also the voice of an animated character that debuted in what year?
+Answer: 1999
+
+Question 1: In what year was the son of Max Weinreich born?
+Question 2: In what year did the Irish Politician who led the Introduction of the Constitution of Ireland resign as President of the legitimatist government, the Council of State?
+Answer: 1926
+
+Question 1: When was the father of Princess Mafalda of Savoy born ?
+Question 2: What is the birthdate of this King of Italy, claiming thrones of Ethiopia and Albania and father of Princess Yolanda of Savoy?
+Answer: 11 November 1869
+
+Question 1: Otterington railway station was on a 393 mi major railway that linked Edinburgh to what city?
+Question 2: In which city is the parent company of Sterlite Industries headquartered?
+Answer: London

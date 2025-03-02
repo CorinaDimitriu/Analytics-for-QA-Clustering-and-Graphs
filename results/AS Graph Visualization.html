@@ -1,0 +1,939 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 1700px;
+                 height: 900px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a229">a229</option>
+                                
+                                    <option value="a831">a831</option>
+                                
+                                    <option value="a1561">a1561</option>
+                                
+                                    <option value="a2837">a2837</option>
+                                
+                                    <option value="a4362">a4362</option>
+                                
+                                    <option value="a338">a338</option>
+                                
+                                    <option value="a471">a471</option>
+                                
+                                    <option value="a262">a262</option>
+                                
+                                    <option value="a1932">a1932</option>
+                                
+                                    <option value="a413">a413</option>
+                                
+                                    <option value="a2993">a2993</option>
+                                
+                                    <option value="a3">a3</option>
+                                
+                                    <option value="a581">a581</option>
+                                
+                                    <option value="a2417">a2417</option>
+                                
+                                    <option value="a270">a270</option>
+                                
+                                    <option value="a925">a925</option>
+                                
+                                    <option value="a71">a71</option>
+                                
+                                    <option value="a3646">a3646</option>
+                                
+                                    <option value="a69">a69</option>
+                                
+                                    <option value="a213">a213</option>
+                                
+                                    <option value="a876">a876</option>
+                                
+                                    <option value="a1294">a1294</option>
+                                
+                                    <option value="a1808">a1808</option>
+                                
+                                    <option value="a2305">a2305</option>
+                                
+                                    <option value="a2442">a2442</option>
+                                
+                                    <option value="a2587">a2587</option>
+                                
+                                    <option value="a2861">a2861</option>
+                                
+                                    <option value="a2903">a2903</option>
+                                
+                                    <option value="a4015">a4015</option>
+                                
+                                    <option value="a4176">a4176</option>
+                                
+                                    <option value="a4592">a4592</option>
+                                
+                                    <option value="a4874">a4874</option>
+                                
+                                    <option value="a5368">a5368</option>
+                                
+                                    <option value="a5646">a5646</option>
+                                
+                                    <option value="a323">a323</option>
+                                
+                                    <option value="a322">a322</option>
+                                
+                                    <option value="a59">a59</option>
+                                
+                                    <option value="a256">a256</option>
+                                
+                                    <option value="a342">a342</option>
+                                
+                                    <option value="a456">a456</option>
+                                
+                                    <option value="a501">a501</option>
+                                
+                                    <option value="a539">a539</option>
+                                
+                                    <option value="a1835">a1835</option>
+                                
+                                    <option value="a2287">a2287</option>
+                                
+                                    <option value="a2564">a2564</option>
+                                
+                                    <option value="a64">a64</option>
+                                
+                                    <option value="a5527">a5527</option>
+                                
+                                    <option value="a163">a163</option>
+                                
+                                    <option value="a39">a39</option>
+                                
+                                    <option value="a19">a19</option>
+                                
+                                    <option value="a1466">a1466</option>
+                                
+                                    <option value="a3252">a3252</option>
+                                
+                                    <option value="a17">a17</option>
+                                
+                                    <option value="a1228">a1228</option>
+                                
+                                    <option value="a121">a121</option>
+                                
+                                    <option value="a230">a230</option>
+                                
+                                    <option value="a143">a143</option>
+                                
+                                    <option value="a587">a587</option>
+                                
+                                    <option value="a663">a663</option>
+                                
+                                    <option value="a1105">a1105</option>
+                                
+                                    <option value="a1149">a1149</option>
+                                
+                                    <option value="a1273">a1273</option>
+                                
+                                    <option value="a2394">a2394</option>
+                                
+                                    <option value="a2512">a2512</option>
+                                
+                                    <option value="a2978">a2978</option>
+                                
+                                    <option value="a3394">a3394</option>
+                                
+                                    <option value="a3741">a3741</option>
+                                
+                                    <option value="a4784">a4784</option>
+                                
+                                    <option value="a5130">a5130</option>
+                                
+                                    <option value="a227">a227</option>
+                                
+                                    <option value="a1408">a1408</option>
+                                
+                                    <option value="a373">a373</option>
+                                
+                                    <option value="a4633">a4633</option>
+                                
+                                    <option value="a134">a134</option>
+                                
+                                    <option value="a688">a688</option>
+                                
+                                    <option value="a297">a297</option>
+                                
+                                    <option value="a873">a873</option>
+                                
+                                    <option value="a2398">a2398</option>
+                                
+                                    <option value="a3024">a3024</option>
+                                
+                                    <option value="a431">a431</option>
+                                
+                                    <option value="a3388">a3388</option>
+                                
+                                    <option value="a55">a55</option>
+                                
+                                    <option value="a449">a449</option>
+                                
+                                    <option value="a1">a1</option>
+                                
+                                    <option value="a184">a184</option>
+                                
+                                    <option value="a485">a485</option>
+                                
+                                    <option value="a2367">a2367</option>
+                                
+                                    <option value="a4177">a4177</option>
+                                
+                                    <option value="a180">a180</option>
+                                
+                                    <option value="a4353">a4353</option>
+                                
+                                    <option value="a160">a160</option>
+                                
+                                    <option value="a599">a599</option>
+                                
+                                    <option value="a182">a182</option>
+                                
+                                    <option value="a340">a340</option>
+                                
+                                    <option value="a3442">a3442</option>
+                                
+                                    <option value="a4745">a4745</option>
+                                
+                                    <option value="a1129">a1129</option>
+                                
+                                    <option value="a1459">a1459</option>
+                                
+                                    <option value="a4347">a4347</option>
+                                
+                                    <option value="a1377">a1377</option>
+                                
+                                    <option value="a1281">a1281</option>
+                                
+                                    <option value="a574">a574</option>
+                                
+                                    <option value="a950">a950</option>
+                                
+                                    <option value="a1161">a1161</option>
+                                
+                                    <option value="a4007">a4007</option>
+                                
+                                    <option value="a1024">a1024</option>
+                                
+                                    <option value="a3161">a3161</option>
+                                
+                                    <option value="a4778">a4778</option>
+                                
+                                    <option value="a1552">a1552</option>
+                                
+                                    <option value="a1392">a1392</option>
+                                
+                                    <option value="a5487">a5487</option>
+                                
+                                    <option value="a1551">a1551</option>
+                                
+                                    <option value="a1544">a1544</option>
+                                
+                                    <option value="a2371">a2371</option>
+                                
+                                    <option value="a1028">a1028</option>
+                                
+                                    <option value="a627">a627</option>
+                                
+                                    <option value="a3850">a3850</option>
+                                
+                                    <option value="a4793">a4793</option>
+                                
+                                    <option value="a5098">a5098</option>
+                                
+                                    <option value="a1530">a1530</option>
+                                
+                                    <option value="a1352">a1352</option>
+                                
+                                    <option value="a2302">a2302</option>
+                                
+                                    <option value="a1445">a1445</option>
+                                
+                                    <option value="a1477">a1477</option>
+                                
+                                    <option value="a1566">a1566</option>
+                                
+                                    <option value="a3458">a3458</option>
+                                
+                                    <option value="a1199">a1199</option>
+                                
+                                    <option value="a480">a480</option>
+                                
+                                    <option value="a2389">a2389</option>
+                                
+                                    <option value="a1626">a1626</option>
+                                
+                                    <option value="a3512">a3512</option>
+                                
+                                    <option value="a1381">a1381</option>
+                                
+                                    <option value="a1214">a1214</option>
+                                
+                                    <option value="a4678">a4678</option>
+                                
+                                    <option value="a1158">a1158</option>
+                                
+                                    <option value="a2885">a2885</option>
+                                
+                                    <option value="a5068">a5068</option>
+                                
+                                    <option value="a1662">a1662</option>
+                                
+                                    <option value="a2008">a2008</option>
+                                
+                                    <option value="a1242">a1242</option>
+                                
+                                    <option value="a2454">a2454</option>
+                                
+                                    <option value="a3259">a3259</option>
+                                
+                                    <option value="a1109">a1109</option>
+                                
+                                    <option value="a1832">a1832</option>
+                                
+                                    <option value="a1438">a1438</option>
+                                
+                                    <option value="a2285">a2285</option>
+                                
+                                    <option value="a2392">a2392</option>
+                                
+                                    <option value="a3276">a3276</option>
+                                
+                                    <option value="a3439">a3439</option>
+                                
+                                    <option value="a5601">a5601</option>
+                                
+                                    <option value="a3112">a3112</option>
+                                
+                                    <option value="a5503">a5503</option>
+                                
+                                    <option value="a3117">a3117</option>
+                                
+                                    <option value="a2401">a2401</option>
+                                
+                                    <option value="a2687">a2687</option>
+                                
+                                    <option value="a3861">a3861</option>
+                                
+                                    <option value="a2513">a2513</option>
+                                
+                                    <option value="a2943">a2943</option>
+                                
+                                    <option value="a3072">a3072</option>
+                                
+                                    <option value="a4422">a4422</option>
+                                
+                                    <option value="a3671">a3671</option>
+                                
+                                    <option value="a3163">a3163</option>
+                                
+                                    <option value="a623">a623</option>
+                                
+                                    <option value="a2583">a2583</option>
+                                
+                                    <option value="a813">a813</option>
+                                
+                                    <option value="a3139">a3139</option>
+                                
+                                    <option value="a4099">a4099</option>
+                                
+                                    <option value="a2206">a2206</option>
+                                
+                                    <option value="a3356">a3356</option>
+                                
+                                    <option value="a4459">a4459</option>
+                                
+                                    <option value="a4697">a4697</option>
+                                
+                                    <option value="a4705">a4705</option>
+                                
+                                    <option value="a3714">a3714</option>
+                                
+                                    <option value="a4743">a4743</option>
+                                
+                                    <option value="a3890">a3890</option>
+                                
+                                    <option value="a4196">a4196</option>
+                                
+                                    <option value="a3863">a3863</option>
+                                
+                                    <option value="a4393">a4393</option>
+                                
+                                    <option value="a4519">a4519</option>
+                                
+                                    <option value="a1819">a1819</option>
+                                
+                                    <option value="a4435">a4435</option>
+                                
+                                    <option value="a4374">a4374</option>
+                                
+                                    <option value="a734">a734</option>
+                                
+                                    <option value="a4397">a4397</option>
+                                
+                                    <option value="a4766">a4766</option>
+                                
+                                    <option value="a902">a902</option>
+                                
+                                    <option value="a4736">a4736</option>
+                                
+                                    <option value="a4148">a4148</option>
+                                
+                                    <option value="a4649">a4649</option>
+                                
+                                    <option value="a767">a767</option>
+                                
+                                    <option value="a1686">a1686</option>
+                                
+                                    <option value="a2203">a2203</option>
+                                
+                                    <option value="a4303">a4303</option>
+                                
+                                    <option value="a4142">a4142</option>
+                                
+                                    <option value="a4276">a4276</option>
+                                
+                                    <option value="a708">a708</option>
+                                
+                                    <option value="a4977">a4977</option>
+                                
+                                    <option value="a4680">a4680</option>
+                                
+                                    <option value="a5511">a5511</option>
+                                
+                                    <option value="a558">a558</option>
+                                
+                                    <option value="a760">a760</option>
+                                
+                                    <option value="a646">a646</option>
+                                
+                                    <option value="a756">a756</option>
+                                
+                                    <option value="a1836">a1836</option>
+                                
+                                    <option value="a924">a924</option>
+                                
+                                    <option value="a754">a754</option>
+                                
+                                    <option value="a906">a906</option>
+                                
+                                    <option value="a695">a695</option>
+                                
+                                    <option value="a3846">a3846</option>
+                                
+                                    <option value="a578">a578</option>
+                                
+                                    <option value="a4958">a4958</option>
+                                
+                                    <option value="a1935">a1935</option>
+                                
+                                    <option value="a2292">a2292</option>
+                                
+                                    <option value="a3327">a3327</option>
+                                
+                                    <option value="a3485">a3485</option>
+                                
+                                    <option value="a3828">a3828</option>
+                                
+                                    <option value="a3977">a3977</option>
+                                
+                                    <option value="a4060">a4060</option>
+                                
+                                    <option value="a5426">a5426</option>
+                                
+                                    <option value="a5651">a5651</option>
+                                
+                                    <option value="a1852">a1852</option>
+                                
+                                    <option value="a1997">a1997</option>
+                                
+                                    <option value="a3956">a3956</option>
+                                
+                                    <option value="a2034">a2034</option>
+                                
+                                    <option value="a5236">a5236</option>
+                                
+                                    <option value="a3639">a3639</option>
+                                
+                                    <option value="a5654">a5654</option>
+                                
+                                    <option value="a3205">a3205</option>
+                                
+                                    <option value="a5127">a5127</option>
+                                
+                                    <option value="a5659">a5659</option>
+                                
+                                    <option value="a5099">a5099</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 33, "id": "a229", "label": "a229", "shape": "triangle", "size": 5, "title": "Question:Jinchang and Liling, are located in which country?\nAnswer:China\nLevel:easy\nType:comparison"}, {"group": 33, "id": "a831", "label": "a831", "shape": "triangle", "size": 5, "title": "Question:What country are K. R. Kaushik and Narendra Modi from? \nAnswer:India\nLevel:medium\nType:bridge"}, {"group": 33, "id": "a1561", "label": "a1561", "shape": "triangle", "size": 5, "title": "Question:The Naga Chili, closely related to the Bhut jolokia, also known as ghost pepper, ghost chili, U-morok, red naga, naga jolokia and ghost jolokia, is an interspecific hybrid chili pepper cultivated in the Indian states of Arunachal Pradesh, Assam, Nagaland and Manipur, and is closely related to the Naga morich, of which country?\nAnswer:Bangladesh\nLevel:easy\nType:bridge"}, {"group": 33, "id": "a2837", "label": "a2837", "shape": "triangle", "size": 5, "title": "Question:Operation Mountain Viper was working to uncover hundreds of suspected rebels from the Sunni Islamic fundamentalist political movement, located where?\nAnswer:Afghanistan\nLevel:easy\nType:bridge"}, {"group": 33, "id": "a4362", "label": "a4362", "shape": "triangle", "size": 5, "title": "Question:What is known as the Kingdom and the National Route 13 stretches towards the border?\nAnswer:Cambodia\nLevel:easy\nType:bridge"}, {"group": 110, "id": "a338", "label": "a338", "shape": "triangle", "size": 5, "title": "Question:The weapon BFG is found in which game developed by id Software ?\nAnswer:Doom\nLevel:medium\nType:bridge"}, {"group": 110, "id": "a471", "label": "a471", "shape": "triangle", "size": 5, "title": "Question:Rob Jenkins is an Australian actor, which of his movies, was a 2014 science fiction thriller film?\nAnswer:Predestination\nLevel:easy\nType:bridge"}, {"group": 51, "id": "a262", "label": "a262", "shape": "triangle", "size": 5, "title": "Question:Die Meistersinger von N\u00fcrnberg and Iphig\u00e9nie en Aulide, are which type of music drama?\nAnswer:opera\nLevel:easy\nType:comparison"}, {"group": 51, "id": "a1932", "label": "a1932", "shape": "triangle", "size": 5, "title": "Question:Kamarinskaya was a folk dance that shares a name with the composer who was the first in his country to be recognized for what type of music?\nAnswer:classical\nLevel:hard\nType:bridge"}, {"group": 93, "id": "a413", "label": "a413", "shape": "triangle", "size": 5, "title": "Question:What sport did Jack Sock and Raffaella Reggi play?\nAnswer:tennis\nLevel:medium\nType:comparison"}, {"group": 93, "id": "a2993", "label": "a2993", "shape": "triangle", "size": 5, "title": "Question:how is Victor Oladipo and NBA All-Rookie Team connected?\nAnswer:basketball\nLevel:easy\nType:bridge"}, {"group": 74, "id": "a3", "label": "a3", "shape": "triangle", "size": 5, "title": "Question: What nationality was James Henry Miller\u0027s wife?\nAnswer:American\nLevel:medium\nType:bridge"}, {"group": 74, "id": "a581", "label": "a581", "shape": "triangle", "size": 5, "title": "Question:The 34th Foot Regiment was sent to fight who?\nAnswer:Americans\nLevel:easy\nType:bridge"}, {"group": 74, "id": "a2417", "label": "a2417", "shape": "triangle", "size": 5, "title": "Question:What nationality was the player acquired by the Milwaukee Bucks from the Charlotte Bobcats in the offseason before the 2004-2005 NBA season?\nAnswer:Georgian\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a270", "label": "a270", "shape": "triangle", "size": 5, "title": "Question:What city is located in Gauteng, South Africa with a suburb called Kew?\nAnswer:Johannesburg\nLevel:hard\nType:bridge"}, {"group": 0, "id": "a925", "label": "a925", "shape": "triangle", "size": 5, "title": "Question:Andover, located in Essex County, Massachusetts, is an example of a basic unit of local government and local division of state authority in each of the six New England states, commonly referred to in other states as what?\nAnswer:cities\nLevel:easy\nType:bridge"}, {"group": 121, "id": "a71", "label": "a71", "shape": "triangle", "size": 5, "title": "Question:What profession does Am Rong and Alexandre Rockwell have in common?\nAnswer:filmmaker\nLevel:medium\nType:comparison"}, {"group": 121, "id": "a3646", "label": "a3646", "shape": "triangle", "size": 5, "title": "Question:Who financed the  3D computer-animated fantasy which was one of Chris Bacon film scores?\nAnswer:Disney\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a69", "label": "a69", "shape": "triangle", "size": 5, "title": "Question:The expert mentor to the celebrities that perform on \"Splash!\" won the 2009 FINA World Championionship in the individual event at what age? \nAnswer:15\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a213", "label": "a213", "shape": "triangle", "size": 5, "title": "Question:How many test centuries did the grandfather of Fabian Cowdrey make for England ?\nAnswer:22\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a876", "label": "a876", "shape": "triangle", "size": 5, "title": "Question:Vladimir Yaroshenko was a soloist with the choreographer who dominated Russian ballet for how many years?\nAnswer:30\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a1294", "label": "a1294", "shape": "triangle", "size": 5, "title": "Question:The 1983\u201384 New York Knicks season included the retired basketball player at small forward who played a total of how many seasons?\nAnswer:14\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a1808", "label": "a1808", "shape": "triangle", "size": 5, "title": "Question:The Tulsa Golden Hurricane will join an American collegiate athletic conference, featuring how many member universities?\nAnswer:12\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a2305", "label": "a2305", "shape": "triangle", "size": 5, "title": "Question: The O\u0027Hara Watercolor School was burned down during fires that killed how many people?\nAnswer:16\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a2442", "label": "a2442", "shape": "triangle", "size": 5, "title": "Question:The film To Hell and Back stars a combat solider that received the Medal of Honor at what age?\nAnswer:19\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a2587", "label": "a2587", "shape": "triangle", "size": 5, "title": "Question:yphoon Oliwa was one of a record eleven super typhoons in a season with how many Category 5 storms?\nAnswer:ten\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a2861", "label": "a2861", "shape": "triangle", "size": 5, "title": "Question:The Association of Jesuit University Presses (AJUP) is an association of North American university presses which are members of the Association of Jesuit Colleges and Universities (AJCU), a consortium of how many Jesuit colleges and universities, and two theological centers in the United States?\nAnswer:28\nLevel:easy\nType:bridge"}, {"group": 16, "id": "a2903", "label": "a2903", "shape": "triangle", "size": 5, "title": "Question:How many original games are there in the tactical role-playing video game franchise developed by the same Japanese company who developed the \"Wars\" series of games?\nAnswer:twelve\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a4015", "label": "a4015", "shape": "triangle", "size": 5, "title": "Question:The host of the American version of \"Punchlines\" hosted how many shows in his career?\nAnswer:23\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a4176", "label": "a4176", "shape": "triangle", "size": 5, "title": "Question:How many songs were written by the man who shares attribution for one of his songs with a poem by Emily Huntington Miller?\nAnswer:80\nLevel:hard\nType:bridge"}, {"group": 16, "id": "a4592", "label": "a4592", "shape": "triangle", "size": 5, "title": "Question:The composer of the ballet L\u0027\u00cele Enchant\u00e9e has composed how many major orchestral works?\nAnswer:13\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a4874", "label": "a4874", "shape": "triangle", "size": 5, "title": "Question:The Neoclassical monument Benito Ju\u00e1rez Hemicycle is located in this city of Mexico that consists of how many municipalities?\nAnswer:sixteen\nLevel:hard\nType:bridge"}, {"group": 16, "id": "a5368", "label": "a5368", "shape": "triangle", "size": 5, "title": "Question:In how many countries did a song written by Rolf Magnus Joakim Larsson go to the number one spot?\nAnswer:25\nLevel:medium\nType:bridge"}, {"group": 16, "id": "a5646", "label": "a5646", "shape": "triangle", "size": 5, "title": "Question:For how many seasons was the running back that Barry Redden was overshadowed by, play in?\nAnswer:eleven\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a323", "label": "a323", "shape": "triangle", "size": 5, "title": "Question:The band that released the album \"Let\u0027s Cheers to This\" is from what Florida city?\nAnswer:Orlando\nLevel:medium\nType:bridge"}, {"group": 46, "id": "a322", "label": "a322", "shape": "triangle", "size": 5, "title": "Question:Device \u2013 Voice \u2013 Drum is the fourth live album by a band that produced how many gold albums?\nAnswer:eight\nLevel:medium\nType:bridge"}, {"group": 46, "id": "a59", "label": "a59", "shape": "triangle", "size": 5, "title": "Question:An edited version of \"Just the Two of Us\" reached number two on the \"Billboard\" Hot 100 behind a song written and composed by Donna Weiss and Jackie DeShannon which spend how many weeks at No. 1 on the \"Billboard\" hot 100?\nAnswer:nine\nLevel:medium\nType:bridge"}, {"group": 46, "id": "a256", "label": "a256", "shape": "triangle", "size": 5, "title": "Question:The 2005 documentary \"The Aristocrats\" was dedicated to a comedian that received how many Emmy Awards?\nAnswer:six\nLevel:medium\nType:bridge"}, {"group": 46, "id": "a342", "label": "a342", "shape": "triangle", "size": 5, "title": "Question:American actor, Peter Hansen, best known for his role on General Hospital, also starred in The War of the Roses with American film and stage actress and director who has won how many Golden Globe Awards?\nAnswer:two\nLevel:easy\nType:bridge"}, {"group": 46, "id": "a456", "label": "a456", "shape": "triangle", "size": 5, "title": "Question:Rags Ragland died how many years after starring in Meet the People?\nAnswer:II\nLevel:easy\nType:bridge"}, {"group": 46, "id": "a501", "label": "a501", "shape": "triangle", "size": 5, "title": "Question:Navarone Garibaldi is the half-brother of a singer who has been married how many times?\nAnswer:four\nLevel:medium\nType:bridge"}, {"group": 46, "id": "a539", "label": "a539", "shape": "triangle", "size": 5, "title": "Question:The pop singer in the lead role in \"Tere Bin Laden\" received how many Lux Style Awards?\nAnswer:five\nLevel:medium\nType:bridge"}, {"group": 46, "id": "a1835", "label": "a1835", "shape": "triangle", "size": 5, "title": "Question:How many expansion packs have been created for a game that Keith Baker, a game designer, created?\nAnswer:Four\nLevel:hard\nType:bridge"}, {"group": 46, "id": "a2287", "label": "a2287", "shape": "triangle", "size": 5, "title": "Question: Michael Edward Curry served as head coach for an American Professional basketball team that has won how many NBA championchips?\nAnswer:three\nLevel:medium\nType:bridge"}, {"group": 46, "id": "a2564", "label": "a2564", "shape": "triangle", "size": 5, "title": "Question:How many novels are in the C.S. Lewis series that the Brazilian series \"S\u00edtio do Picapau Amarelo\" has been compared to?\nAnswer:seven\nLevel:medium\nType:bridge"}, {"group": 194, "id": "a64", "label": "a64", "shape": "triangle", "size": 5, "title": "Question:Iqaluit Airport and Canadian North are based out of what country?\nAnswer:Canada\nLevel:easy\nType:bridge"}, {"group": 194, "id": "a5527", "label": "a5527", "shape": "triangle", "size": 5, "title": "Question:What country is St. Olaf College in?\nAnswer:America\nLevel:easy\nType:bridge"}, {"group": 0, "id": "a163", "label": "a163", "shape": "triangle", "size": 5, "title": "Question:Axle Whitehead was a part of an American comedy-drama television series that is a remake of the British series with the same name set in what city?\nAnswer:Chicago\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a39", "label": "a39", "shape": "triangle", "size": 5, "title": "Question:The 337th Flight Test Squadron (337 FLTS) was most recently part of the 46th Test Wing and based at McClellan Air Force Base, a former United States Air Force base located in the North Highlands area of Sacramento County, in which US state?\nAnswer:California\nLevel:easy\nType:bridge"}, {"group": 27, "id": "a19", "label": "a19", "shape": "triangle", "size": 5, "title": "Question:American politician Joe Heck ran unsuccessfully against Democrat Catherine Cortez Masto, a woman who previously served as the 32nd Attorney General of where?\nAnswer:Nevada\nLevel:easy\nType:bridge"}, {"group": 27, "id": "a1466", "label": "a1466", "shape": "triangle", "size": 5, "title": "Question:in the 1975\u201376, Seattle SuperSonics lost to a team based in which US state ?\nAnswer:Arizona\nLevel:hard\nType:bridge"}, {"group": 27, "id": "a3252", "label": "a3252", "shape": "triangle", "size": 5, "title": "Question:Craig Duane Neal who was selected in the 1988 NBA draft by a team based in which US state ?\nAnswer:Oregon\nLevel:hard\nType:bridge"}, {"group": 12, "id": "a17", "label": "a17", "shape": "triangle", "size": 5, "title": "Question:Human Error\" is the season finale of the third season of a tv show that aired on what network?\nAnswer:Fox\nLevel:medium\nType:bridge"}, {"group": 12, "id": "a1228", "label": "a1228", "shape": "triangle", "size": 5, "title": "Question:Afghan Hound and Rhodesian Ridgeback, are a type of which animal?\nAnswer:dog\nLevel:easy\nType:comparison"}, {"group": 10, "id": "a121", "label": "a121", "shape": "triangle", "size": 5, "title": "Question:What type of vegetation does Kniphofia and Baptisia have in common?\nAnswer:plant\nLevel:hard\nType:comparison"}, {"group": 10, "id": "a230", "label": "a230", "shape": "triangle", "size": 5, "title": "Question:What type of vegetation does Fothergilla and Clerodendrum have in common?\nAnswer:plants\nLevel:medium\nType:comparison"}, {"group": 3, "id": "a143", "label": "a143", "shape": "triangle", "size": 5, "title": "Question:What city does Bundestag and Reichstag building have in common?\nAnswer:Berlin\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a587", "label": "a587", "shape": "triangle", "size": 5, "title": "Question:Puklo srce is an album by a singer who lives where? \nAnswer:Belgrade\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a663", "label": "a663", "shape": "triangle", "size": 5, "title": "Question:What town sends their students to Messalonskee High School and had a population of 1010 according to the 2010 census?\nAnswer:Rome\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a1105", "label": "a1105", "shape": "triangle", "size": 5, "title": "Question:In which state is the Seattle Redhawks women\u0027s basketball team found?\nAnswer:Washington\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a1149", "label": "a1149", "shape": "triangle", "size": 5, "title": "Question:Ho Mann Jahaan is a  2016 coming-of-age drama film with dialogues by a Pakistani actor from where?\nAnswer:Islamabad\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a1273", "label": "a1273", "shape": "triangle", "size": 5, "title": "Question:King of the Jungle was a song written by the girl group formed in what city in 1981?\nAnswer:London\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a2394", "label": "a2394", "shape": "triangle", "size": 5, "title": "Question:Hi Fly Malta is a subsidiary of a charter airline located in what city?\nAnswer:Lisbon\nLevel:hard\nType:bridge"}, {"group": 3, "id": "a2512", "label": "a2512", "shape": "triangle", "size": 5, "title": "Question:What country is the man, with whom John Spencer beat in a 2006 primary, slated to become the next United States Ambassador for?\nAnswer:Singapore\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a2978", "label": "a2978", "shape": "triangle", "size": 5, "title": "Question:What city is the head office of J\u00f3zsef V\u00e1radi\u0027s airline located in?\nAnswer:Budapest\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a3394", "label": "a3394", "shape": "triangle", "size": 5, "title": "Question:Where does the 2009 movie which was directed by the director who also directed \"Heaven\" take place?\nAnswer:Luxembourg\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a3741", "label": "a3741", "shape": "triangle", "size": 5, "title": "Question:What is the capital city of the country, bordred by the Atlantic ocean and Zambia, and where the Phyllogomphus selysi species of dragonfly can be found?\nAnswer:Luanda\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a4784", "label": "a4784", "shape": "triangle", "size": 5, "title": "Question:H. Frank Carey Junior-Senior High School serves students in the census-designated place in what New York county?\nAnswer:Nassau\nLevel:medium\nType:bridge"}, {"group": 3, "id": "a5130", "label": "a5130", "shape": "triangle", "size": 5, "title": "Question:Harold E. Bradshaw was a member of the vets organization founded in what city?\nAnswer:Paris\nLevel:medium\nType:bridge"}, {"group": 22, "id": "a227", "label": "a227", "shape": "triangle", "size": 5, "title": "Question:What profession do K\u014db\u014d Abe and Agatha Christie share?\nAnswer:playwright\nLevel:easy\nType:comparison"}, {"group": 22, "id": "a1408", "label": "a1408", "shape": "triangle", "size": 5, "title": "Question:What profession does Thornton Wilder and Richard Llewellyn have in common?\nAnswer:novelist\nLevel:medium\nType:comparison"}, {"group": 44, "id": "a373", "label": "a373", "shape": "triangle", "size": 5, "title": "Question:The Colombian airline that has been the national airline and flag carrier of Colombia since 1919 is wholly owned by a company headquartered in what country?\nAnswer:Brazil\nLevel:medium\nType:bridge"}, {"group": 44, "id": "a4633", "label": "a4633", "shape": "triangle", "size": 5, "title": "Question:SS Cap Polonio\u0027s destination port was the leading transshipment point for foreign trade of which country in South America?\nAnswer:Argentina\nLevel:medium\nType:bridge"}, {"group": 17, "id": "a134", "label": "a134", "shape": "triangle", "size": 5, "title": "Question:Pearl Lowe and Alison Goldfrapp, is of which nationality?\nAnswer:English\nLevel:easy\nType:comparison"}, {"group": 17, "id": "a688", "label": "a688", "shape": "triangle", "size": 5, "title": "Question:What is the nationality of the actor who starred as Rene Russo\u0027s husband in the 1997 movie \"Buddy\"?\nAnswer:Scottish\nLevel:medium\nType:bridge"}, {"group": 72, "id": "a297", "label": "a297", "shape": "triangle", "size": 5, "title": "Question:Javier Mora, is a Mexican boxer in the Heavyweight division, he was defeated by Alexander Vladimirovich \"Sasha\" Povetkin, by a 5-round TKO, in which country?\nAnswer:Germany\nLevel:easy\nType:bridge"}, {"group": 72, "id": "a873", "label": "a873", "shape": "triangle", "size": 5, "title": "Question:Ettore or Edoardo Ettore Forti was an Italian painter, who was prolific in depicting realistic Neo-Pompeian scenes of Ancient Roman life and events, these subjects were popular in the late-Victorian period, as exemplified by the popularity of Lawrence Alma-Tadema, born in Dronrijp, in which country?\nAnswer:Netherlands\nLevel:easy\nType:bridge"}, {"group": 72, "id": "a2398", "label": "a2398", "shape": "triangle", "size": 5, "title": "Question:The 2012 Spengler Cup was held in Davos, Switzerland between 26 and 31 December 2012, all matches were played at HC Davos\u0027s home known as Vaillant Arena, an arena in Davos, in which country?\nAnswer:Switzerland\nLevel:easy\nType:bridge"}, {"group": 72, "id": "a3024", "label": "a3024", "shape": "triangle", "size": 5, "title": "Question:The .45 GAP is produced by a company headquartered in what country?\nAnswer:Austria\nLevel:medium\nType:bridge"}, {"group": 111, "id": "a431", "label": "a431", "shape": "triangle", "size": 5, "title": "Question:Was the president who appointed Thomas C. Mann a democrat or a republican?\nAnswer:Democrat\nLevel:medium\nType:bridge"}, {"group": 111, "id": "a3388", "label": "a3388", "shape": "triangle", "size": 5, "title": "Question:What party does the Virginia representative of a narrow pass through the mountains belong to?\nAnswer:Republican\nLevel:medium\nType:bridge"}, {"group": 157, "id": "a55", "label": "a55", "shape": "triangle", "size": 5, "title": "Question:The 1895/96 Football League season was the eighth in Football League history with Everton, their Goodison Park home, is a football stadium located in Walton, Liverpool, in which country?\nAnswer:England\nLevel:easy\nType:bridge"}, {"group": 157, "id": "a449", "label": "a449", "shape": "triangle", "size": 5, "title": "Question:Where is the there a small medevial castle\nAnswer:Scotland\nLevel:easy\nType:bridge"}, {"group": 0, "id": "a1", "label": "a1", "shape": "triangle", "size": 5, "title": "Question:The Oberoi family is part of a hotel company that has a head office in what city?\nAnswer:Delhi\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a184", "label": "a184", "shape": "triangle", "size": 5, "title": "Question:Michael Ralph DeVito (born June 10, 1984) is a former American football defensive end, he  the National Football League (NFL), DeVito attended high school at Nauset Regional High School an NEASC accredited high school located in North Eastham, in which state?\nAnswer:Massachusetts\nLevel:easy\nType:bridge"}, {"group": 27, "id": "a485", "label": "a485", "shape": "triangle", "size": 5, "title": "Question:Mike Gibbons won the middleweight championship after the previous champion was found murdered where?\nAnswer:Missouri\nLevel:easy\nType:bridge"}, {"group": 27, "id": "a2367", "label": "a2367", "shape": "triangle", "size": 5, "title": "Question:The president that signed a new Railway Labor Act in 1926 was a lawyer from what state?\nAnswer:Vermont\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a4177", "label": "a4177", "shape": "triangle", "size": 5, "title": "Question:Clay County is a county located in the U.S. state of South Dakota, the county is named in honor of Henry Clay, an American lawyer and planter, statesman, and skilled orator who represented which state,in both the United States Senate and House of Representatives?\nAnswer:Kentucky\nLevel:easy\nType:bridge"}, {"group": 41, "id": "a180", "label": "a180", "shape": "triangle", "size": 5, "title": "Question:Gelatine was an airship piloted on September 19, 1905 by a pioneer American aviator and what?\nAnswer:barnstormer\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a4353", "label": "a4353", "shape": "triangle", "size": 5, "title": "Question:Billy Bob Thornton and Gene Saks, are Americans that have which occupation in common?\nAnswer:actor\nLevel:easy\nType:comparison"}, {"group": 35, "id": "a160", "label": "a160", "shape": "triangle", "size": 5, "title": "Question:Jane\u0027s Addiction and Weeping Willows, play which genre of music?\nAnswer:rock\nLevel:easy\nType:comparison"}, {"group": 35, "id": "a599", "label": "a599", "shape": "triangle", "size": 5, "title": "Question:Them Crooked Vultures and The Vines are both part of what music genres?\nAnswer:Rock\nLevel:medium\nType:comparison"}, {"group": 44, "id": "a182", "label": "a182", "shape": "triangle", "size": 5, "title": "Question:In what country did the repression of citizens by a dictator during the period of 1973 to 1990 occur?\nAnswer:Chile\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a340", "label": "a340", "shape": "triangle", "size": 5, "title": "Question:The 2016 Liberty Bowl was sponsored by a company based in what city?\nAnswer:Memphis\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a3442", "label": "a3442", "shape": "triangle", "size": 5, "title": "Question:What state was the president who appointed Fran P. Mainella to be the 16th Director of the National Park Service of the United States once governor of?\nAnswer:Texas\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a4745", "label": "a4745", "shape": "triangle", "size": 5, "title": "Question:What state is Ruxton Park and Pikes Peak located in?\nAnswer:Colorado\nLevel:hard\nType:bridge"}, {"group": 5, "id": "a1129", "label": "a1129", "shape": "triangle", "size": 5, "title": "Question:Marguerite Coppin was a pioneer in women\u0027s rights along with the activist and suffragette leader of what nationality?\nAnswer:British\nLevel:medium\nType:bridge"}, {"group": 5, "id": "a1459", "label": "a1459", "shape": "triangle", "size": 5, "title": "Question:What was the nationality of the man who inspired the experimental work of the inventor of Moseley\u0027s law\nAnswer:Dutch\nLevel:medium\nType:bridge"}, {"group": 5, "id": "a4347", "label": "a4347", "shape": "triangle", "size": 5, "title": "Question:What is the nationality of the person who played the protagonist in \"Mind Games\"?\nAnswer:Irish\nLevel:hard\nType:bridge"}, {"group": 0, "id": "a1377", "label": "a1377", "shape": "triangle", "size": 5, "title": "Question:Which footballing city beat the Netherlands in the 1974 FIFA World Cup Final?\nAnswer:Munich\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a1281", "label": "a1281", "shape": "triangle", "size": 5, "title": "Question:Robinson\u0027s Onion grows in Ferry County in a specific state; what is the capital of that state?\nAnswer:Olympia\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a574", "label": "a574", "shape": "triangle", "size": 5, "title": "Question:What is the capital of the state Curly Ray Cline is from?\nAnswer:Charleston\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a950", "label": "a950", "shape": "triangle", "size": 5, "title": "Question:In what Australian city did the United States ship supplies in 1943 as part of the Lend-lease policy during WWII\nAnswer:Sydney\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a1161", "label": "a1161", "shape": "triangle", "size": 5, "title": "Question:Henry Ephraim Robins the the eighth President of a college in a state with what capital?\nAnswer:Augusta\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a4007", "label": "a4007", "shape": "triangle", "size": 5, "title": "Question:Rafael Ynoa plays left-field for the MLB team based in what Colorado city?\nAnswer:Denver\nLevel:medium\nType:bridge"}, {"group": 1, "id": "a1024", "label": "a1024", "shape": "triangle", "size": 5, "title": "Question:St Estevam is an Island in Ilhas, Goa, India, it is also known as \u0027Shakecho Juvo\u0027 - the isle of vegetables - known for its long, seven-ridged, light green ladyfingers, Okra or okro, known in many English-speaking countries as ladies\u0027 fingers or ochro, is a flowering plant in which family? \nAnswer:mallow\nLevel:easy\nType:bridge"}, {"group": 1, "id": "a3161", "label": "a3161", "shape": "triangle", "size": 5, "title": "Question:Which genus contains more species, Philadelphus or Sarracenia?\nAnswer:Philadelphus\nLevel:medium\nType:comparison"}, {"group": 1, "id": "a4778", "label": "a4778", "shape": "triangle", "size": 5, "title": "Question:Which of Lodoicea and Privet. has more species?\nAnswer:Privet\nLevel:medium\nType:comparison"}, {"group": 0, "id": "a1552", "label": "a1552", "shape": "triangle", "size": 5, "title": "Question:Which city is the third most populated city in Pennsylvania and was apart of the film the Florentine? \nAnswer:Allentown\nLevel:medium\nType:bridge"}, {"group": 21, "id": "a1392", "label": "a1392", "shape": "triangle", "size": 5, "title": "Question:Which is a perennial plant, Chelidonium or Duranta?\nAnswer:Chelidonium\nLevel:medium\nType:comparison"}, {"group": 21, "id": "a5487", "label": "a5487", "shape": "triangle", "size": 5, "title": "Question:Which is a genus of more species, Crambe or Nomocharis?\nAnswer:Crambe\nLevel:medium\nType:comparison"}, {"group": 0, "id": "a1551", "label": "a1551", "shape": "triangle", "size": 5, "title": "Question:Metal band Crown the Empire, whose first album was called Limitless, are from which Texas city?\nAnswer:Dallas\nLevel:medium\nType:bridge"}, {"group": 30, "id": "a1544", "label": "a1544", "shape": "triangle", "size": 5, "title": "Question:what does The Freedom Force and Isis have in common?\nAnswer:television\nLevel:easy\nType:bridge"}, {"group": 30, "id": "a2371", "label": "a2371", "shape": "triangle", "size": 5, "title": "Question:What technology used to be how the school that Adelaide Miethke conducted classes?\nAnswer:radio\nLevel:hard\nType:bridge"}, {"group": 2, "id": "a1028", "label": "a1028", "shape": "triangle", "size": 5, "title": "Question:ND \u010crnu\u010de was managed in the mid-90s by the football coach of what nationality?\nAnswer:Slovenian\nLevel:hard\nType:bridge"}, {"group": 2, "id": "a627", "label": "a627", "shape": "triangle", "size": 5, "title": "Question:Nikolaas Tinbergen shared the 1973 Nobel in Medicine with the zoologist who was of what nationality?\nAnswer:Austrian\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a3850", "label": "a3850", "shape": "triangle", "size": 5, "title": "Question:What was the nationality of the man with whom Hans Loewald studied philosophy? \nAnswer:German\nLevel:hard\nType:bridge"}, {"group": 2, "id": "a4793", "label": "a4793", "shape": "triangle", "size": 5, "title": "Question:Ghosts comes from a slang term that applies to what type of ethnicities?\nAnswer:European\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a5098", "label": "a5098", "shape": "triangle", "size": 5, "title": "Question:What was Bill Dvorak\u0027s fifth cousin\u0027s nationality?\nAnswer:Czech\nLevel:hard\nType:bridge"}, {"group": 18, "id": "a1530", "label": "a1530", "shape": "triangle", "size": 5, "title": "Question:Cache is a city in Comanche County, Oklahoma, it is the location of Star House, the home of the Comanche chief Quanah Parker, was a Comanche war leader of the Quahadi (\"Antelope\") band of which people?\nAnswer:Comanche\nLevel:easy\nType:bridge"}, {"group": 18, "id": "a1352", "label": "a1352", "shape": "triangle", "size": 5, "title": "Question:David Bell was a third baseman for which team?\nAnswer:Indians\nLevel:easy\nType:bridge"}, {"group": 18, "id": "a2302", "label": "a2302", "shape": "triangle", "size": 5, "title": "Question:What ethnicity are both Befikra and Aditi Singh Sharma?\nAnswer:Indian\nLevel:easy\nType:bridge"}, {"group": 25, "id": "a1445", "label": "a1445", "shape": "triangle", "size": 5, "title": "Question:Sarabande and Danse is a ballet made by Jacques d\u0027Amboise to which song, by who?\nAnswer:Debussy\nLevel:easy\nType:bridge"}, {"group": 25, "id": "a1477", "label": "a1477", "shape": "triangle", "size": 5, "title": "Question:What do Alessandro Scarlatti and Nikolai Rimsky-Korsakov have in common?\nAnswer:composer\nLevel:easy\nType:comparison"}, {"group": 34, "id": "a1566", "label": "a1566", "shape": "triangle", "size": 5, "title": "Question:What to Autograph Collector Magazine and Linux Journal have in common?\nAnswer:monthly\nLevel:hard\nType:comparison"}, {"group": 34, "id": "a3458", "label": "a3458", "shape": "triangle", "size": 5, "title": "Question:At what frequency the news magazine published in which Ursula Gauthier was reporter in China?\nAnswer:weekly\nLevel:hard\nType:bridge"}, {"group": 9, "id": "a1199", "label": "a1199", "shape": "triangle", "size": 5, "title": "Question:Christelyn Karazin is an American writer, columnist, and blogger on the subject of interracial dating, particularly black women dating outside their race, she has written for which digital magazine, an American weekly marketed toward African-American readers, it was founded in 1951 by John H. Johnson of the Johnson Publishing Company in Chicago, Illinois?\nAnswer:Jet\nLevel:easy\nType:bridge"}, {"group": 9, "id": "a480", "label": "a480", "shape": "triangle", "size": 5, "title": "Question:Which was released second, Charley and the Angel or Planes?\nAnswer:Planes\nLevel:hard\nType:comparison"}, {"group": 9, "id": "a2389", "label": "a2389", "shape": "triangle", "size": 5, "title": "Question:What types of aeronautical machines are described above?\nAnswer:jet\nLevel:easy\nType:bridge"}, {"group": 27, "id": "a1626", "label": "a1626", "shape": "triangle", "size": 5, "title": "Question:In what state was the university Darryl Carlton played for?\nAnswer:Florida\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a3512", "label": "a3512", "shape": "triangle", "size": 5, "title": "Question: S. Truett Cathy founded a fast food chain that is headquartered in what state?\nAnswer:Georgia\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a1381", "label": "a1381", "shape": "triangle", "size": 5, "title": "Question:the rest of Shabbethai Donnolo\u0027s family was carried to what location that is over 2700 years old?\nAnswer:Palermo\nLevel:medium\nType:bridge"}, {"group": 11, "id": "a1214", "label": "a1214", "shape": "triangle", "size": 5, "title": "Question:In between Splash and Son of Flubber, which one was directed by Ron Howard?\nAnswer:Splash\nLevel:medium\nType:comparison"}, {"group": 11, "id": "a4678", "label": "a4678", "shape": "triangle", "size": 5, "title": "Question:What was the father of Vaiva the common Baltic god of?\nAnswer:thunder\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a1158", "label": "a1158", "shape": "triangle", "size": 5, "title": "Question:Excuse My French was the debut album that features a guest appearance by the American rapper and actor from what Ohio city?\nAnswer:Cleveland\nLevel:medium\nType:bridge"}, {"group": 18, "id": "a2885", "label": "a2885", "shape": "triangle", "size": 5, "title": "Question:The world premiere of the movie starring a co-founder of United Artists film studio was shown at a theatre in what city?\nAnswer:Ottawa\nLevel:medium\nType:bridge"}, {"group": 18, "id": "a5068", "label": "a5068", "shape": "triangle", "size": 5, "title": "Question:What group of people does Texcoco, State of Mexico and National Museum of Anthropology have in common?\nAnswer:Aztec\nLevel:medium\nType:bridge"}, {"group": 38, "id": "a1662", "label": "a1662", "shape": "triangle", "size": 5, "title": "Question:What was the position of the player who\u0027s final match was the final of the 2003-04 Scottish Cup\nAnswer:striker\nLevel:medium\nType:bridge"}, {"group": 38, "id": "a2008", "label": "a2008", "shape": "triangle", "size": 5, "title": "Question:Multiple medallists at the 2012 Summer Paralympics in London, United Kingdom included cyclist Sarah Storey, a British road and track racing cyclist and former what (sport)?\nAnswer:swimmer\nLevel:easy\nType:bridge"}, {"group": 13, "id": "a1242", "label": "a1242", "shape": "triangle", "size": 5, "title": "Question:Cornell Iral Haynes Jr. had released how many studio albums as of 2013?\nAnswer:seventh\nLevel:medium\nType:bridge"}, {"group": 13, "id": "a2454", "label": "a2454", "shape": "triangle", "size": 5, "title": "Question:What number president was the most notable Congressman from Massachusetts Congressional District 11?\nAnswer:sixth\nLevel:hard\nType:bridge"}, {"group": 13, "id": "a3259", "label": "a3259", "shape": "triangle", "size": 5, "title": "Question:What season of The Voice did the lead vocalist of No Doubt appear on?\nAnswer:ninth\nLevel:medium\nType:bridge"}, {"group": 4, "id": "a1109", "label": "a1109", "shape": "triangle", "size": 5, "title": "Question:Which form of plant is only found in Australia, Hakea or Blechnum?\nAnswer:Hakea\nLevel:medium\nType:comparison"}, {"group": 4, "id": "a1832", "label": "a1832", "shape": "triangle", "size": 5, "title": "Question:Which genus has more species, Cardiospermum or Chestnut?\nAnswer:Cardiospermum\nLevel:medium\nType:comparison"}, {"group": 24, "id": "a1438", "label": "a1438", "shape": "triangle", "size": 5, "title": "Question:Paul Auster and Jodi Picoult, have which occupation in common?\nAnswer:writer\nLevel:easy\nType:comparison"}, {"group": 24, "id": "a2285", "label": "a2285", "shape": "triangle", "size": 5, "title": "Question:Who wrote a work that described European history until the dawn of the age of the longest serving monarch in European history?\nAnswer:Voltaire\nLevel:medium\nType:bridge"}, {"group": 24, "id": "a2392", "label": "a2392", "shape": "triangle", "size": 5, "title": "Question:The recording of a musical released as an album on April 2 starred an English actress, singer, and what?\nAnswer:author\nLevel:medium\nType:bridge"}, {"group": 24, "id": "a3276", "label": "a3276", "shape": "triangle", "size": 5, "title": "Question:Which suburb in southern Hamilton, New Zealand contains streets named after war heroes including Douglas Bader?\nAnswer:Melville\nLevel:medium\nType:bridge"}, {"group": 24, "id": "a3439", "label": "a3439", "shape": "triangle", "size": 5, "title": "Question:Frank Freshwaters pled guilty to voluntary manslaughter and, after a brief sentence at a prison located in which city ?\nAnswer:Mansfield\nLevel:hard\nType:bridge"}, {"group": 72, "id": "a5601", "label": "a5601", "shape": "triangle", "size": 5, "title": "Question:What region of Europe does the mob boss known as Erricone and the boss born January 222, 1862- known as the \"boss of bosses\"- hail from?\nAnswer:Italy\nLevel:easy\nType:bridge"}, {"group": 97, "id": "a3112", "label": "a3112", "shape": "triangle", "size": 5, "title": "Question:Between Cyclamen and Fargesia, which genus to spread to more continents?\nAnswer:Cyclamen\nLevel:hard\nType:comparison"}, {"group": 97, "id": "a5503", "label": "a5503", "shape": "triangle", "size": 5, "title": "Question:What genus of plants is native to southwestern Asia, Cassiope or Calendula?\nAnswer:Calendula\nLevel:medium\nType:comparison"}, {"group": 27, "id": "a3117", "label": "a3117", "shape": "triangle", "size": 5, "title": "Question:Norris Dam State Park is a state park in Anderson County and Campbell County, Tennessee, the park is situated along the shores of Norris Lake, an impoundment of the Clinch River created by the completion of Norris Dam in 1936, the Clinch River rises near Tazewell, Virginia, and flows southwest for more than 300 mi through the Great Appalachian Valley, at the end, it joins the Tennessee River in Kingston in which US state?\nAnswer:Tennessee\nLevel:easy\nType:bridge"}, {"group": 27, "id": "a2401", "label": "a2401", "shape": "triangle", "size": 5, "title": "Question:In what state are the headquarters of this American multinational automaker, which has a 50:50 joint venture with Changan Automobile?\nAnswer:Michigan\nLevel:hard\nType:bridge"}, {"group": 84, "id": "a2687", "label": "a2687", "shape": "triangle", "size": 5, "title": "Question:What was the subject of an incident at a sports stadium in Perth, Western Australia?\nAnswer:ComBat\nLevel:medium\nType:bridge"}, {"group": 84, "id": "a3861", "label": "a3861", "shape": "triangle", "size": 5, "title": "Question:What type of physical activity does Red, White \u0026 Cr\u00fce and Mike Tyson have in common?\nAnswer:fight\nLevel:hard\nType:bridge"}, {"group": 0, "id": "a2513", "label": "a2513", "shape": "triangle", "size": 5, "title": "Question:In which city was this global energy and commodity trading company larger than Trafigura as an oil trader formed?\nAnswer:Rotterdam\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a2943", "label": "a2943", "shape": "triangle", "size": 5, "title": "Question:Which suburb in the Northern Region of Ghana that created Sagnarigu district was Yakubu II born?\nAnswer:Tamale\nLevel:medium\nType:bridge"}, {"group": 96, "id": "a3072", "label": "a3072", "shape": "triangle", "size": 5, "title": "Question:In which state was the 1926 Navy Midshipmen football team located?\nAnswer:Maryland\nLevel:medium\nType:bridge"}, {"group": 96, "id": "a4422", "label": "a4422", "shape": "triangle", "size": 5, "title": "Question:Foxcatcher is a 2014 American true crime sports drama film about a wrestling team set up in what state?\nAnswer:Pennsylvania\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a3671", "label": "a3671", "shape": "triangle", "size": 5, "title": "Question:What state is the college that Everson Walls played at located in?\nAnswer:Louisiana\nLevel:medium\nType:bridge"}, {"group": 101, "id": "a3163", "label": "a3163", "shape": "triangle", "size": 5, "title": "Question:What sport does Dave Silk and Miracle on Ice have in common?\nAnswer:hockey\nLevel:medium\nType:bridge"}, {"group": 101, "id": "a623", "label": "a623", "shape": "triangle", "size": 5, "title": "Question:What sport does Pieter Nys and Fortuna Sittard have in common?\nAnswer:football\nLevel:medium\nType:bridge"}, {"group": 81, "id": "a2583", "label": "a2583", "shape": "triangle", "size": 5, "title": "Question:What occupation did Eugene Dynkin and Anatoly Maltsev both have in common?\nAnswer:mathematician\nLevel:medium\nType:comparison"}, {"group": 81, "id": "a813", "label": "a813", "shape": "triangle", "size": 5, "title": "Question:Jordan Fished played the role of John Laurens in which Broadway production?\nAnswer:Hamilton\nLevel:easy\nType:bridge"}, {"group": 0, "id": "a3139", "label": "a3139", "shape": "triangle", "size": 5, "title": "Question:Which Virginia town speaks the High Tider dialect and has lost 67% of its landmass since 1850?\nAnswer:Tangier\nLevel:medium\nType:bridge"}, {"group": 58, "id": "a4099", "label": "a4099", "shape": "triangle", "size": 5, "title": "Question:In what month did the both the Battle of Kulcullen occur and the Irish Rebellion start?\nAnswer:May\nLevel:medium\nType:bridge"}, {"group": 58, "id": "a2206", "label": "a2206", "shape": "triangle", "size": 5, "title": "Question:The artist who recorded the October 2005 song Cheatin\u0027 was born in what month?\nAnswer:February\nLevel:medium\nType:bridge"}, {"group": 58, "id": "a3356", "label": "a3356", "shape": "triangle", "size": 5, "title": "Question:In what month is the traditional fish dish served at a festival in Kansas?\nAnswer:October\nLevel:medium\nType:bridge"}, {"group": 58, "id": "a4459", "label": "a4459", "shape": "triangle", "size": 5, "title": "Question:In what month was the album containing The Man released?\nAnswer:September\nLevel:medium\nType:bridge"}, {"group": 58, "id": "a4697", "label": "a4697", "shape": "triangle", "size": 5, "title": "Question:The person who bought the cottage on Round Island in 1995 was born in what month?\nAnswer:July\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a4705", "label": "a4705", "shape": "triangle", "size": 5, "title": "Question:In what state is the national guard base that is name for America\u0027s most successful fighter ace in World War I?\nAnswer:Ohio\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a3714", "label": "a3714", "shape": "triangle", "size": 5, "title": "Question:Three Nationwide Plaza is a 408 ft(124m) postmodern highrise building located at the address 3 Nationwide Plaza in Downtown Columbus, Nationwide Plaza is the headquarters of Nationwide Mutual Insurance Company, and affiliated companies, are a group of large U.S. insurance and financial services companies based in Columbus in which US state (acronym)?\nAnswer:OH\nLevel:easy\nType:bridge"}, {"group": 131, "id": "a4743", "label": "a4743", "shape": "triangle", "size": 5, "title": "Question:What sitcom aired on NBC and Yahoo had a character named Michelle Slater (played by American actress Lauren Stamile)?\nAnswer:Community\nLevel:medium\nType:bridge"}, {"group": 131, "id": "a3890", "label": "a3890", "shape": "triangle", "size": 5, "title": "Question:What tragedy by William Shakespeare involves a norwegian crown prince and a character named \"Horatio\"?\nAnswer:Hamlet\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a4196", "label": "a4196", "shape": "triangle", "size": 5, "title": "Question:Werner Gunter Jaff\u00e9 Fellner was born in which metropolis and the largest city in the German state of Hesse and the fifth-largest city in Germany?\nAnswer:Frankfurt\nLevel:medium\nType:bridge"}, {"group": 41, "id": "a3863", "label": "a3863", "shape": "triangle", "size": 5, "title": "Question:Under the Cherry Moon stars the English Actress who won a 1979 BAFTA for what serial?\nAnswer:Lillie\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a4393", "label": "a4393", "shape": "triangle", "size": 5, "title": "Question:In which city is the conglomerate that bought Ray Ban from Bausch \u0026 Lomb ?\nAnswer:Milan\nLevel:hard\nType:bridge"}, {"group": 27, "id": "a4519", "label": "a4519", "shape": "triangle", "size": 5, "title": "Question:What state does First East Branch Magalloway River and Kennebec River have in common?\nAnswer:Maine\nLevel:medium\nType:bridge"}, {"group": 27, "id": "a1819", "label": "a1819", "shape": "triangle", "size": 5, "title": "Question:When considering Kelly D.Johnston and Bod Dole, which state was represented in the United States senate first - Oklahoma or Kansas?\nAnswer:Kansas\nLevel:hard\nType:bridge"}, {"group": 0, "id": "a4435", "label": "a4435", "shape": "triangle", "size": 5, "title": "Question:Readville, Boston is bordered on the south by the town in what Massachusetts county, the birthplace of George HW Bush?\nAnswer:Norfolk\nLevel:medium\nType:bridge"}, {"group": 72, "id": "a4374", "label": "a4374", "shape": "triangle", "size": 5, "title": "Question:What country are both Kopparvallen and Conny Torstensson from?\nAnswer:Sweden\nLevel:easy\nType:bridge"}, {"group": 72, "id": "a734", "label": "a734", "shape": "triangle", "size": 5, "title": "Question:In what country is both Faxe and Heineken brewed in?\nAnswer:Denmark\nLevel:hard\nType:bridge"}, {"group": 0, "id": "a4397", "label": "a4397", "shape": "triangle", "size": 5, "title": "Question:What team, managed by a man who is also and advisor to Central Coast Mariners, won the 2008 FA Cup?\nAnswer:Portsmouth\nLevel:hard\nType:bridge"}, {"group": 171, "id": "a4766", "label": "a4766", "shape": "triangle", "size": 5, "title": "Question:Where is the American film director based in who\u0027s one of the film is The Running Jumping \u0026 Standing Still Film?\nAnswer:Britain\nLevel:medium\nType:bridge"}, {"group": 171, "id": "a902", "label": "a902", "shape": "triangle", "size": 5, "title": "Question:Stainby is a hamlet in the South Kesteven district of Lincolnshire, and is situated 2 mi west from the A1 road, the A1 is the longest numbered road in which country?\nAnswer:UK\nLevel:easy\nType:bridge"}, {"group": 0, "id": "a4736", "label": "a4736", "shape": "triangle", "size": 5, "title": "Question:Of the cities Abdiel V\u00e1zquez has lived in, which one was the capital of Nuevo Leon?\nAnswer:Monterrey\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a4148", "label": "a4148", "shape": "triangle", "size": 5, "title": "Question:An American professional basketball player for the New York Knicks, who was born in 1983,  attended a college preparatory, non-denominational, co-educational day school in what North Carolina city?\nAnswer:Durham\nLevel:medium\nType:bridge"}, {"group": 39, "id": "a4649", "label": "a4649", "shape": "triangle", "size": 5, "title": "Question:What is the vocal range of the performer on the 2010 album \"Laws of Illusion\"?\nAnswer:mezzo-soprano\nLevel:medium\nType:bridge"}, {"group": 39, "id": "a767", "label": "a767", "shape": "triangle", "size": 5, "title": "Question:Steve Jones and Blag Dahlia, have which occupation in common?\nAnswer:singer\nLevel:easy\nType:comparison"}, {"group": 39, "id": "a1686", "label": "a1686", "shape": "triangle", "size": 5, "title": "Question:What role in their respective bands do Stephen Christian and Jonathan Davis share?\nAnswer:vocalist\nLevel:medium\nType:comparison"}, {"group": 39, "id": "a2203", "label": "a2203", "shape": "triangle", "size": 5, "title": "Question:Roger Vignoles has accompanied singer Sylvia McNair, what redister does she sing in?\nAnswer:soprano\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a4303", "label": "a4303", "shape": "triangle", "size": 5, "title": "Question:Pasquale Pistoriois the ex president of a multinational electronics and semiconductor manufacturer headquartered in which city ?\nAnswer:Geneva\nLevel:hard\nType:bridge"}, {"group": 0, "id": "a4142", "label": "a4142", "shape": "triangle", "size": 5, "title": "Question:Campari Knoepffler competed in 3 events at the Olympics in which city?\nAnswer:Montreal\nLevel:medium\nType:bridge"}, {"group": 145, "id": "a4276", "label": "a4276", "shape": "triangle", "size": 5, "title": "Question:\"This Is It\" is a song co-written by American pop star and musician, Michael Jackson, and Paul Albert Anka, a Canadian-American singer, songwriter, and actor that first became famous during the late era, of which time period?\nAnswer:1950s\nLevel:easy\nType:bridge"}, {"group": 145, "id": "a708", "label": "a708", "shape": "triangle", "size": 5, "title": "Question:Mark Geragos was involved in the scandal that took place in what decade?\nAnswer:1990s\nLevel:medium\nType:bridge"}, {"group": 145, "id": "a4977", "label": "a4977", "shape": "triangle", "size": 5, "title": "Question:What decade did Axl Rose and Masatoshi Ono vie for musical popularity?\nAnswer:1980s\nLevel:medium\nType:comparison"}, {"group": 164, "id": "a4680", "label": "a4680", "shape": "triangle", "size": 5, "title": "Question:What country of origin does Mad Over You and Runtown have in common?\nAnswer:Nigerian\nLevel:medium\nType:bridge"}, {"group": 164, "id": "a5511", "label": "a5511", "shape": "triangle", "size": 5, "title": "Question:Which of Hausa-Fulani\u0027s languages is the Chadic language with the largest number of speakers, Fulfulde or Hausa?\nAnswer:Hausa\nLevel:hard\nType:bridge"}, {"group": 195, "id": "a558", "label": "a558", "shape": "triangle", "size": 5, "title": "Question:Seoul Train and Making North America are both films in what style of cinema or film making genre?\nAnswer:documentary\nLevel:medium\nType:comparison"}, {"group": 195, "id": "a760", "label": "a760", "shape": "triangle", "size": 5, "title": "Question:Reagan and Give Us Our Skeletons were both which kind of films?\nAnswer:film\nLevel:easy\nType:comparison"}, {"group": 47, "id": "a646", "label": "a646", "shape": "triangle", "size": 5, "title": "Question:The Oxus cobra contains what kind of ions for their venom to be active? \nAnswer:magnesium\nLevel:hard\nType:bridge"}, {"group": 47, "id": "a756", "label": "a756", "shape": "triangle", "size": 5, "title": "Question:On which station could you have watched the actor from \"My Fair Lady\" play a character in \"I Can Hear Your Voice\"? \nAnswer:SBS\nLevel:easy\nType:bridge"}, {"group": 47, "id": "a1836", "label": "a1836", "shape": "triangle", "size": 5, "title": "Question:Black Nativity is a 2013 American musical drama film directed by Kasi Lemmons, the film stars an African American ensemble cast featuring which American hip hop recording artist, record producer, actor and entrepreneur, better known by his stage name, called what? \nAnswer:Nas\nLevel:easy\nType:bridge"}, {"group": 218, "id": "a924", "label": "a924", "shape": "triangle", "size": 5, "title": "Question:What do it yourself magazine does William Gurstelle write for?\nAnswer:Make\nLevel:hard\nType:bridge"}, {"group": 218, "id": "a754", "label": "a754", "shape": "triangle", "size": 5, "title": "Question:Both Corydalis and Cedrus are what level of classification in the naming system?\nAnswer:genus\nLevel:hard\nType:comparison"}, {"group": 0, "id": "a906", "label": "a906", "shape": "triangle", "size": 5, "title": "Question:Where was the British singer-songwriter who composed The Princess Bride\u0027s soundtrack born?\nAnswer:Glasgow\nLevel:medium\nType:bridge"}, {"group": 72, "id": "a695", "label": "a695", "shape": "triangle", "size": 5, "title": "Question:Tripel was the strongest beer in their range, in 1956, served at a Trappist brewery in what country?\nAnswer:Belgium\nLevel:medium\nType:bridge"}, {"group": 9, "id": "a3846", "label": "a3846", "shape": "triangle", "size": 5, "title": "Question:What type of aircraft can be used in congested or isolated areas and is used at Langley Regional Airport?\nAnswer:Helicopter\nLevel:medium\nType:bridge"}, {"group": 178, "id": "a578", "label": "a578", "shape": "triangle", "size": 5, "title": "Question:Which genus has a name derives from Greek words, Micromeria or Pamianthe?\nAnswer:Micromeria\nLevel:medium\nType:comparison"}, {"group": 178, "id": "a4958", "label": "a4958", "shape": "triangle", "size": 5, "title": "Question:Which one is a genus of perennial herbaceous, Gladiolus or Chelone?\nAnswer:Chelone\nLevel:medium\nType:comparison"}, {"group": 0, "id": "a1935", "label": "a1935", "shape": "triangle", "size": 5, "title": "Question:Which city is the training center that a forward for Spanish side Las Palmas of La Liga located in?\nAnswer:Lyon\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a2292", "label": "a2292", "shape": "triangle", "size": 5, "title": "Question:Which city is in the Western area of Ireland which is also the home of Sean Smyth?\nAnswer:Galway\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a3327", "label": "a3327", "shape": "triangle", "size": 5, "title": "Question:Who directed the 1979 American drama film that starred the actress who won the Golden Globe Award for Best Supporting Actress for \"Psycho\"?\nAnswer:Verona\nLevel:hard\nType:bridge"}, {"group": 0, "id": "a3485", "label": "a3485", "shape": "triangle", "size": 5, "title": "Question:Which ancient Lebanese city issued the coins known as shekels, used to pay taxes in the Temple of Jerusalem?\nAnswer:Tyre\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a3828", "label": "a3828", "shape": "triangle", "size": 5, "title": "Question:In what city was the person that discovered British singer-songwriter Kavana based?\nAnswer:Manchester\nLevel:hard\nType:bridge"}, {"group": 0, "id": "a3977", "label": "a3977", "shape": "triangle", "size": 5, "title": "Question:From what city was high-lying bass singer and conductor Gotthold Schwarz from?\nAnswer:Leipzig\nLevel:hard\nType:bridge"}, {"group": 0, "id": "a4060", "label": "a4060", "shape": "triangle", "size": 5, "title": "Question:SLS station was just south of those that were designed to give access to the RV park and casino in what Nevada suburb?\nAnswer:Winchester\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a5426", "label": "a5426", "shape": "triangle", "size": 5, "title": "Question:Which city on the banks of the Rhine is home to a museum of contemporary history with around one million visitors every year?\nAnswer:Bonn\nLevel:medium\nType:bridge"}, {"group": 0, "id": "a5651", "label": "a5651", "shape": "triangle", "size": 5, "title": "Question:Contract, an American album released by Freda Payne for Invictus Records, was compared to music by Diana Ross who performed under a division of what label?\nAnswer:Motown\nLevel:medium\nType:bridge"}, {"group": 39, "id": "a1852", "label": "a1852", "shape": "triangle", "size": 5, "title": "Question:What was the occupation of Manikanth Kadri\u0027s father?\nAnswer:saxophonist\nLevel:medium\nType:bridge"}, {"group": 39, "id": "a1997", "label": "a1997", "shape": "triangle", "size": 5, "title": "Question:Miki Berenyi and Phil Anselmo, are in which industry?\nAnswer:musician\nLevel:easy\nType:comparison"}, {"group": 39, "id": "a3956", "label": "a3956", "shape": "triangle", "size": 5, "title": "Question:What insturument type did Dickie Peterson and Ely Buendia have in common?\nAnswer:guitarist\nLevel:easy\nType:comparison"}, {"group": 55, "id": "a2034", "label": "a2034", "shape": "triangle", "size": 5, "title": "Question:What nationality were the ancestors of the congresswoman who introduced WEEA?\nAnswer:Japanese\nLevel:hard\nType:bridge"}, {"group": 55, "id": "a5236", "label": "a5236", "shape": "triangle", "size": 5, "title": "Question:Pura Gede Perancak is a prominent sea temple, of which type that has historically been used as a geographical, cultural, and later religious identifier for people indigenous to South Asia, in Perancak, Bali, Indonesia?\nAnswer:Hindu\nLevel:easy\nType:bridge"}, {"group": 120, "id": "a3639", "label": "a3639", "shape": "triangle", "size": 5, "title": "Question:What Small native cat to North and South America did Carl B. Koford make studies on in the 50\u0027s and 70\u0027s?\nAnswer:Jaguarundi\nLevel:medium\nType:bridge"}, {"group": 120, "id": "a5654", "label": "a5654", "shape": "triangle", "size": 5, "title": "Question:Which brand belongs to the elder brother of the owners of Adidas ?\nAnswer:Puma\nLevel:hard\nType:bridge"}, {"group": 102, "id": "a3205", "label": "a3205", "shape": "triangle", "size": 5, "title": "Question:Legend is a science fiction Western television show starring an American , director, producer, writer, singer, musician, voice artist and stand-up what?\nAnswer:comedian\nLevel:medium\nType:bridge"}, {"group": 102, "id": "a5127", "label": "a5127", "shape": "triangle", "size": 5, "title": "Question:Batman: The Killing Joke is a 1988 DC Comics graphic novel featuring characters Batman and who else?\nAnswer:Joker\nLevel:hard\nType:bridge"}, {"group": 183, "id": "a5659", "label": "a5659", "shape": "triangle", "size": 5, "title": "Question:What is the name of the leguminous tree that creates the flavor Imli for the digestive tablet Hajmola?\nAnswer:Tamarind\nLevel:medium\nType:bridge"}, {"group": 183, "id": "a5099", "label": "a5099", "shape": "triangle", "size": 5, "title": "Question:Lodoicea and Nothofagus, are genus of what mutual species?\nAnswer:trees\nLevel:easy\nType:comparison"}]);
+                  edges = new vis.DataSet([{"from": "a229", "to": "a831", "width": 1}, {"from": "a229", "to": "a1561", "width": 1}, {"from": "a229", "to": "a2837", "width": 1}, {"from": "a229", "to": "a4362", "width": 1}, {"from": "a338", "to": "a471", "width": 1}, {"from": "a262", "to": "a1932", "width": 1}, {"from": "a413", "to": "a2993", "width": 1}, {"from": "a3", "to": "a581", "width": 1}, {"from": "a3", "to": "a2417", "width": 1}, {"from": "a270", "to": "a925", "width": 1}, {"from": "a71", "to": "a3646", "width": 1}, {"from": "a69", "to": "a213", "width": 1}, {"from": "a69", "to": "a876", "width": 1}, {"from": "a69", "to": "a1294", "width": 1}, {"from": "a69", "to": "a1808", "width": 1}, {"from": "a69", "to": "a2305", "width": 1}, {"from": "a69", "to": "a2442", "width": 1}, {"from": "a69", "to": "a2587", "width": 1}, {"from": "a69", "to": "a2861", "width": 1}, {"from": "a69", "to": "a2903", "width": 1}, {"from": "a69", "to": "a4015", "width": 1}, {"from": "a69", "to": "a4176", "width": 1}, {"from": "a69", "to": "a4592", "width": 1}, {"from": "a69", "to": "a4874", "width": 1}, {"from": "a69", "to": "a5368", "width": 1}, {"from": "a69", "to": "a5646", "width": 1}, {"from": "a323", "to": "a925", "width": 1}, {"from": "a322", "to": "a59", "width": 1}, {"from": "a322", "to": "a256", "width": 1}, {"from": "a322", "to": "a342", "width": 1}, {"from": "a322", "to": "a456", "width": 1}, {"from": "a322", "to": "a501", "width": 1}, {"from": "a322", "to": "a539", "width": 1}, {"from": "a322", "to": "a1835", "width": 1}, {"from": "a322", "to": "a2287", "width": 1}, {"from": "a322", "to": "a2564", "width": 1}, {"from": "a64", "to": "a5527", "width": 1}, {"from": "a213", "to": "a876", "width": 1}, {"from": "a213", "to": "a1294", "width": 1}, {"from": "a213", "to": "a1808", "width": 1}, {"from": "a213", "to": "a2305", "width": 1}, {"from": "a213", "to": "a2442", "width": 1}, {"from": "a213", "to": "a2587", "width": 1}, {"from": "a213", "to": "a2861", "width": 1}, {"from": "a213", "to": "a2903", "width": 1}, {"from": "a213", "to": "a4015", "width": 1}, {"from": "a213", "to": "a4176", "width": 1}, {"from": "a213", "to": "a4592", "width": 1}, {"from": "a213", "to": "a4874", "width": 1}, {"from": "a213", "to": "a5368", "width": 1}, {"from": "a213", "to": "a5646", "width": 1}, {"from": "a163", "to": "a925", "width": 1}, {"from": "a39", "to": "a19", "width": 1}, {"from": "a39", "to": "a1466", "width": 1}, {"from": "a39", "to": "a3252", "width": 1}, {"from": "a17", "to": "a1228", "width": 1}, {"from": "a121", "to": "a230", "width": 1}, {"from": "a143", "to": "a587", "width": 1}, {"from": "a143", "to": "a663", "width": 1}, {"from": "a143", "to": "a1105", "width": 1}, {"from": "a143", "to": "a1149", "width": 1}, {"from": "a143", "to": "a1273", "width": 1}, {"from": "a143", "to": "a2394", "width": 1}, {"from": "a143", "to": "a2512", "width": 1}, {"from": "a143", "to": "a2978", "width": 1}, {"from": "a143", "to": "a3394", "width": 1}, {"from": "a143", "to": "a3741", "width": 1}, {"from": "a143", "to": "a4784", "width": 1}, {"from": "a143", "to": "a5130", "width": 1}, {"from": "a227", "to": "a1408", "width": 1}, {"from": "a373", "to": "a4633", "width": 1}, {"from": "a59", "to": "a256", "width": 1}, {"from": "a59", "to": "a342", "width": 1}, {"from": "a59", "to": "a456", "width": 1}, {"from": "a59", "to": "a501", "width": 1}, {"from": "a59", "to": "a539", "width": 1}, {"from": "a59", "to": "a1835", "width": 1}, {"from": "a59", "to": "a2287", "width": 1}, {"from": "a59", "to": "a2564", "width": 1}, {"from": "a134", "to": "a688", "width": 1}, {"from": "a342", "to": "a256", "width": 1}, {"from": "a342", "to": "a456", "width": 1}, {"from": "a342", "to": "a501", "width": 1}, {"from": "a342", "to": "a539", "width": 1}, {"from": "a342", "to": "a1835", "width": 1}, {"from": "a342", "to": "a2287", "width": 1}, {"from": "a342", "to": "a2564", "width": 1}, {"from": "a297", "to": "a873", "width": 1}, {"from": "a297", "to": "a2398", "width": 1}, {"from": "a297", "to": "a3024", "width": 1}, {"from": "a431", "to": "a3388", "width": 1}, {"from": "a55", "to": "a449", "width": 1}, {"from": "a1", "to": "a925", "width": 1}, {"from": "a256", "to": "a456", "width": 1}, {"from": "a256", "to": "a501", "width": 1}, {"from": "a256", "to": "a539", "width": 1}, {"from": "a256", "to": "a1835", "width": 1}, {"from": "a256", "to": "a2287", "width": 1}, {"from": "a256", "to": "a2564", "width": 1}, {"from": "a184", "to": "a485", "width": 1}, {"from": "a184", "to": "a2367", "width": 1}, {"from": "a184", "to": "a3252", "width": 1}, {"from": "a184", "to": "a4177", "width": 1}, {"from": "a180", "to": "a4353", "width": 1}, {"from": "a160", "to": "a599", "width": 1}, {"from": "a182", "to": "a4633", "width": 1}, {"from": "a340", "to": "a925", "width": 1}, {"from": "a19", "to": "a1466", "width": 1}, {"from": "a19", "to": "a3442", "width": 1}, {"from": "a19", "to": "a4745", "width": 1}, {"from": "a1129", "to": "a1459", "width": 1}, {"from": "a1129", "to": "a4347", "width": 1}, {"from": "a1377", "to": "a925", "width": 1}, {"from": "a1281", "to": "a574", "width": 1}, {"from": "a1281", "to": "a950", "width": 1}, {"from": "a1281", "to": "a1161", "width": 1}, {"from": "a1281", "to": "a4007", "width": 1}, {"from": "a1024", "to": "a3161", "width": 1}, {"from": "a1024", "to": "a4778", "width": 1}, {"from": "a1552", "to": "a925", "width": 1}, {"from": "a1459", "to": "a4347", "width": 1}, {"from": "a1392", "to": "a5487", "width": 1}, {"from": "a1551", "to": "a925", "width": 1}, {"from": "a1544", "to": "a2371", "width": 1}, {"from": "a1161", "to": "a574", "width": 1}, {"from": "a1161", "to": "a950", "width": 1}, {"from": "a1161", "to": "a4007", "width": 1}, {"from": "a1105", "to": "a587", "width": 1}, {"from": "a1105", "to": "a663", "width": 1}, {"from": "a1105", "to": "a1149", "width": 1}, {"from": "a1105", "to": "a1273", "width": 1}, {"from": "a1105", "to": "a2394", "width": 1}, {"from": "a1105", "to": "a2512", "width": 1}, {"from": "a1105", "to": "a2978", "width": 1}, {"from": "a1105", "to": "a3394", "width": 1}, {"from": "a1105", "to": "a3741", "width": 1}, {"from": "a1105", "to": "a4784", "width": 1}, {"from": "a1105", "to": "a5130", "width": 1}, {"from": "a1028", "to": "a627", "width": 1}, {"from": "a1028", "to": "a3850", "width": 1}, {"from": "a1028", "to": "a4793", "width": 1}, {"from": "a1028", "to": "a5098", "width": 1}, {"from": "a1530", "to": "a1352", "width": 1}, {"from": "a1530", "to": "a2302", "width": 1}, {"from": "a1445", "to": "a1477", "width": 1}, {"from": "a1466", "to": "a3442", "width": 1}, {"from": "a1466", "to": "a4745", "width": 1}, {"from": "a1566", "to": "a3458", "width": 1}, {"from": "a1199", "to": "a480", "width": 1}, {"from": "a1199", "to": "a2389", "width": 1}, {"from": "a1626", "to": "a3512", "width": 1}, {"from": "a1381", "to": "a925", "width": 1}, {"from": "a1214", "to": "a4678", "width": 1}, {"from": "a1158", "to": "a925", "width": 1}, {"from": "a1294", "to": "a876", "width": 1}, {"from": "a1294", "to": "a1808", "width": 1}, {"from": "a1294", "to": "a2305", "width": 1}, {"from": "a1294", "to": "a2442", "width": 1}, {"from": "a1294", "to": "a2587", "width": 1}, {"from": "a1294", "to": "a2861", "width": 1}, {"from": "a1294", "to": "a2903", "width": 1}, {"from": "a1294", "to": "a4015", "width": 1}, {"from": "a1294", "to": "a4176", "width": 1}, {"from": "a1294", "to": "a4592", "width": 1}, {"from": "a1294", "to": "a4874", "width": 1}, {"from": "a1294", "to": "a5368", "width": 1}, {"from": "a1294", "to": "a5646", "width": 1}, {"from": "a1352", "to": "a2302", "width": 1}, {"from": "a1352", "to": "a2885", "width": 1}, {"from": "a1352", "to": "a5068", "width": 1}, {"from": "a1662", "to": "a2008", "width": 1}, {"from": "a1242", "to": "a2454", "width": 1}, {"from": "a1242", "to": "a3259", "width": 1}, {"from": "a1149", "to": "a587", "width": 1}, {"from": "a1149", "to": "a663", "width": 1}, {"from": "a1149", "to": "a1273", "width": 1}, {"from": "a1149", "to": "a2394", "width": 1}, {"from": "a1149", "to": "a2512", "width": 1}, {"from": "a1149", "to": "a2978", "width": 1}, {"from": "a1149", "to": "a3394", "width": 1}, {"from": "a1149", "to": "a3741", "width": 1}, {"from": "a1149", "to": "a4784", "width": 1}, {"from": "a1149", "to": "a5130", "width": 1}, {"from": "a1561", "to": "a831", "width": 1}, {"from": "a1109", "to": "a1832", "width": 1}, {"from": "a1273", "to": "a587", "width": 1}, {"from": "a1273", "to": "a663", "width": 1}, {"from": "a1273", "to": "a2394", "width": 1}, {"from": "a1273", "to": "a2512", "width": 1}, {"from": "a1273", "to": "a2978", "width": 1}, {"from": "a1273", "to": "a3394", "width": 1}, {"from": "a1273", "to": "a3741", "width": 1}, {"from": "a1273", "to": "a4784", "width": 1}, {"from": "a1273", "to": "a5130", "width": 1}, {"from": "a1438", "to": "a2285", "width": 1}, {"from": "a1438", "to": "a2392", "width": 1}, {"from": "a1438", "to": "a3276", "width": 1}, {"from": "a1438", "to": "a3439", "width": 1}, {"from": "a2398", "to": "a873", "width": 1}, {"from": "a2398", "to": "a3024", "width": 1}, {"from": "a2398", "to": "a5601", "width": 1}, {"from": "a3112", "to": "a5503", "width": 1}, {"from": "a3117", "to": "a485", "width": 1}, {"from": "a3117", "to": "a2401", "width": 1}, {"from": "a3117", "to": "a4177", "width": 1}, {"from": "a2564", "to": "a456", "width": 1}, {"from": "a2564", "to": "a501", "width": 1}, {"from": "a2564", "to": "a539", "width": 1}, {"from": "a2564", "to": "a1835", "width": 1}, {"from": "a2564", "to": "a2287", "width": 1}, {"from": "a2687", "to": "a3861", "width": 1}, {"from": "a2513", "to": "a925", "width": 1}, {"from": "a3024", "to": "a5601", "width": 1}, {"from": "a2512", "to": "a587", "width": 1}, {"from": "a2512", "to": "a663", "width": 1}, {"from": "a2512", "to": "a2394", "width": 1}, {"from": "a2512", "to": "a2978", "width": 1}, {"from": "a2512", "to": "a3394", "width": 1}, {"from": "a2512", "to": "a3741", "width": 1}, {"from": "a2512", "to": "a4784", "width": 1}, {"from": "a2512", "to": "a5130", "width": 1}, {"from": "a2885", "to": "a2302", "width": 1}, {"from": "a2392", "to": "a3276", "width": 1}, {"from": "a2392", "to": "a3439", "width": 1}, {"from": "a2943", "to": "a925", "width": 1}, {"from": "a3072", "to": "a4422", "width": 1}, {"from": "a2401", "to": "a3512", "width": 1}, {"from": "a2401", "to": "a3671", "width": 1}, {"from": "a2587", "to": "a876", "width": 1}, {"from": "a2587", "to": "a1808", "width": 1}, {"from": "a2587", "to": "a2305", "width": 1}, {"from": "a2587", "to": "a2442", "width": 1}, {"from": "a2587", "to": "a2861", "width": 1}, {"from": "a2587", "to": "a2903", "width": 1}, {"from": "a2587", "to": "a4015", "width": 1}, {"from": "a2587", "to": "a4176", "width": 1}, {"from": "a2587", "to": "a4592", "width": 1}, {"from": "a2587", "to": "a4874", "width": 1}, {"from": "a2587", "to": "a5368", "width": 1}, {"from": "a2587", "to": "a5646", "width": 1}, {"from": "a2417", "to": "a581", "width": 1}, {"from": "a2861", "to": "a876", "width": 1}, {"from": "a2861", "to": "a1808", "width": 1}, {"from": "a2861", "to": "a2305", "width": 1}, {"from": "a2861", "to": "a2442", "width": 1}, {"from": "a2861", "to": "a2903", "width": 1}, {"from": "a2861", "to": "a4015", "width": 1}, {"from": "a2861", "to": "a4176", "width": 1}, {"from": "a2861", "to": "a4592", "width": 1}, {"from": "a2861", "to": "a4874", "width": 1}, {"from": "a2861", "to": "a5368", "width": 1}, {"from": "a2861", "to": "a5646", "width": 1}, {"from": "a2978", "to": "a587", "width": 1}, {"from": "a2978", "to": "a663", "width": 1}, {"from": "a2978", "to": "a2394", "width": 1}, {"from": "a2978", "to": "a3394", "width": 1}, {"from": "a2978", "to": "a3741", "width": 1}, {"from": "a2978", "to": "a4784", "width": 1}, {"from": "a2978", "to": "a5130", "width": 1}, {"from": "a2394", "to": "a587", "width": 1}, {"from": "a2394", "to": "a663", "width": 1}, {"from": "a2394", "to": "a3394", "width": 1}, {"from": "a2394", "to": "a3741", "width": 1}, {"from": "a2394", "to": "a4784", "width": 1}, {"from": "a2394", "to": "a5130", "width": 1}, {"from": "a3163", "to": "a623", "width": 1}, {"from": "a2583", "to": "a813", "width": 1}, {"from": "a2903", "to": "a876", "width": 1}, {"from": "a2903", "to": "a1808", "width": 1}, {"from": "a2903", "to": "a2305", "width": 1}, {"from": "a2903", "to": "a2442", "width": 1}, {"from": "a2903", "to": "a4015", "width": 1}, {"from": "a2903", "to": "a4176", "width": 1}, {"from": "a2903", "to": "a4592", "width": 1}, {"from": "a2903", "to": "a4874", "width": 1}, {"from": "a2903", "to": "a5368", "width": 1}, {"from": "a2903", "to": "a5646", "width": 1}, {"from": "a2454", "to": "a3259", "width": 1}, {"from": "a2442", "to": "a876", "width": 1}, {"from": "a2442", "to": "a1808", "width": 1}, {"from": "a2442", "to": "a2305", "width": 1}, {"from": "a2442", "to": "a4015", "width": 1}, {"from": "a2442", "to": "a4176", "width": 1}, {"from": "a2442", "to": "a4592", "width": 1}, {"from": "a2442", "to": "a4874", "width": 1}, {"from": "a2442", "to": "a5368", "width": 1}, {"from": "a2442", "to": "a5646", "width": 1}, {"from": "a2389", "to": "a480", "width": 1}, {"from": "a3139", "to": "a925", "width": 1}, {"from": "a3161", "to": "a4778", "width": 1}, {"from": "a4099", "to": "a2206", "width": 1}, {"from": "a4099", "to": "a3356", "width": 1}, {"from": "a4099", "to": "a4459", "width": 1}, {"from": "a4099", "to": "a4697", "width": 1}, {"from": "a4705", "to": "a3512", "width": 1}, {"from": "a4705", "to": "a3714", "width": 1}, {"from": "a4743", "to": "a3890", "width": 1}, {"from": "a4196", "to": "a925", "width": 1}, {"from": "a4353", "to": "a3863", "width": 1}, {"from": "a4176", "to": "a876", "width": 1}, {"from": "a4176", "to": "a1808", "width": 1}, {"from": "a4176", "to": "a2305", "width": 1}, {"from": "a4176", "to": "a4015", "width": 1}, {"from": "a4176", "to": "a4592", "width": 1}, {"from": "a4176", "to": "a4874", "width": 1}, {"from": "a4176", "to": "a5368", "width": 1}, {"from": "a4176", "to": "a5646", "width": 1}, {"from": "a4393", "to": "a925", "width": 1}, {"from": "a4519", "to": "a3252", "width": 1}, {"from": "a4519", "to": "a3512", "width": 1}, {"from": "a4745", "to": "a1819", "width": 1}, {"from": "a4745", "to": "a3442", "width": 1}, {"from": "a4435", "to": "a925", "width": 1}, {"from": "a4374", "to": "a734", "width": 1}, {"from": "a4397", "to": "a925", "width": 1}, {"from": "a4766", "to": "a902", "width": 1}, {"from": "a4736", "to": "a925", "width": 1}, {"from": "a4148", "to": "a925", "width": 1}, {"from": "a4459", "to": "a2206", "width": 1}, {"from": "a4459", "to": "a3356", "width": 1}, {"from": "a4459", "to": "a4697", "width": 1}, {"from": "a4697", "to": "a2206", "width": 1}, {"from": "a4697", "to": "a3356", "width": 1}, {"from": "a4649", "to": "a767", "width": 1}, {"from": "a4649", "to": "a1686", "width": 1}, {"from": "a4649", "to": "a2203", "width": 1}, {"from": "a4592", "to": "a876", "width": 1}, {"from": "a4592", "to": "a1808", "width": 1}, {"from": "a4592", "to": "a2305", "width": 1}, {"from": "a4592", "to": "a4015", "width": 1}, {"from": "a4592", "to": "a4874", "width": 1}, {"from": "a4592", "to": "a5368", "width": 1}, {"from": "a4592", "to": "a5646", "width": 1}, {"from": "a4303", "to": "a925", "width": 1}, {"from": "a4142", "to": "a925", "width": 1}, {"from": "a4276", "to": "a708", "width": 1}, {"from": "a4276", "to": "a4977", "width": 1}, {"from": "a4680", "to": "a5511", "width": 1}, {"from": "a708", "to": "a4977", "width": 1}, {"from": "a558", "to": "a760", "width": 1}, {"from": "a646", "to": "a756", "width": 1}, {"from": "a646", "to": "a1836", "width": 1}, {"from": "a924", "to": "a754", "width": 1}, {"from": "a627", "to": "a3850", "width": 1}, {"from": "a627", "to": "a4793", "width": 1}, {"from": "a627", "to": "a5098", "width": 1}, {"from": "a906", "to": "a925", "width": 1}, {"from": "a485", "to": "a1819", "width": 1}, {"from": "a873", "to": "a695", "width": 1}, {"from": "a873", "to": "a734", "width": 1}, {"from": "a480", "to": "a3846", "width": 1}, {"from": "a456", "to": "a501", "width": 1}, {"from": "a456", "to": "a539", "width": 1}, {"from": "a456", "to": "a1835", "width": 1}, {"from": "a456", "to": "a2287", "width": 1}, {"from": "a876", "to": "a1808", "width": 1}, {"from": "a876", "to": "a2305", "width": 1}, {"from": "a876", "to": "a4015", "width": 1}, {"from": "a876", "to": "a4874", "width": 1}, {"from": "a876", "to": "a5368", "width": 1}, {"from": "a876", "to": "a5646", "width": 1}, {"from": "a578", "to": "a4958", "width": 1}, {"from": "a925", "to": "a1935", "width": 1}, {"from": "a925", "to": "a2292", "width": 1}, {"from": "a925", "to": "a3327", "width": 1}, {"from": "a925", "to": "a3485", "width": 1}, {"from": "a925", "to": "a3828", "width": 1}, {"from": "a925", "to": "a3977", "width": 1}, {"from": "a925", "to": "a4060", "width": 1}, {"from": "a925", "to": "a5426", "width": 1}, {"from": "a925", "to": "a5651", "width": 1}, {"from": "a950", "to": "a574", "width": 1}, {"from": "a950", "to": "a4007", "width": 1}, {"from": "a663", "to": "a587", "width": 1}, {"from": "a663", "to": "a3394", "width": 1}, {"from": "a663", "to": "a3741", "width": 1}, {"from": "a663", "to": "a4784", "width": 1}, {"from": "a663", "to": "a5130", "width": 1}, {"from": "a756", "to": "a1836", "width": 1}, {"from": "a574", "to": "a4007", "width": 1}, {"from": "a587", "to": "a3394", "width": 1}, {"from": "a587", "to": "a3741", "width": 1}, {"from": "a587", "to": "a4784", "width": 1}, {"from": "a587", "to": "a5130", "width": 1}, {"from": "a501", "to": "a539", "width": 1}, {"from": "a501", "to": "a1835", "width": 1}, {"from": "a501", "to": "a2287", "width": 1}, {"from": "a539", "to": "a1835", "width": 1}, {"from": "a539", "to": "a2287", "width": 1}, {"from": "a767", "to": "a1686", "width": 1}, {"from": "a767", "to": "a1852", "width": 1}, {"from": "a767", "to": "a1997", "width": 1}, {"from": "a767", "to": "a2203", "width": 1}, {"from": "a767", "to": "a3956", "width": 1}, {"from": "a2302", "to": "a5068", "width": 1}, {"from": "a2203", "to": "a1686", "width": 1}, {"from": "a2203", "to": "a1997", "width": 1}, {"from": "a1997", "to": "a1686", "width": 1}, {"from": "a1997", "to": "a1852", "width": 1}, {"from": "a1997", "to": "a3956", "width": 1}, {"from": "a2287", "to": "a1835", "width": 1}, {"from": "a2034", "to": "a5236", "width": 1}, {"from": "a1852", "to": "a1686", "width": 1}, {"from": "a1852", "to": "a3956", "width": 1}, {"from": "a2305", "to": "a1808", "width": 1}, {"from": "a2305", "to": "a4015", "width": 1}, {"from": "a2305", "to": "a4874", "width": 1}, {"from": "a2305", "to": "a5368", "width": 1}, {"from": "a2305", "to": "a5646", "width": 1}, {"from": "a1808", "to": "a4015", "width": 1}, {"from": "a1808", "to": "a4874", "width": 1}, {"from": "a1808", "to": "a5368", "width": 1}, {"from": "a1808", "to": "a5646", "width": 1}, {"from": "a2206", "to": "a3356", "width": 1}, {"from": "a1686", "to": "a3956", "width": 1}, {"from": "a1819", "to": "a3442", "width": 1}, {"from": "a3639", "to": "a5654", "width": 1}, {"from": "a3394", "to": "a3741", "width": 1}, {"from": "a3394", "to": "a4784", "width": 1}, {"from": "a3394", "to": "a5130", "width": 1}, {"from": "a3850", "to": "a4793", "width": 1}, {"from": "a3850", "to": "a5098", "width": 1}, {"from": "a4015", "to": "a4874", "width": 1}, {"from": "a4015", "to": "a5368", "width": 1}, {"from": "a4015", "to": "a5646", "width": 1}, {"from": "a3671", "to": "a3442", "width": 1}, {"from": "a3512", "to": "a3714", "width": 1}, {"from": "a3205", "to": "a5127", "width": 1}, {"from": "a3741", "to": "a4784", "width": 1}, {"from": "a3741", "to": "a5130", "width": 1}, {"from": "a5659", "to": "a5099", "width": 1}, {"from": "a4874", "to": "a5368", "width": 1}, {"from": "a4874", "to": "a5646", "width": 1}, {"from": "a4784", "to": "a5130", "width": 1}, {"from": "a4793", "to": "a5098", "width": 1}, {"from": "a5368", "to": "a5646", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

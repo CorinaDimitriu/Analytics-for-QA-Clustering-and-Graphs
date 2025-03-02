@@ -1,0 +1,256 @@
+p 59 196
+v 1 CitySpire Center Sentence
+v 2 Night Live Sentence
+v 3 Staten Island Sentence
+v 4 non-Hispanic White Sentence
+v 5 Cecily Legler Sentence
+v 6 Staten Island Sentence
+v 7 New York City Sentence
+v 8 New Jersey Sentence
+v 9 New York Bay Sentence
+v 10 New York Sentence
+v 11 Arthur Kill Sentence
+v 12 New York Sentence
+v 13 New York Sentence
+v 14 Staten Island Sentence
+v 15 American Sentence
+v 16 Colin Jost Sentence
+v 17 Staten Island Title
+v 18 U.S Sentence
+v 19 New York City Sentence
+v 20 U.S Sentence
+v 21 New York Sentence
+v 22 New York Bay Sentence
+v 23 New York Sentence
+v 24 Van Kull Sentence
+v 25 Staten Island Sentence
+v 26 Metropolitan Tower Sentence
+v 27 Staten Island Sentence
+v 28 Staten Island Sentence
+v 29 Brooklyn Sentence
+v 30 New Jersey Sentence
+v 31 Rhys Thomas Sentence
+v 32 Street Sentence
+v 33 New York City Sentence
+v 34 non-Hispanic White Sentence
+v 35 U.S Sentence
+v 36 Census-estimated Sentence
+v 37 New York City Sentence
+v 38 Conference House Park Sentence
+v 39 New York Sentence
+v 40 Arthur Kill Sentence
+v 41 Staten Island Title
+v 42 Van Kull Sentence
+v 43 Carnegie Hall Tower Sentence
+v 44 Staten Island Sentence
+v 45 Queens County Sentence
+v 46 Census-estimated Sentence
+v 47 Staten Island Title
+v 48 New York Sentence
+v 49 Kings County Sentence
+v 50 Staten Island Sentence
+v 51 One57 Sentence
+v 52 Carnegie Hall Tower Title
+v 53 New York Sentence
+v 54 Carnegie Hall Sentence
+v 55 New York Sentence
+v 56 American Sentence
+v 57 Staten Island Sentence
+v 58 Conference House Park Sentence
+v 59 New York Sentence
+e 54 1 1
+e 51 1 1
+e 26 1 1
+e 13 1 1
+e 56 2 1
+e 5 2 1
+e 31 3 1
+e 17 3 1
+e 16 3 1
+e 15 3 1
+e 57 4 1
+e 39 4 1
+e 56 5 1
+e 2 5 1
+e 53 6 1
+e 41 6 1
+e 37 6 1
+e 35 6 1
+e 33 7 1
+e 27 7 1
+e 23 7 1
+e 20 7 1
+e 24 8 1
+e 21 8 1
+e 11 8 1
+e 9 8 1
+e 24 9 1
+e 21 9 1
+e 11 9 1
+e 8 9 1
+e 58 10 1
+e 14 10 1
+e 13 10 1
+e 24 11 1
+e 21 11 1
+e 9 11 1
+e 8 11 1
+e 42 12 1
+e 40 12 1
+e 30 12 1
+e 22 12 1
+e 13 12 1
+e 54 13 1
+e 53 13 1
+e 51 13 1
+e 39 13 1
+e 26 13 1
+e 12 13 1
+e 10 13 1
+e 1 13 1
+e 58 14 1
+e 41 14 1
+e 10 14 1
+e 56 15 1
+e 31 15 1
+e 16 15 1
+e 3 15 1
+e 31 16 1
+e 15 16 1
+e 3 16 1
+e 47 17 1
+e 41 17 1
+e 55 18 1
+e 49 18 1
+e 45 18 1
+e 29 18 1
+e 20 18 1
+e 43 19 1
+e 37 19 1
+e 32 19 1
+e 27 20 1
+e 23 20 1
+e 18 20 1
+e 7 20 1
+e 55 21 1
+e 24 21 1
+e 11 21 1
+e 9 21 1
+e 8 21 1
+e 42 22 1
+e 40 22 1
+e 30 22 1
+e 12 22 1
+e 55 23 1
+e 27 23 1
+e 20 23 1
+e 7 23 1
+e 21 24 1
+e 11 24 1
+e 9 24 1
+e 8 24 1
+e 41 25 1
+e 36 25 1
+e 54 26 1
+e 51 26 1
+e 13 26 1
+e 1 26 1
+e 47 27 1
+e 23 27 1
+e 20 27 1
+e 7 27 1
+e 47 28 1
+e 46 28 1
+e 55 29 1
+e 49 29 1
+e 45 29 1
+e 18 29 1
+e 42 30 1
+e 40 30 1
+e 22 30 1
+e 12 30 1
+e 16 31 1
+e 15 31 1
+e 3 31 1
+e 43 32 1
+e 19 32 1
+e 7 33 1
+e 59 34 1
+e 50 34 1
+e 53 35 1
+e 37 35 1
+e 6 35 1
+e 25 36 1
+e 53 37 1
+e 35 37 1
+e 19 37 1
+e 6 37 1
+e 48 38 1
+e 44 38 1
+e 57 39 1
+e 13 39 1
+e 4 39 1
+e 42 40 1
+e 30 40 1
+e 22 40 1
+e 12 40 1
+e 47 41 1
+e 17 41 1
+e 40 42 1
+e 30 42 1
+e 22 42 1
+e 12 42 1
+e 52 43 1
+e 32 43 1
+e 19 43 1
+e 48 44 1
+e 47 44 1
+e 38 44 1
+e 55 45 1
+e 49 45 1
+e 29 45 1
+e 18 45 1
+e 28 46 1
+e 41 47 1
+e 17 47 1
+e 55 48 1
+e 44 48 1
+e 38 48 1
+e 55 49 1
+e 45 49 1
+e 29 49 1
+e 18 49 1
+e 59 50 1
+e 47 50 1
+e 34 50 1
+e 54 51 1
+e 26 51 1
+e 13 51 1
+e 1 51 1
+e 37 53 1
+e 35 53 1
+e 13 53 1
+e 6 53 1
+e 51 54 1
+e 26 54 1
+e 13 54 1
+e 1 54 1
+e 59 55 1
+e 49 55 1
+e 48 55 1
+e 45 55 1
+e 29 55 1
+e 23 55 1
+e 21 55 1
+e 18 55 1
+e 15 56 1
+e 5 56 1
+e 2 56 1
+e 41 57 1
+e 39 57 1
+e 4 57 1
+e 14 58 1
+e 10 58 1
+e 55 59 1
+e 50 59 1
+e 34 59 1

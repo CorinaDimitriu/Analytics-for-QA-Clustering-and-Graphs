@@ -1,0 +1,815 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 1700px;
+                 height: 900px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="3057-2-0-1">3057-2-0-1</option>
+                                
+                                    <option value="3057-2-0-5">3057-2-0-5</option>
+                                
+                                    <option value="3057-2-0-4">3057-2-0-4</option>
+                                
+                                    <option value="3057-2-0-2">3057-2-0-2</option>
+                                
+                                    <option value="3057-2-0-0">3057-2-0-0</option>
+                                
+                                    <option value="3057-2--1-1">3057-2--1-1</option>
+                                
+                                    <option value="3807-4-0-1">3807-4-0-1</option>
+                                
+                                    <option value="3807-4-0-2">3807-4-0-2</option>
+                                
+                                    <option value="3807-4-0-0">3807-4-0-0</option>
+                                
+                                    <option value="3057-2-0-3">3057-2-0-3</option>
+                                
+                                    <option value="1961-2-1-0">1961-2-1-0</option>
+                                
+                                    <option value="1961-2-1-3">1961-2-1-3</option>
+                                
+                                    <option value="1961-2-1-2">1961-2-1-2</option>
+                                
+                                    <option value="1961-2-1-1">1961-2-1-1</option>
+                                
+                                    <option value="3123-8-0-4">3123-8-0-4</option>
+                                
+                                    <option value="3123-8-0-6">3123-8-0-6</option>
+                                
+                                    <option value="3123-8-0-5">3123-8-0-5</option>
+                                
+                                    <option value="3123-8-0-3">3123-8-0-3</option>
+                                
+                                    <option value="3123-8-0-2">3123-8-0-2</option>
+                                
+                                    <option value="3123-8-0-1">3123-8-0-1</option>
+                                
+                                    <option value="3123-8-0-0">3123-8-0-0</option>
+                                
+                                    <option value="7144-5-2-1">7144-5-2-1</option>
+                                
+                                    <option value="7144-5-2-0">7144-5-2-0</option>
+                                
+                                    <option value="7144-5--1-0">7144-5--1-0</option>
+                                
+                                    <option value="3123-8-1-2">3123-8-1-2</option>
+                                
+                                    <option value="3123-8-1-4">3123-8-1-4</option>
+                                
+                                    <option value="3123-8-1-3">3123-8-1-3</option>
+                                
+                                    <option value="3123-8-1-1">3123-8-1-1</option>
+                                
+                                    <option value="3123-8-1-0">3123-8-1-0</option>
+                                
+                                    <option value="3807-9-1-1">3807-9-1-1</option>
+                                
+                                    <option value="3807-9-1-0">3807-9-1-0</option>
+                                
+                                    <option value="4410-6-1-3">4410-6-1-3</option>
+                                
+                                    <option value="4410-6-1-4">4410-6-1-4</option>
+                                
+                                    <option value="4410-6-1-2">4410-6-1-2</option>
+                                
+                                    <option value="4410-6-1-1">4410-6-1-1</option>
+                                
+                                    <option value="4410-6-1-0">4410-6-1-0</option>
+                                
+                                    <option value="7144-5-1-4">7144-5-1-4</option>
+                                
+                                    <option value="7144-5-1-3">7144-5-1-3</option>
+                                
+                                    <option value="7144-5-1-2">7144-5-1-2</option>
+                                
+                                    <option value="7144-5-1-1">7144-5-1-1</option>
+                                
+                                    <option value="7144-5-1-0">7144-5-1-0</option>
+                                
+                                    <option value="4933-7-2-2">4933-7-2-2</option>
+                                
+                                    <option value="4933-9-4-1">4933-9-4-1</option>
+                                
+                                    <option value="4933-9-0-0">4933-9-0-0</option>
+                                
+                                    <option value="4933-7-2-4">4933-7-2-4</option>
+                                
+                                    <option value="4933-7-2-3">4933-7-2-3</option>
+                                
+                                    <option value="4933-7-2-1">4933-7-2-1</option>
+                                
+                                    <option value="4933-7-2-0">4933-7-2-0</option>
+                                
+                                    <option value="3123-0-1-5">3123-0-1-5</option>
+                                
+                                    <option value="3123-0-0-4">3123-0-0-4</option>
+                                
+                                    <option value="7144-5-0-3">7144-5-0-3</option>
+                                
+                                    <option value="7144-5-0-4">7144-5-0-4</option>
+                                
+                                    <option value="7144-5-0-2">7144-5-0-2</option>
+                                
+                                    <option value="7144-5-0-1">7144-5-0-1</option>
+                                
+                                    <option value="7144-5-0-0">7144-5-0-0</option>
+                                
+                                    <option value="4182-7-1-3">4182-7-1-3</option>
+                                
+                                    <option value="4182-7-1-4">4182-7-1-4</option>
+                                
+                                    <option value="4182-7-1-2">4182-7-1-2</option>
+                                
+                                    <option value="4182-7-1-1">4182-7-1-1</option>
+                                
+                                    <option value="4182-7-1-0">4182-7-1-0</option>
+                                
+                                    <option value="4182-7-2-4">4182-7-2-4</option>
+                                
+                                    <option value="4182-7-2-3">4182-7-2-3</option>
+                                
+                                    <option value="4182-7-2-2">4182-7-2-2</option>
+                                
+                                    <option value="4182-7-2-1">4182-7-2-1</option>
+                                
+                                    <option value="4182-7-2-0">4182-7-2-0</option>
+                                
+                                    <option value="1751-0--1-0">1751-0--1-0</option>
+                                
+                                    <option value="4410-6--1-0">4410-6--1-0</option>
+                                
+                                    <option value="3123-8--1-0">3123-8--1-0</option>
+                                
+                                    <option value="3057-2--1-0">3057-2--1-0</option>
+                                
+                                    <option value="1961-3--1-0">1961-3--1-0</option>
+                                
+                                    <option value="1751-0-0-0">1751-0-0-0</option>
+                                
+                                    <option value="1751-0-1-1">1751-0-1-1</option>
+                                
+                                    <option value="3123-0-0-2">3123-0-0-2</option>
+                                
+                                    <option value="3123-0-0-3">3123-0-0-3</option>
+                                
+                                    <option value="3123-0-0-1">3123-0-0-1</option>
+                                
+                                    <option value="3123-0-0-0">3123-0-0-0</option>
+                                
+                                    <option value="1961-3-0-0">1961-3-0-0</option>
+                                
+                                    <option value="1961-3-1-1">1961-3-1-1</option>
+                                
+                                    <option value="1961-2-0-4">1961-2-0-4</option>
+                                
+                                    <option value="1961-2-0-8">1961-2-0-8</option>
+                                
+                                    <option value="1961-2-0-7">1961-2-0-7</option>
+                                
+                                    <option value="1961-2-0-6">1961-2-0-6</option>
+                                
+                                    <option value="1961-2-0-5">1961-2-0-5</option>
+                                
+                                    <option value="1961-2-0-3">1961-2-0-3</option>
+                                
+                                    <option value="1961-2-0-2">1961-2-0-2</option>
+                                
+                                    <option value="1961-2-0-1">1961-2-0-1</option>
+                                
+                                    <option value="1961-2-0-0">1961-2-0-0</option>
+                                
+                                    <option value="4182-1-2-1">4182-1-2-1</option>
+                                
+                                    <option value="4182-1-2-2">4182-1-2-2</option>
+                                
+                                    <option value="4182-1-2-0">4182-1-2-0</option>
+                                
+                                    <option value="4410-2-0-6">4410-2-0-6</option>
+                                
+                                    <option value="2157-4-0-1">2157-4-0-1</option>
+                                
+                                    <option value="2157-4-0-3">2157-4-0-3</option>
+                                
+                                    <option value="2157-4-0-2">2157-4-0-2</option>
+                                
+                                    <option value="2157-4-0-0">2157-4-0-0</option>
+                                
+                                    <option value="2157-4--1-1">2157-4--1-1</option>
+                                
+                                    <option value="1751-0-1-0">1751-0-1-0</option>
+                                
+                                    <option value="1751-0-1-3">1751-0-1-3</option>
+                                
+                                    <option value="1751-0-1-2">1751-0-1-2</option>
+                                
+                                    <option value="4182-7-0-0">4182-7-0-0</option>
+                                
+                                    <option value="4182-7-0-2">4182-7-0-2</option>
+                                
+                                    <option value="4182-7-0-1">4182-7-0-1</option>
+                                
+                                    <option value="4182-7--1-0">4182-7--1-0</option>
+                                
+                                    <option value="4182-1-1-1">4182-1-1-1</option>
+                                
+                                    <option value="4182-1-1-0">4182-1-1-0</option>
+                                
+                                    <option value="4933-7-1-1">4933-7-1-1</option>
+                                
+                                    <option value="4933-7-1-2">4933-7-1-2</option>
+                                
+                                    <option value="4933-7-1-0">4933-7-1-0</option>
+                                
+                                    <option value="6899-1-0-3">6899-1-0-3</option>
+                                
+                                    <option value="6899-1-0-4">6899-1-0-4</option>
+                                
+                                    <option value="6899-1-0-2">6899-1-0-2</option>
+                                
+                                    <option value="6899-1-0-1">6899-1-0-1</option>
+                                
+                                    <option value="6899-1-0-0">6899-1-0-0</option>
+                                
+                                    <option value="1961-3-1-4">1961-3-1-4</option>
+                                
+                                    <option value="4182-1--1-0">4182-1--1-0</option>
+                                
+                                    <option value="4182-1-0-0">4182-1-0-0</option>
+                                
+                                    <option value="3123-8--1-1">3123-8--1-1</option>
+                                
+                                    <option value="7144-5--1-1">7144-5--1-1</option>
+                                
+                                    <option value="4933-9-4-0">4933-9-4-0</option>
+                                
+                                    <option value="4933-9-3-0">4933-9-3-0</option>
+                                
+                                    <option value="4933-9-2-0">4933-9-2-0</option>
+                                
+                                    <option value="3123-0-1-6">3123-0-1-6</option>
+                                
+                                    <option value="3123-0-1-4">3123-0-1-4</option>
+                                
+                                    <option value="3123-0-1-3">3123-0-1-3</option>
+                                
+                                    <option value="3123-0-1-2">3123-0-1-2</option>
+                                
+                                    <option value="3123-0-1-1">3123-0-1-1</option>
+                                
+                                    <option value="3123-0-1-0">3123-0-1-0</option>
+                                
+                                    <option value="4933-9-2-1">4933-9-2-1</option>
+                                
+                                    <option value="4933-9-2-3">4933-9-2-3</option>
+                                
+                                    <option value="4933-9-2-2">4933-9-2-2</option>
+                                
+                                    <option value="1961-3-0-6">1961-3-0-6</option>
+                                
+                                    <option value="1961-3-0-5">1961-3-0-5</option>
+                                
+                                    <option value="1961-3-0-4">1961-3-0-4</option>
+                                
+                                    <option value="1961-3-0-3">1961-3-0-3</option>
+                                
+                                    <option value="1961-3-0-2">1961-3-0-2</option>
+                                
+                                    <option value="1961-3-0-1">1961-3-0-1</option>
+                                
+                                    <option value="5120-4-0-6">5120-4-0-6</option>
+                                
+                                    <option value="5120-4-0-5">5120-4-0-5</option>
+                                
+                                    <option value="5120-4-0-4">5120-4-0-4</option>
+                                
+                                    <option value="5120-4-0-3">5120-4-0-3</option>
+                                
+                                    <option value="5120-4-0-2">5120-4-0-2</option>
+                                
+                                    <option value="5120-4-0-1">5120-4-0-1</option>
+                                
+                                    <option value="5120-4-0-0">5120-4-0-0</option>
+                                
+                                    <option value="3057-2-2-1">3057-2-2-1</option>
+                                
+                                    <option value="3057-2-2-0">3057-2-2-0</option>
+                                
+                                    <option value="1961-3--1-1">1961-3--1-1</option>
+                                
+                                    <option value="3807-4--1-0">3807-4--1-0</option>
+                                
+                                    <option value="4933-9--1-0">4933-9--1-0</option>
+                                
+                                    <option value="3807-4-2-3">3807-4-2-3</option>
+                                
+                                    <option value="1961-3-1-3">1961-3-1-3</option>
+                                
+                                    <option value="1961-3-1-2">1961-3-1-2</option>
+                                
+                                    <option value="1961-3-1-0">1961-3-1-0</option>
+                                
+                                    <option value="3123-0--1-0">3123-0--1-0</option>
+                                
+                                    <option value="6899-1--1-0">6899-1--1-0</option>
+                                
+                                    <option value="4410-6-0-1">4410-6-0-1</option>
+                                
+                                    <option value="4410-6-0-6">4410-6-0-6</option>
+                                
+                                    <option value="4410-6-0-4">4410-6-0-4</option>
+                                
+                                    <option value="4410-6-0-2">4410-6-0-2</option>
+                                
+                                    <option value="4410-6-0-0">4410-6-0-0</option>
+                                
+                                    <option value="4410-6--1-1">4410-6--1-1</option>
+                                
+                                    <option value="4410-6-0-5">4410-6-0-5</option>
+                                
+                                    <option value="4410-6-0-3">4410-6-0-3</option>
+                                
+                                    <option value="2157-4--1-0">2157-4--1-0</option>
+                                
+                                    <option value="5120-4--1-0">5120-4--1-0</option>
+                                
+                                    <option value="4410-2--1-0">4410-2--1-0</option>
+                                
+                                    <option value="4182-1-0-1">4182-1-0-1</option>
+                                
+                                    <option value="3807-4-2-2">3807-4-2-2</option>
+                                
+                                    <option value="3807-4-2-4">3807-4-2-4</option>
+                                
+                                    <option value="3807-4-2-1">3807-4-2-1</option>
+                                
+                                    <option value="3807-4-2-0">3807-4-2-0</option>
+                                
+                                    <option value="4410-2-0-0">4410-2-0-0</option>
+                                
+                                    <option value="4410-2-0-5">4410-2-0-5</option>
+                                
+                                    <option value="4410-2-0-4">4410-2-0-4</option>
+                                
+                                    <option value="4410-2-0-3">4410-2-0-3</option>
+                                
+                                    <option value="4410-2-0-2">4410-2-0-2</option>
+                                
+                                    <option value="4410-2-0-1">4410-2-0-1</option>
+                                
+                                    <option value="1751-0-0-1">1751-0-0-1</option>
+                                
+                                    <option value="1751-0-0-3">1751-0-0-3</option>
+                                
+                                    <option value="1751-0-0-2">1751-0-0-2</option>
+                                
+                                    <option value="1751-4-2-0">1751-4-2-0</option>
+                                
+                                    <option value="1961-2--1-0">1961-2--1-0</option>
+                                
+                                    <option value="2157-4-2-0">2157-4-2-0</option>
+                                
+                                    <option value="4933-9-3-1">4933-9-3-1</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 50, "id": "3057-2-0-1", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.14\nLabel:50", "shape": "square", "size": 6, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.14\nLabel:50"}, {"group": 47, "id": "3057-2-0-5", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.13\nLabel:47", "shape": "square", "size": 6, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.13\nLabel:47"}, {"group": 50, "id": "3057-2-0-4", "label": "Entity:California\nType:Sentence\nPage Rank:1.35\nLabel:50", "shape": "square", "size": 7, "title": "Entity:California\nType:Sentence\nPage Rank:1.35\nLabel:50"}, {"group": 50, "id": "3057-2-0-2", "label": "Entity:UCSF\nType:Sentence\nPage Rank:1.35\nLabel:50", "shape": "square", "size": 7, "title": "Entity:UCSF\nType:Sentence\nPage Rank:1.35\nLabel:50"}, {"group": 47, "id": "3057-2-0-0", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.13\nLabel:47", "shape": "square", "size": 6, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.13\nLabel:47"}, {"group": 101, "id": "3057-2--1-1", "label": "Entity:San Francisco\nType:Title\nPage Rank:0.31\nLabel:101", "shape": "square", "size": 2, "title": "Entity:San Francisco\nType:Title\nPage Rank:0.31\nLabel:101"}, {"group": 83, "id": "3807-4-0-1", "label": "Entity:American\nType:Sentence\nPage Rank:0.91\nLabel:83", "shape": "square", "size": 5, "title": "Entity:American\nType:Sentence\nPage Rank:0.91\nLabel:83"}, {"group": 83, "id": "3807-4-0-2", "label": "Entity:San Francisco Bay Area\nType:Sentence\nPage Rank:0.91\nLabel:83", "shape": "square", "size": 5, "title": "Entity:San Francisco Bay Area\nType:Sentence\nPage Rank:0.91\nLabel:83"}, {"group": 83, "id": "3807-4-0-0", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.32\nLabel:83", "shape": "square", "size": 7, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.32\nLabel:83"}, {"group": 50, "id": "3057-2-0-3", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.14\nLabel:50", "shape": "square", "size": 6, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.14\nLabel:50"}, {"group": 20, "id": "1961-2-1-0", "label": "Entity:Louis Guillaume Valentin Dubourg\nType:Sentence\nPage Rank:0.89\nLabel:20", "shape": "square", "size": 4, "title": "Entity:Louis Guillaume Valentin Dubourg\nType:Sentence\nPage Rank:0.89\nLabel:20"}, {"group": 20, "id": "1961-2-1-3", "label": "Entity:United States\nType:Sentence\nPage Rank:1.10\nLabel:20", "shape": "square", "size": 5, "title": "Entity:United States\nType:Sentence\nPage Rank:1.10\nLabel:20"}, {"group": 20, "id": "1961-2-1-2", "label": "Entity:Jesuit\nType:Sentence\nPage Rank:0.89\nLabel:20", "shape": "square", "size": 4, "title": "Entity:Jesuit\nType:Sentence\nPage Rank:0.89\nLabel:20"}, {"group": 20, "id": "1961-2-1-1", "label": "Entity:Mississippi River\nType:Sentence\nPage Rank:0.89\nLabel:20", "shape": "square", "size": 4, "title": "Entity:Mississippi River\nType:Sentence\nPage Rank:0.89\nLabel:20"}, {"group": 74, "id": "3123-8-0-4", "label": "Entity:Cal\nType:Sentence\nPage Rank:1.29\nLabel:74", "shape": "square", "size": 6, "title": "Entity:Cal\nType:Sentence\nPage Rank:1.29\nLabel:74"}, {"group": 74, "id": "3123-8-0-6", "label": "Entity:California\nType:Sentence\nPage Rank:1.29\nLabel:74", "shape": "square", "size": 6, "title": "Entity:California\nType:Sentence\nPage Rank:1.29\nLabel:74"}, {"group": 74, "id": "3123-8-0-5", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:74", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:74"}, {"group": 74, "id": "3123-8-0-3", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:74", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:74"}, {"group": 74, "id": "3123-8-0-2", "label": "Entity:UC Berkeley\nType:Sentence\nPage Rank:1.29\nLabel:74", "shape": "square", "size": 6, "title": "Entity:UC Berkeley\nType:Sentence\nPage Rank:1.29\nLabel:74"}, {"group": 74, "id": "3123-8-0-1", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:74", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:74"}, {"group": 74, "id": "3123-8-0-0", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.33\nLabel:74", "shape": "square", "size": 7, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.33\nLabel:74"}, {"group": 182, "id": "7144-5-2-1", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.15\nLabel:182", "shape": "square", "size": 6, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.15\nLabel:182"}, {"group": 181, "id": "7144-5-2-0", "label": "Entity:UCSB\nType:Sentence\nPage Rank:1.13\nLabel:181", "shape": "square", "size": 6, "title": "Entity:UCSB\nType:Sentence\nPage Rank:1.13\nLabel:181"}, {"group": 68, "id": "7144-5--1-0", "label": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68", "shape": "square", "size": 2, "title": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68"}, {"group": 77, "id": "3123-8-1-2", "label": "Entity:UCSF\nType:Sentence\nPage Rank:0.99\nLabel:77", "shape": "square", "size": 5, "title": "Entity:UCSF\nType:Sentence\nPage Rank:0.99\nLabel:77"}, {"group": 77, "id": "3123-8-1-4", "label": "Entity:United States\nType:Sentence\nPage Rank:1.37\nLabel:77", "shape": "square", "size": 7, "title": "Entity:United States\nType:Sentence\nPage Rank:1.37\nLabel:77"}, {"group": 77, "id": "3123-8-1-3", "label": "Entity:UC\nType:Sentence\nPage Rank:0.99\nLabel:77", "shape": "square", "size": 5, "title": "Entity:UC\nType:Sentence\nPage Rank:0.99\nLabel:77"}, {"group": 77, "id": "3123-8-1-1", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.02\nLabel:77", "shape": "square", "size": 5, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.02\nLabel:77"}, {"group": 77, "id": "3123-8-1-0", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:1.01\nLabel:77", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:1.01\nLabel:77"}, {"group": 89, "id": "3807-9-1-1", "label": "Entity:NFL Draft\nType:Sentence\nPage Rank:0.49\nLabel:89", "shape": "square", "size": 2, "title": "Entity:NFL Draft\nType:Sentence\nPage Rank:0.49\nLabel:89"}, {"group": 86, "id": "3807-9-1-0", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.19\nLabel:86", "shape": "square", "size": 6, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.19\nLabel:86"}, {"group": 134, "id": "4410-6-1-3", "label": "Entity:UC\nType:Sentence\nPage Rank:1.01\nLabel:134", "shape": "square", "size": 5, "title": "Entity:UC\nType:Sentence\nPage Rank:1.01\nLabel:134"}, {"group": 134, "id": "4410-6-1-4", "label": "Entity:United States\nType:Sentence\nPage Rank:1.18\nLabel:134", "shape": "square", "size": 6, "title": "Entity:United States\nType:Sentence\nPage Rank:1.18\nLabel:134"}, {"group": 134, "id": "4410-6-1-2", "label": "Entity:UCSF\nType:Sentence\nPage Rank:1.01\nLabel:134", "shape": "square", "size": 5, "title": "Entity:UCSF\nType:Sentence\nPage Rank:1.01\nLabel:134"}, {"group": 134, "id": "4410-6-1-1", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.04\nLabel:134", "shape": "square", "size": 5, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.04\nLabel:134"}, {"group": 134, "id": "4410-6-1-0", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:1.03\nLabel:134", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:1.03\nLabel:134"}, {"group": 176, "id": "7144-5-1-4", "label": "Entity:Los Angeles\nType:Sentence\nPage Rank:1.08\nLabel:176", "shape": "square", "size": 5, "title": "Entity:Los Angeles\nType:Sentence\nPage Rank:1.08\nLabel:176"}, {"group": 176, "id": "7144-5-1-3", "label": "Entity:Santa Barbara\nType:Sentence\nPage Rank:1.13\nLabel:176", "shape": "square", "size": 6, "title": "Entity:Santa Barbara\nType:Sentence\nPage Rank:1.13\nLabel:176"}, {"group": 176, "id": "7144-5-1-2", "label": "Entity:United States\nType:Sentence\nPage Rank:1.08\nLabel:176", "shape": "square", "size": 5, "title": "Entity:United States\nType:Sentence\nPage Rank:1.08\nLabel:176"}, {"group": 176, "id": "7144-5-1-1", "label": "Entity:California\nType:Sentence\nPage Rank:1.08\nLabel:176", "shape": "square", "size": 5, "title": "Entity:California\nType:Sentence\nPage Rank:1.08\nLabel:176"}, {"group": 176, "id": "7144-5-1-0", "label": "Entity:Isla Vista\nType:Sentence\nPage Rank:1.08\nLabel:176", "shape": "square", "size": 5, "title": "Entity:Isla Vista\nType:Sentence\nPage Rank:1.08\nLabel:176"}, {"group": 140, "id": "4933-7-2-2", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.71\nLabel:140", "shape": "square", "size": 9, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.71\nLabel:140"}, {"group": 140, "id": "4933-9-4-1", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.05\nLabel:140", "shape": "square", "size": 5, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.05\nLabel:140"}, {"group": 140, "id": "4933-9-0-0", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:0.75\nLabel:140", "shape": "square", "size": 4, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:0.75\nLabel:140"}, {"group": 140, "id": "4933-7-2-4", "label": "Entity:Gavin Newsom\nType:Sentence\nPage Rank:1.99\nLabel:140", "shape": "square", "size": 10, "title": "Entity:Gavin Newsom\nType:Sentence\nPage Rank:1.99\nLabel:140"}, {"group": 140, "id": "4933-7-2-3", "label": "Entity:Democrat\nType:Sentence\nPage Rank:1.10\nLabel:140", "shape": "square", "size": 6, "title": "Entity:Democrat\nType:Sentence\nPage Rank:1.10\nLabel:140"}, {"group": 140, "id": "4933-7-2-1", "label": "Entity:Green Party\nType:Sentence\nPage Rank:1.10\nLabel:140", "shape": "square", "size": 6, "title": "Entity:Green Party\nType:Sentence\nPage Rank:1.10\nLabel:140"}, {"group": 140, "id": "4933-7-2-0", "label": "Entity:Gonzalez\nType:Sentence\nPage Rank:1.10\nLabel:140", "shape": "square", "size": 6, "title": "Entity:Gonzalez\nType:Sentence\nPage Rank:1.10\nLabel:140"}, {"group": 65, "id": "3123-0-1-5", "label": "Entity:United States\nType:Sentence\nPage Rank:1.21\nLabel:65", "shape": "square", "size": 6, "title": "Entity:United States\nType:Sentence\nPage Rank:1.21\nLabel:65"}, {"group": 59, "id": "3123-0-0-4", "label": "Entity:United States\nType:Sentence\nPage Rank:1.27\nLabel:59", "shape": "square", "size": 6, "title": "Entity:United States\nType:Sentence\nPage Rank:1.27\nLabel:59"}, {"group": 173, "id": "7144-5-0-3", "label": "Entity:UCSB\nType:Sentence\nPage Rank:1.29\nLabel:173", "shape": "square", "size": 6, "title": "Entity:UCSB\nType:Sentence\nPage Rank:1.29\nLabel:173"}, {"group": 173, "id": "7144-5-0-4", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.02\nLabel:173", "shape": "square", "size": 5, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.02\nLabel:173"}, {"group": 173, "id": "7144-5-0-2", "label": "Entity:UC Santa Barbara\nType:Sentence\nPage Rank:1.29\nLabel:173", "shape": "square", "size": 6, "title": "Entity:UC Santa Barbara\nType:Sentence\nPage Rank:1.29\nLabel:173"}, {"group": 173, "id": "7144-5-0-1", "label": "Entity:Santa Barbara\nType:Sentence\nPage Rank:1.34\nLabel:173", "shape": "square", "size": 7, "title": "Entity:Santa Barbara\nType:Sentence\nPage Rank:1.34\nLabel:173"}, {"group": 173, "id": "7144-5-0-0", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.02\nLabel:173", "shape": "square", "size": 5, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.02\nLabel:173"}, {"group": 107, "id": "4182-7-1-3", "label": "Entity:NFC\nType:Sentence\nPage Rank:1.03\nLabel:107", "shape": "square", "size": 5, "title": "Entity:NFC\nType:Sentence\nPage Rank:1.03\nLabel:107"}, {"group": 107, "id": "4182-7-1-4", "label": "Entity:West\nType:Sentence\nPage Rank:1.03\nLabel:107", "shape": "square", "size": 5, "title": "Entity:West\nType:Sentence\nPage Rank:1.03\nLabel:107"}, {"group": 107, "id": "4182-7-1-2", "label": "Entity:National Football Conference\nType:Sentence\nPage Rank:1.03\nLabel:107", "shape": "square", "size": 5, "title": "Entity:National Football Conference\nType:Sentence\nPage Rank:1.03\nLabel:107"}, {"group": 107, "id": "4182-7-1-1", "label": "Entity:NFL\nType:Sentence\nPage Rank:1.32\nLabel:107", "shape": "square", "size": 7, "title": "Entity:NFL\nType:Sentence\nPage Rank:1.32\nLabel:107"}, {"group": 107, "id": "4182-7-1-0", "label": "Entity:National Football League\nType:Sentence\nPage Rank:1.03\nLabel:107", "shape": "square", "size": 5, "title": "Entity:National Football League\nType:Sentence\nPage Rank:1.03\nLabel:107"}, {"group": 113, "id": "4182-7-2-4", "label": "Entity:Silicon Valley\nType:Sentence\nPage Rank:1.10\nLabel:113", "shape": "square", "size": 6, "title": "Entity:Silicon Valley\nType:Sentence\nPage Rank:1.10\nLabel:113"}, {"group": 113, "id": "4182-7-2-3", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.44\nLabel:113", "shape": "square", "size": 7, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.44\nLabel:113"}, {"group": 113, "id": "4182-7-2-2", "label": "Entity:California\nType:Sentence\nPage Rank:1.40\nLabel:113", "shape": "square", "size": 7, "title": "Entity:California\nType:Sentence\nPage Rank:1.40\nLabel:113"}, {"group": 113, "id": "4182-7-2-1", "label": "Entity:Santa Clara\nType:Sentence\nPage Rank:1.10\nLabel:113", "shape": "square", "size": 6, "title": "Entity:Santa Clara\nType:Sentence\nPage Rank:1.10\nLabel:113"}, {"group": 113, "id": "4182-7-2-0", "label": "Entity:Levi\u0027s Stadium\nType:Sentence\nPage Rank:1.10\nLabel:113", "shape": "square", "size": 6, "title": "Entity:Levi\u0027s Stadium\nType:Sentence\nPage Rank:1.10\nLabel:113"}, {"group": 68, "id": "1751-0--1-0", "label": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68", "shape": "square", "size": 2, "title": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68"}, {"group": 68, "id": "4410-6--1-0", "label": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68", "shape": "square", "size": 2, "title": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68"}, {"group": 68, "id": "3123-8--1-0", "label": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68", "shape": "square", "size": 2, "title": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68"}, {"group": 68, "id": "3057-2--1-0", "label": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68", "shape": "square", "size": 2, "title": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68"}, {"group": 68, "id": "1961-3--1-0", "label": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68", "shape": "square", "size": 2, "title": "Entity:University of California\nType:Title\nPage Rank:0.36\nLabel:68"}, {"group": 2, "id": "1751-0-0-0", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.38\nLabel:2", "shape": "square", "size": 7, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.38\nLabel:2"}, {"group": 8, "id": "1751-0-1-1", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.38\nLabel:8", "shape": "square", "size": 7, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.38\nLabel:8"}, {"group": 59, "id": "3123-0-0-2", "label": "Entity:Providence\nType:Sentence\nPage Rank:1.07\nLabel:59", "shape": "square", "size": 5, "title": "Entity:Providence\nType:Sentence\nPage Rank:1.07\nLabel:59"}, {"group": 59, "id": "3123-0-0-3", "label": "Entity:Rhode Island\nType:Sentence\nPage Rank:1.07\nLabel:59", "shape": "square", "size": 5, "title": "Entity:Rhode Island\nType:Sentence\nPage Rank:1.07\nLabel:59"}, {"group": 59, "id": "3123-0-0-1", "label": "Entity:Ivy League\nType:Sentence\nPage Rank:1.07\nLabel:59", "shape": "square", "size": 5, "title": "Entity:Ivy League\nType:Sentence\nPage Rank:1.07\nLabel:59"}, {"group": 59, "id": "3123-0-0-0", "label": "Entity:Brown University\nType:Sentence\nPage Rank:1.16\nLabel:59", "shape": "square", "size": 6, "title": "Entity:Brown University\nType:Sentence\nPage Rank:1.16\nLabel:59"}, {"group": 32, "id": "1961-3-0-0", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.33\nLabel:32", "shape": "square", "size": 7, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.33\nLabel:32"}, {"group": 35, "id": "1961-3-1-1", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.02\nLabel:35", "shape": "square", "size": 5, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.02\nLabel:35"}, {"group": 17, "id": "1961-2-0-4", "label": "Entity:Louis\nType:Sentence\nPage Rank:1.12\nLabel:17", "shape": "square", "size": 6, "title": "Entity:Louis\nType:Sentence\nPage Rank:1.12\nLabel:17"}, {"group": 17, "id": "1961-2-0-8", "label": "Entity:Spain\nType:Sentence\nPage Rank:1.12\nLabel:17", "shape": "square", "size": 6, "title": "Entity:Spain\nType:Sentence\nPage Rank:1.12\nLabel:17"}, {"group": 17, "id": "1961-2-0-7", "label": "Entity:Madrid\nType:Sentence\nPage Rank:1.12\nLabel:17", "shape": "square", "size": 6, "title": "Entity:Madrid\nType:Sentence\nPage Rank:1.12\nLabel:17"}, {"group": 17, "id": "1961-2-0-6", "label": "Entity:United States\nType:Sentence\nPage Rank:1.31\nLabel:17", "shape": "square", "size": 7, "title": "Entity:United States\nType:Sentence\nPage Rank:1.31\nLabel:17"}, {"group": 17, "id": "1961-2-0-5", "label": "Entity:Missouri\nType:Sentence\nPage Rank:1.12\nLabel:17", "shape": "square", "size": 6, "title": "Entity:Missouri\nType:Sentence\nPage Rank:1.12\nLabel:17"}, {"group": 17, "id": "1961-2-0-3", "label": "Entity:St\nType:Sentence\nPage Rank:1.12\nLabel:17", "shape": "square", "size": 6, "title": "Entity:St\nType:Sentence\nPage Rank:1.12\nLabel:17"}, {"group": 17, "id": "1961-2-0-2", "label": "Entity:Roman Catholic\nType:Sentence\nPage Rank:1.12\nLabel:17", "shape": "square", "size": 6, "title": "Entity:Roman Catholic\nType:Sentence\nPage Rank:1.12\nLabel:17"}, {"group": 17, "id": "1961-2-0-1", "label": "Entity:SLU\nType:Sentence\nPage Rank:1.12\nLabel:17", "shape": "square", "size": 6, "title": "Entity:SLU\nType:Sentence\nPage Rank:1.12\nLabel:17"}, {"group": 17, "id": "1961-2-0-0", "label": "Entity:Saint Louis University\nType:Sentence\nPage Rank:1.23\nLabel:17", "shape": "square", "size": 6, "title": "Entity:Saint Louis University\nType:Sentence\nPage Rank:1.23\nLabel:17"}, {"group": 98, "id": "4182-1-2-1", "label": "Entity:Carmichael\nType:Sentence\nPage Rank:0.78\nLabel:98", "shape": "square", "size": 4, "title": "Entity:Carmichael\nType:Sentence\nPage Rank:0.78\nLabel:98"}, {"group": 98, "id": "4182-1-2-2", "label": "Entity:California\nType:Sentence\nPage Rank:1.05\nLabel:98", "shape": "square", "size": 5, "title": "Entity:California\nType:Sentence\nPage Rank:1.05\nLabel:98"}, {"group": 98, "id": "4182-1-2-0", "label": "Entity:Jesuit High School\nType:Sentence\nPage Rank:0.78\nLabel:98", "shape": "square", "size": 4, "title": "Entity:Jesuit High School\nType:Sentence\nPage Rank:0.78\nLabel:98"}, {"group": 122, "id": "4410-2-0-6", "label": "Entity:United States\nType:Sentence\nPage Rank:1.33\nLabel:122", "shape": "square", "size": 7, "title": "Entity:United States\nType:Sentence\nPage Rank:1.33\nLabel:122"}, {"group": 41, "id": "2157-4-0-1", "label": "Entity:Syracuse University\nType:Sentence\nPage Rank:1.35\nLabel:41", "shape": "square", "size": 7, "title": "Entity:Syracuse University\nType:Sentence\nPage Rank:1.35\nLabel:41"}, {"group": 41, "id": "2157-4-0-3", "label": "Entity:Second Empire\nType:Sentence\nPage Rank:1.30\nLabel:41", "shape": "square", "size": 6, "title": "Entity:Second Empire\nType:Sentence\nPage Rank:1.30\nLabel:41"}, {"group": 41, "id": "2157-4-0-2", "label": "Entity:Horatio Nelson White\nType:Sentence\nPage Rank:1.30\nLabel:41", "shape": "square", "size": 6, "title": "Entity:Horatio Nelson White\nType:Sentence\nPage Rank:1.30\nLabel:41"}, {"group": 41, "id": "2157-4-0-0", "label": "Entity:Hall of Languages\nType:Sentence\nPage Rank:1.40\nLabel:41", "shape": "square", "size": 7, "title": "Entity:Hall of Languages\nType:Sentence\nPage Rank:1.40\nLabel:41"}, {"group": 155, "id": "2157-4--1-1", "label": "Entity:Syracuse University\nType:Title\nPage Rank:0.33\nLabel:155", "shape": "square", "size": 2, "title": "Entity:Syracuse University\nType:Title\nPage Rank:0.33\nLabel:155"}, {"group": 8, "id": "1751-0-1-0", "label": "Entity:California Master Plan for Higher Education\nType:Sentence\nPage Rank:1.02\nLabel:8", "shape": "square", "size": 5, "title": "Entity:California Master Plan for Higher Education\nType:Sentence\nPage Rank:1.02\nLabel:8"}, {"group": 8, "id": "1751-0-1-3", "label": "Entity:California Community Colleges System\nType:Sentence\nPage Rank:1.02\nLabel:8", "shape": "square", "size": 5, "title": "Entity:California Community Colleges System\nType:Sentence\nPage Rank:1.02\nLabel:8"}, {"group": 8, "id": "1751-0-1-2", "label": "Entity:California State University\nType:Sentence\nPage Rank:1.02\nLabel:8", "shape": "square", "size": 5, "title": "Entity:California State University\nType:Sentence\nPage Rank:1.02\nLabel:8"}, {"group": 104, "id": "4182-7-0-0", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.31\nLabel:104", "shape": "square", "size": 7, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.31\nLabel:104"}, {"group": 104, "id": "4182-7-0-2", "label": "Entity:San Francisco Bay Area\nType:Sentence\nPage Rank:0.93\nLabel:104", "shape": "square", "size": 5, "title": "Entity:San Francisco Bay Area\nType:Sentence\nPage Rank:0.93\nLabel:104"}, {"group": 104, "id": "4182-7-0-1", "label": "Entity:American\nType:Sentence\nPage Rank:1.45\nLabel:104", "shape": "square", "size": 7, "title": "Entity:American\nType:Sentence\nPage Rank:1.45\nLabel:104"}, {"group": 101, "id": "4182-7--1-0", "label": "Entity:San Francisco\nType:Title\nPage Rank:0.31\nLabel:101", "shape": "square", "size": 2, "title": "Entity:San Francisco\nType:Title\nPage Rank:0.31\nLabel:101"}, {"group": 104, "id": "4182-1-1-1", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.05\nLabel:104", "shape": "square", "size": 5, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.05\nLabel:104"}, {"group": 113, "id": "4182-1-1-0", "label": "Entity:NFL\nType:Sentence\nPage Rank:0.67\nLabel:113", "shape": "square", "size": 3, "title": "Entity:NFL\nType:Sentence\nPage Rank:0.67\nLabel:113"}, {"group": 146, "id": "4933-7-1-1", "label": "Entity:San Francisco County\u0027s Board of Supervisors\nType:Sentence\nPage Rank:0.80\nLabel:146", "shape": "square", "size": 4, "title": "Entity:San Francisco County\u0027s Board of Supervisors\nType:Sentence\nPage Rank:0.80\nLabel:146"}, {"group": 137, "id": "4933-7-1-2", "label": "Entity:Board\nType:Sentence\nPage Rank:0.80\nLabel:137", "shape": "square", "size": 4, "title": "Entity:Board\nType:Sentence\nPage Rank:0.80\nLabel:137"}, {"group": 137, "id": "4933-7-1-0", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.44\nLabel:137", "shape": "square", "size": 7, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.44\nLabel:137"}, {"group": 167, "id": "6899-1-0-3", "label": "Entity:Rhode Island\nType:Sentence\nPage Rank:1.14\nLabel:167", "shape": "square", "size": 6, "title": "Entity:Rhode Island\nType:Sentence\nPage Rank:1.14\nLabel:167"}, {"group": 167, "id": "6899-1-0-4", "label": "Entity:United States\nType:Sentence\nPage Rank:1.14\nLabel:167", "shape": "square", "size": 6, "title": "Entity:United States\nType:Sentence\nPage Rank:1.14\nLabel:167"}, {"group": 167, "id": "6899-1-0-2", "label": "Entity:Providence\nType:Sentence\nPage Rank:1.14\nLabel:167", "shape": "square", "size": 6, "title": "Entity:Providence\nType:Sentence\nPage Rank:1.14\nLabel:167"}, {"group": 167, "id": "6899-1-0-1", "label": "Entity:Ivy League\nType:Sentence\nPage Rank:1.14\nLabel:167", "shape": "square", "size": 6, "title": "Entity:Ivy League\nType:Sentence\nPage Rank:1.14\nLabel:167"}, {"group": 167, "id": "6899-1-0-0", "label": "Entity:Brown University\nType:Sentence\nPage Rank:1.23\nLabel:167", "shape": "square", "size": 6, "title": "Entity:Brown University\nType:Sentence\nPage Rank:1.23\nLabel:167"}, {"group": 35, "id": "1961-3-1-4", "label": "Entity:United States\nType:Sentence\nPage Rank:1.35\nLabel:35", "shape": "square", "size": 7, "title": "Entity:United States\nType:Sentence\nPage Rank:1.35\nLabel:35"}, {"group": 95, "id": "4182-1--1-0", "label": "Entity:Giovanni Carmazzi\nType:Title\nPage Rank:0.15\nLabel:95", "shape": "square", "size": 1, "title": "Entity:Giovanni Carmazzi\nType:Title\nPage Rank:0.15\nLabel:95"}, {"group": 104, "id": "4182-1-0-0", "label": "Entity:Giovanni Carmazzi\nType:Sentence\nPage Rank:0.81\nLabel:104", "shape": "square", "size": 4, "title": "Entity:Giovanni Carmazzi\nType:Sentence\nPage Rank:0.81\nLabel:104"}, {"group": 74, "id": "3123-8--1-1", "label": "Entity:Berkeley\nType:Title\nPage Rank:0.21\nLabel:74", "shape": "square", "size": 1, "title": "Entity:Berkeley\nType:Title\nPage Rank:0.21\nLabel:74"}, {"group": 173, "id": "7144-5--1-1", "label": "Entity:Santa Barbara\nType:Title\nPage Rank:0.15\nLabel:173", "shape": "square", "size": 1, "title": "Entity:Santa Barbara\nType:Title\nPage Rank:0.15\nLabel:173"}, {"group": 137, "id": "4933-9-4-0", "label": "Entity:Gavin Newsom\nType:Sentence\nPage Rank:0.69\nLabel:137", "shape": "square", "size": 3, "title": "Entity:Gavin Newsom\nType:Sentence\nPage Rank:0.69\nLabel:137"}, {"group": 140, "id": "4933-9-3-0", "label": "Entity:Gavin Newsom\nType:Sentence\nPage Rank:0.82\nLabel:140", "shape": "square", "size": 4, "title": "Entity:Gavin Newsom\nType:Sentence\nPage Rank:0.82\nLabel:140"}, {"group": 149, "id": "4933-9-2-0", "label": "Entity:Gavin Newsom\nType:Sentence\nPage Rank:1.18\nLabel:149", "shape": "square", "size": 6, "title": "Entity:Gavin Newsom\nType:Sentence\nPage Rank:1.18\nLabel:149"}, {"group": 65, "id": "3123-0-1-6", "label": "Entity:American Revolution\nType:Sentence\nPage Rank:1.02\nLabel:65", "shape": "square", "size": 5, "title": "Entity:American Revolution\nType:Sentence\nPage Rank:1.02\nLabel:65"}, {"group": 65, "id": "3123-0-1-4", "label": "Entity:Brown\nType:Sentence\nPage Rank:1.02\nLabel:65", "shape": "square", "size": 5, "title": "Entity:Brown\nType:Sentence\nPage Rank:1.02\nLabel:65"}, {"group": 65, "id": "3123-0-1-3", "label": "Entity:Providence Plantations\nType:Sentence\nPage Rank:1.02\nLabel:65", "shape": "square", "size": 5, "title": "Entity:Providence Plantations\nType:Sentence\nPage Rank:1.02\nLabel:65"}, {"group": 65, "id": "3123-0-1-2", "label": "Entity:Rhode Island\nType:Sentence\nPage Rank:1.02\nLabel:65", "shape": "square", "size": 5, "title": "Entity:Rhode Island\nType:Sentence\nPage Rank:1.02\nLabel:65"}, {"group": 65, "id": "3123-0-1-1", "label": "Entity:English Colony\nType:Sentence\nPage Rank:1.02\nLabel:65", "shape": "square", "size": 5, "title": "Entity:English Colony\nType:Sentence\nPage Rank:1.02\nLabel:65"}, {"group": 65, "id": "3123-0-1-0", "label": "Entity:College\nType:Sentence\nPage Rank:1.02\nLabel:65", "shape": "square", "size": 5, "title": "Entity:College\nType:Sentence\nPage Rank:1.02\nLabel:65"}, {"group": 149, "id": "4933-9-2-1", "label": "Entity:Board of Supervisors\nType:Sentence\nPage Rank:0.93\nLabel:149", "shape": "square", "size": 5, "title": "Entity:Board of Supervisors\nType:Sentence\nPage Rank:0.93\nLabel:149"}, {"group": 149, "id": "4933-9-2-3", "label": "Entity:Angela Alioto\nType:Sentence\nPage Rank:0.93\nLabel:149", "shape": "square", "size": 5, "title": "Entity:Angela Alioto\nType:Sentence\nPage Rank:0.93\nLabel:149"}, {"group": 149, "id": "4933-9-2-2", "label": "Entity:Matt Gonzalez\nType:Sentence\nPage Rank:0.93\nLabel:149", "shape": "square", "size": 5, "title": "Entity:Matt Gonzalez\nType:Sentence\nPage Rank:0.93\nLabel:149"}, {"group": 32, "id": "1961-3-0-6", "label": "Entity:California\nType:Sentence\nPage Rank:1.29\nLabel:32", "shape": "square", "size": 6, "title": "Entity:California\nType:Sentence\nPage Rank:1.29\nLabel:32"}, {"group": 32, "id": "1961-3-0-5", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:32", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:32"}, {"group": 32, "id": "1961-3-0-4", "label": "Entity:Cal\nType:Sentence\nPage Rank:1.29\nLabel:32", "shape": "square", "size": 6, "title": "Entity:Cal\nType:Sentence\nPage Rank:1.29\nLabel:32"}, {"group": 32, "id": "1961-3-0-3", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:32", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:32"}, {"group": 32, "id": "1961-3-0-2", "label": "Entity:UC Berkeley\nType:Sentence\nPage Rank:1.29\nLabel:32", "shape": "square", "size": 6, "title": "Entity:UC Berkeley\nType:Sentence\nPage Rank:1.29\nLabel:32"}, {"group": 32, "id": "1961-3-0-1", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:32", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:32"}, {"group": 158, "id": "5120-4-0-6", "label": "Entity:United States\nType:Sentence\nPage Rank:1.13\nLabel:158", "shape": "square", "size": 6, "title": "Entity:United States\nType:Sentence\nPage Rank:1.13\nLabel:158"}, {"group": 158, "id": "5120-4-0-5", "label": "Entity:New York\nType:Sentence\nPage Rank:1.13\nLabel:158", "shape": "square", "size": 6, "title": "Entity:New York\nType:Sentence\nPage Rank:1.13\nLabel:158"}, {"group": 158, "id": "5120-4-0-4", "label": "Entity:Syracuse\nType:Sentence\nPage Rank:0.96\nLabel:158", "shape": "square", "size": 5, "title": "Entity:Syracuse\nType:Sentence\nPage Rank:0.96\nLabel:158"}, {"group": 158, "id": "5120-4-0-3", "label": "Entity:SU\nType:Sentence\nPage Rank:1.13\nLabel:158", "shape": "square", "size": 6, "title": "Entity:SU\nType:Sentence\nPage Rank:1.13\nLabel:158"}, {"group": 158, "id": "5120-4-0-2", "label": "Entity:Cuse\nType:Sentence\nPage Rank:1.13\nLabel:158", "shape": "square", "size": 6, "title": "Entity:Cuse\nType:Sentence\nPage Rank:1.13\nLabel:158"}, {"group": 158, "id": "5120-4-0-1", "label": "Entity:Syracuse\nType:Sentence\nPage Rank:0.96\nLabel:158", "shape": "square", "size": 5, "title": "Entity:Syracuse\nType:Sentence\nPage Rank:0.96\nLabel:158"}, {"group": 158, "id": "5120-4-0-0", "label": "Entity:Syracuse University\nType:Sentence\nPage Rank:1.20\nLabel:158", "shape": "square", "size": 6, "title": "Entity:Syracuse University\nType:Sentence\nPage Rank:1.20\nLabel:158"}, {"group": 54, "id": "3057-2-2-1", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.15\nLabel:54", "shape": "square", "size": 6, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.15\nLabel:54"}, {"group": 53, "id": "3057-2-2-0", "label": "Entity:Toland Medical College\nType:Sentence\nPage Rank:1.13\nLabel:53", "shape": "square", "size": 6, "title": "Entity:Toland Medical College\nType:Sentence\nPage Rank:1.13\nLabel:53"}, {"group": 32, "id": "1961-3--1-1", "label": "Entity:Berkeley\nType:Title\nPage Rank:0.21\nLabel:32", "shape": "square", "size": 1, "title": "Entity:Berkeley\nType:Title\nPage Rank:0.21\nLabel:32"}, {"group": 101, "id": "3807-4--1-0", "label": "Entity:San Francisco\nType:Title\nPage Rank:0.31\nLabel:101", "shape": "square", "size": 2, "title": "Entity:San Francisco\nType:Title\nPage Rank:0.31\nLabel:101"}, {"group": 101, "id": "4933-9--1-0", "label": "Entity:San Francisco\nType:Title\nPage Rank:0.31\nLabel:101", "shape": "square", "size": 2, "title": "Entity:San Francisco\nType:Title\nPage Rank:0.31\nLabel:101"}, {"group": 86, "id": "3807-4-2-3", "label": "Entity:San Francisco\nType:Sentence\nPage Rank:1.49\nLabel:86", "shape": "square", "size": 7, "title": "Entity:San Francisco\nType:Sentence\nPage Rank:1.49\nLabel:86"}, {"group": 35, "id": "1961-3-1-3", "label": "Entity:UC\nType:Sentence\nPage Rank:0.98\nLabel:35", "shape": "square", "size": 5, "title": "Entity:UC\nType:Sentence\nPage Rank:0.98\nLabel:35"}, {"group": 35, "id": "1961-3-1-2", "label": "Entity:UCSF\nType:Sentence\nPage Rank:0.98\nLabel:35", "shape": "square", "size": 5, "title": "Entity:UCSF\nType:Sentence\nPage Rank:0.98\nLabel:35"}, {"group": 35, "id": "1961-3-1-0", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:1.01\nLabel:35", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:1.01\nLabel:35"}, {"group": 55, "id": "3123-0--1-0", "label": "Entity:Brown University\nType:Title\nPage Rank:0.26\nLabel:55", "shape": "square", "size": 1, "title": "Entity:Brown University\nType:Title\nPage Rank:0.26\nLabel:55"}, {"group": 163, "id": "6899-1--1-0", "label": "Entity:Brown University\nType:Title\nPage Rank:0.26\nLabel:163", "shape": "square", "size": 1, "title": "Entity:Brown University\nType:Title\nPage Rank:0.26\nLabel:163"}, {"group": 131, "id": "4410-6-0-1", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:131", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:131"}, {"group": 131, "id": "4410-6-0-6", "label": "Entity:California\nType:Sentence\nPage Rank:1.29\nLabel:131", "shape": "square", "size": 6, "title": "Entity:California\nType:Sentence\nPage Rank:1.29\nLabel:131"}, {"group": 131, "id": "4410-6-0-4", "label": "Entity:Cal\nType:Sentence\nPage Rank:1.29\nLabel:131", "shape": "square", "size": 6, "title": "Entity:Cal\nType:Sentence\nPage Rank:1.29\nLabel:131"}, {"group": 131, "id": "4410-6-0-2", "label": "Entity:UC Berkeley\nType:Sentence\nPage Rank:1.29\nLabel:131", "shape": "square", "size": 6, "title": "Entity:UC Berkeley\nType:Sentence\nPage Rank:1.29\nLabel:131"}, {"group": 131, "id": "4410-6-0-0", "label": "Entity:University of California\nType:Sentence\nPage Rank:1.33\nLabel:131", "shape": "square", "size": 7, "title": "Entity:University of California\nType:Sentence\nPage Rank:1.33\nLabel:131"}, {"group": 131, "id": "4410-6--1-1", "label": "Entity:Berkeley\nType:Title\nPage Rank:0.21\nLabel:131", "shape": "square", "size": 1, "title": "Entity:Berkeley\nType:Title\nPage Rank:0.21\nLabel:131"}, {"group": 131, "id": "4410-6-0-5", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:131", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:131"}, {"group": 131, "id": "4410-6-0-3", "label": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:131", "shape": "square", "size": 5, "title": "Entity:Berkeley\nType:Sentence\nPage Rank:0.92\nLabel:131"}, {"group": 41, "id": "2157-4--1-0", "label": "Entity:Hall of Languages\nType:Title\nPage Rank:0.15\nLabel:41", "shape": "square", "size": 1, "title": "Entity:Hall of Languages\nType:Title\nPage Rank:0.15\nLabel:41"}, {"group": 155, "id": "5120-4--1-0", "label": "Entity:Syracuse University\nType:Title\nPage Rank:0.31\nLabel:155", "shape": "square", "size": 2, "title": "Entity:Syracuse University\nType:Title\nPage Rank:0.31\nLabel:155"}, {"group": 155, "id": "4410-2--1-0", "label": "Entity:Syracuse University\nType:Title\nPage Rank:0.31\nLabel:155", "shape": "square", "size": 2, "title": "Entity:Syracuse University\nType:Title\nPage Rank:0.31\nLabel:155"}, {"group": 95, "id": "4182-1-0-1", "label": "Entity:American\nType:Sentence\nPage Rank:1.25\nLabel:95", "shape": "square", "size": 6, "title": "Entity:American\nType:Sentence\nPage Rank:1.25\nLabel:95"}, {"group": 86, "id": "3807-4-2-2", "label": "Entity:California\nType:Sentence\nPage Rank:1.11\nLabel:86", "shape": "square", "size": 6, "title": "Entity:California\nType:Sentence\nPage Rank:1.11\nLabel:86"}, {"group": 86, "id": "3807-4-2-4", "label": "Entity:Silicon Valley\nType:Sentence\nPage Rank:1.11\nLabel:86", "shape": "square", "size": 6, "title": "Entity:Silicon Valley\nType:Sentence\nPage Rank:1.11\nLabel:86"}, {"group": 86, "id": "3807-4-2-1", "label": "Entity:Santa Clara\nType:Sentence\nPage Rank:1.11\nLabel:86", "shape": "square", "size": 6, "title": "Entity:Santa Clara\nType:Sentence\nPage Rank:1.11\nLabel:86"}, {"group": 86, "id": "3807-4-2-0", "label": "Entity:Levi\u0027s Stadium\nType:Sentence\nPage Rank:1.11\nLabel:86", "shape": "square", "size": 6, "title": "Entity:Levi\u0027s Stadium\nType:Sentence\nPage Rank:1.11\nLabel:86"}, {"group": 122, "id": "4410-2-0-0", "label": "Entity:Syracuse University\nType:Sentence\nPage Rank:1.21\nLabel:122", "shape": "square", "size": 6, "title": "Entity:Syracuse University\nType:Sentence\nPage Rank:1.21\nLabel:122"}, {"group": 122, "id": "4410-2-0-5", "label": "Entity:New York\nType:Sentence\nPage Rank:1.14\nLabel:122", "shape": "square", "size": 6, "title": "Entity:New York\nType:Sentence\nPage Rank:1.14\nLabel:122"}, {"group": 122, "id": "4410-2-0-4", "label": "Entity:Syracuse\nType:Sentence\nPage Rank:0.97\nLabel:122", "shape": "square", "size": 5, "title": "Entity:Syracuse\nType:Sentence\nPage Rank:0.97\nLabel:122"}, {"group": 122, "id": "4410-2-0-3", "label": "Entity:SU\nType:Sentence\nPage Rank:1.14\nLabel:122", "shape": "square", "size": 6, "title": "Entity:SU\nType:Sentence\nPage Rank:1.14\nLabel:122"}, {"group": 122, "id": "4410-2-0-2", "label": "Entity:Cuse\nType:Sentence\nPage Rank:1.14\nLabel:122", "shape": "square", "size": 6, "title": "Entity:Cuse\nType:Sentence\nPage Rank:1.14\nLabel:122"}, {"group": 122, "id": "4410-2-0-1", "label": "Entity:Syracuse\nType:Sentence\nPage Rank:0.97\nLabel:122", "shape": "square", "size": 5, "title": "Entity:Syracuse\nType:Sentence\nPage Rank:0.97\nLabel:122"}, {"group": 2, "id": "1751-0-0-1", "label": "Entity:UC\nType:Sentence\nPage Rank:1.02\nLabel:2", "shape": "square", "size": 5, "title": "Entity:UC\nType:Sentence\nPage Rank:1.02\nLabel:2"}, {"group": 2, "id": "1751-0-0-3", "label": "Entity:California\nType:Sentence\nPage Rank:1.02\nLabel:2", "shape": "square", "size": 5, "title": "Entity:California\nType:Sentence\nPage Rank:1.02\nLabel:2"}, {"group": 2, "id": "1751-0-0-2", "label": "Entity:U.S\nType:Sentence\nPage Rank:1.02\nLabel:2", "shape": "square", "size": 5, "title": "Entity:U.S\nType:Sentence\nPage Rank:1.02\nLabel:2"}, {"group": 8, "id": "1751-4-2-0", "label": "Entity:University of California\nType:Sentence\nPage Rank:0.74\nLabel:8", "shape": "square", "size": 4, "title": "Entity:University of California\nType:Sentence\nPage Rank:0.74\nLabel:8"}, {"group": 17, "id": "1961-2--1-0", "label": "Entity:Saint Louis University\nType:Title\nPage Rank:0.15\nLabel:17", "shape": "square", "size": 1, "title": "Entity:Saint Louis University\nType:Title\nPage Rank:0.15\nLabel:17"}, {"group": 155, "id": "2157-4-2-0", "label": "Entity:Syracuse University\nType:Sentence\nPage Rank:0.22\nLabel:155", "shape": "square", "size": 1, "title": "Entity:Syracuse University\nType:Sentence\nPage Rank:0.22\nLabel:155"}, {"group": 140, "id": "4933-9-3-1", "label": "Entity:Matt Gonzalez\nType:Sentence\nPage Rank:0.50\nLabel:140", "shape": "square", "size": 2, "title": "Entity:Matt Gonzalez\nType:Sentence\nPage Rank:0.50\nLabel:140"}]);
+                  edges = new vis.DataSet([{"from": "3057-2-0-1", "label": 0.25, "length": 500, "to": "3057-2-0-5", "width": 1}, {"from": "3057-2-0-1", "label": 0.25, "length": 500, "to": "3057-2-0-4", "width": 1}, {"from": "3057-2-0-1", "label": 0.25, "length": 500, "to": "3057-2-0-2", "width": 1}, {"from": "3057-2-0-1", "label": 0.25, "length": 500, "to": "3057-2-0-0", "width": 1}, {"from": "3057-2-0-1", "label": 0.2, "length": 500, "to": "3057-2--1-1", "width": 1}, {"from": "3807-4-0-1", "label": 0.5, "length": 500, "to": "3807-4-0-2", "width": 1}, {"from": "3807-4-0-1", "label": 0.5, "length": 500, "to": "3807-4-0-0", "width": 1}, {"from": "3057-2-0-2", "label": 0.2, "length": 500, "to": "3057-2-0-5", "width": 1}, {"from": "3057-2-0-2", "label": 0.2, "length": 500, "to": "3057-2-0-4", "width": 1}, {"from": "3057-2-0-2", "label": 0.2, "length": 500, "to": "3057-2-0-3", "width": 1}, {"from": "3057-2-0-2", "label": 0.2, "length": 500, "to": "3057-2-0-0", "width": 1}, {"from": "1961-2-1-0", "label": 0.3333333333333333, "length": 500, "to": "1961-2-1-3", "width": 1}, {"from": "1961-2-1-0", "label": 0.3333333333333333, "length": 500, "to": "1961-2-1-2", "width": 1}, {"from": "1961-2-1-0", "label": 0.3333333333333333, "length": 500, "to": "1961-2-1-1", "width": 1}, {"from": "3123-8-0-4", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-6", "width": 1}, {"from": "3123-8-0-4", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-5", "width": 1}, {"from": "3123-8-0-4", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-3", "width": 1}, {"from": "3123-8-0-4", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-2", "width": 1}, {"from": "3123-8-0-4", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-1", "width": 1}, {"from": "3123-8-0-4", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-0", "width": 1}, {"from": "7144-5-2-1", "label": 1.0, "length": 500, "to": "7144-5-2-0", "width": 1}, {"from": "7144-5-2-1", "label": 0.125, "length": 500, "to": "7144-5--1-0", "width": 1}, {"from": "3123-8-1-2", "label": 0.25, "length": 500, "to": "3123-8-1-4", "width": 1}, {"from": "3123-8-1-2", "label": 0.25, "length": 500, "to": "3123-8-1-3", "width": 1}, {"from": "3123-8-1-2", "label": 0.25, "length": 500, "to": "3123-8-1-1", "width": 1}, {"from": "3123-8-1-2", "label": 0.25, "length": 500, "to": "3123-8-1-0", "width": 1}, {"from": "3807-9-1-1", "label": 1.0, "length": 500, "to": "3807-9-1-0", "width": 1}, {"from": "4410-6-1-3", "label": 0.25, "length": 500, "to": "4410-6-1-4", "width": 1}, {"from": "4410-6-1-3", "label": 0.25, "length": 500, "to": "4410-6-1-2", "width": 1}, {"from": "4410-6-1-3", "label": 0.25, "length": 500, "to": "4410-6-1-1", "width": 1}, {"from": "4410-6-1-3", "label": 0.25, "length": 500, "to": "4410-6-1-0", "width": 1}, {"from": "7144-5-1-4", "label": 0.25, "length": 500, "to": "7144-5-1-3", "width": 1}, {"from": "7144-5-1-4", "label": 0.25, "length": 500, "to": "7144-5-1-2", "width": 1}, {"from": "7144-5-1-4", "label": 0.25, "length": 500, "to": "7144-5-1-1", "width": 1}, {"from": "7144-5-1-4", "label": 0.25, "length": 500, "to": "7144-5-1-0", "width": 1}, {"from": "1961-2-1-1", "label": 0.3333333333333333, "length": 500, "to": "1961-2-1-3", "width": 1}, {"from": "1961-2-1-1", "label": 0.3333333333333333, "length": 500, "to": "1961-2-1-2", "width": 1}, {"from": "4933-7-2-2", "label": 0.16666666666666666, "length": 500, "to": "4933-9-4-1", "width": 1}, {"from": "4933-7-2-2", "label": 0.16666666666666666, "length": 500, "to": "4933-9-0-0", "width": 1}, {"from": "4933-7-2-2", "label": 0.16666666666666666, "length": 500, "to": "4933-7-2-4", "width": 1}, {"from": "4933-7-2-2", "label": 0.16666666666666666, "length": 500, "to": "4933-7-2-3", "width": 1}, {"from": "4933-7-2-2", "label": 0.16666666666666666, "length": 500, "to": "4933-7-2-1", "width": 1}, {"from": "4933-7-2-2", "label": 0.16666666666666666, "length": 500, "to": "4933-7-2-0", "width": 1}, {"from": "3123-8-1-4", "label": 0.16666666666666666, "length": 500, "to": "3123-8-1-3", "width": 1}, {"from": "3123-8-1-4", "label": 0.16666666666666666, "length": 500, "to": "3123-8-1-1", "width": 1}, {"from": "3123-8-1-4", "label": 0.16666666666666666, "length": 500, "to": "3123-8-1-0", "width": 1}, {"from": "3123-8-1-4", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-5", "width": 1}, {"from": "3123-8-1-4", "label": 0.16666666666666666, "length": 500, "to": "3123-0-0-4", "width": 1}, {"from": "7144-5-0-3", "label": 0.25, "length": 500, "to": "7144-5-0-4", "width": 1}, {"from": "7144-5-0-3", "label": 0.25, "length": 500, "to": "7144-5-0-2", "width": 1}, {"from": "7144-5-0-3", "label": 0.25, "length": 500, "to": "7144-5-0-1", "width": 1}, {"from": "7144-5-0-3", "label": 0.25, "length": 500, "to": "7144-5-0-0", "width": 1}, {"from": "4182-7-1-3", "label": 0.25, "length": 500, "to": "4182-7-1-4", "width": 1}, {"from": "4182-7-1-3", "label": 0.25, "length": 500, "to": "4182-7-1-2", "width": 1}, {"from": "4182-7-1-3", "label": 0.25, "length": 500, "to": "4182-7-1-1", "width": 1}, {"from": "4182-7-1-3", "label": 0.25, "length": 500, "to": "4182-7-1-0", "width": 1}, {"from": "4933-7-2-0", "label": 0.25, "length": 500, "to": "4933-7-2-4", "width": 1}, {"from": "4933-7-2-0", "label": 0.25, "length": 500, "to": "4933-7-2-3", "width": 1}, {"from": "4933-7-2-0", "label": 0.25, "length": 500, "to": "4933-7-2-1", "width": 1}, {"from": "4182-7-2-4", "label": 0.25, "length": 500, "to": "4182-7-2-3", "width": 1}, {"from": "4182-7-2-4", "label": 0.25, "length": 500, "to": "4182-7-2-2", "width": 1}, {"from": "4182-7-2-4", "label": 0.25, "length": 500, "to": "4182-7-2-1", "width": 1}, {"from": "4182-7-2-4", "label": 0.25, "length": 500, "to": "4182-7-2-0", "width": 1}, {"from": "3807-4-0-2", "label": 0.5, "length": 500, "to": "3807-4-0-0", "width": 1}, {"from": "1751-0--1-0", "label": 0.14285714285714285, "length": 500, "to": "7144-5--1-0", "width": 1}, {"from": "1751-0--1-0", "label": 0.14285714285714285, "length": 500, "to": "4410-6--1-0", "width": 1}, {"from": "1751-0--1-0", "label": 0.14285714285714285, "length": 500, "to": "3123-8--1-0", "width": 1}, {"from": "1751-0--1-0", "label": 0.14285714285714285, "length": 500, "to": "3057-2--1-0", "width": 1}, {"from": "1751-0--1-0", "label": 0.14285714285714285, "length": 500, "to": "1961-3--1-0", "width": 1}, {"from": "1751-0--1-0", "label": 0.14285714285714285, "length": 500, "to": "1751-0-0-0", "width": 1}, {"from": "1751-0--1-0", "label": 0.14285714285714285, "length": 500, "to": "1751-0-1-1", "width": 1}, {"from": "4410-6-1-1", "label": 0.25, "length": 500, "to": "4410-6-1-4", "width": 1}, {"from": "4410-6-1-1", "label": 0.25, "length": 500, "to": "4410-6-1-2", "width": 1}, {"from": "4410-6-1-1", "label": 0.25, "length": 500, "to": "4410-6-1-0", "width": 1}, {"from": "4410-6-1-1", "label": 0.14285714285714285, "length": 500, "to": "4410-6--1-0", "width": 1}, {"from": "3123-0-0-2", "label": 0.25, "length": 500, "to": "3123-0-0-4", "width": 1}, {"from": "3123-0-0-2", "label": 0.25, "length": 500, "to": "3123-0-0-3", "width": 1}, {"from": "3123-0-0-2", "label": 0.25, "length": 500, "to": "3123-0-0-1", "width": 1}, {"from": "3123-0-0-2", "label": 0.25, "length": 500, "to": "3123-0-0-0", "width": 1}, {"from": "3123-0-0-4", "label": 0.2, "length": 500, "to": "3123-0-0-3", "width": 1}, {"from": "3123-0-0-4", "label": 0.2, "length": 500, "to": "3123-0-0-1", "width": 1}, {"from": "3123-0-0-4", "label": 0.2, "length": 500, "to": "3123-0-0-0", "width": 1}, {"from": "7144-5-1-0", "label": 0.25, "length": 500, "to": "7144-5-1-3", "width": 1}, {"from": "7144-5-1-0", "label": 0.25, "length": 500, "to": "7144-5-1-2", "width": 1}, {"from": "7144-5-1-0", "label": 0.25, "length": 500, "to": "7144-5-1-1", "width": 1}, {"from": "1961-3--1-0", "label": 0.14285714285714285, "length": 500, "to": "7144-5--1-0", "width": 1}, {"from": "1961-3--1-0", "label": 0.14285714285714285, "length": 500, "to": "4410-6--1-0", "width": 1}, {"from": "1961-3--1-0", "label": 0.14285714285714285, "length": 500, "to": "3123-8--1-0", "width": 1}, {"from": "1961-3--1-0", "label": 0.14285714285714285, "length": 500, "to": "3057-2--1-0", "width": 1}, {"from": "1961-3--1-0", "label": 0.14285714285714285, "length": 500, "to": "1961-3-0-0", "width": 1}, {"from": "1961-3--1-0", "label": 0.14285714285714285, "length": 500, "to": "1961-3-1-1", "width": 1}, {"from": "4933-7-2-3", "label": 0.25, "length": 500, "to": "4933-7-2-4", "width": 1}, {"from": "4933-7-2-3", "label": 0.25, "length": 500, "to": "4933-7-2-1", "width": 1}, {"from": "1961-2-0-4", "label": 0.125, "length": 500, "to": "1961-2-0-8", "width": 1}, {"from": "1961-2-0-4", "label": 0.125, "length": 500, "to": "1961-2-0-7", "width": 1}, {"from": "1961-2-0-4", "label": 0.125, "length": 500, "to": "1961-2-0-6", "width": 1}, {"from": "1961-2-0-4", "label": 0.125, "length": 500, "to": "1961-2-0-5", "width": 1}, {"from": "1961-2-0-4", "label": 0.125, "length": 500, "to": "1961-2-0-3", "width": 1}, {"from": "1961-2-0-4", "label": 0.125, "length": 500, "to": "1961-2-0-2", "width": 1}, {"from": "1961-2-0-4", "label": 0.125, "length": 500, "to": "1961-2-0-1", "width": 1}, {"from": "1961-2-0-4", "label": 0.125, "length": 500, "to": "1961-2-0-0", "width": 1}, {"from": "4182-1-2-1", "label": 0.5, "length": 500, "to": "4182-1-2-2", "width": 1}, {"from": "4182-1-2-1", "label": 0.5, "length": 500, "to": "4182-1-2-0", "width": 1}, {"from": "4410-6-1-4", "label": 0.2, "length": 500, "to": "4410-6-1-2", "width": 1}, {"from": "4410-6-1-4", "label": 0.2, "length": 500, "to": "4410-6-1-0", "width": 1}, {"from": "4410-6-1-4", "label": 0.2, "length": 500, "to": "4410-2-0-6", "width": 1}, {"from": "2157-4-0-1", "label": 0.3333333333333333, "length": 500, "to": "2157-4-0-3", "width": 1}, {"from": "2157-4-0-1", "label": 0.3333333333333333, "length": 500, "to": "2157-4-0-2", "width": 1}, {"from": "2157-4-0-1", "label": 0.3333333333333333, "length": 500, "to": "2157-4-0-0", "width": 1}, {"from": "2157-4-0-1", "label": 0.25, "length": 500, "to": "2157-4--1-1", "width": 1}, {"from": "1961-2-0-7", "label": 0.125, "length": 500, "to": "1961-2-0-8", "width": 1}, {"from": "1961-2-0-7", "label": 0.125, "length": 500, "to": "1961-2-0-6", "width": 1}, {"from": "1961-2-0-7", "label": 0.125, "length": 500, "to": "1961-2-0-5", "width": 1}, {"from": "1961-2-0-7", "label": 0.125, "length": 500, "to": "1961-2-0-3", "width": 1}, {"from": "1961-2-0-7", "label": 0.125, "length": 500, "to": "1961-2-0-2", "width": 1}, {"from": "1961-2-0-7", "label": 0.125, "length": 500, "to": "1961-2-0-1", "width": 1}, {"from": "1961-2-0-7", "label": 0.125, "length": 500, "to": "1961-2-0-0", "width": 1}, {"from": "3057-2-0-5", "label": 0.25, "length": 500, "to": "3057-2-0-4", "width": 1}, {"from": "3057-2-0-5", "label": 0.25, "length": 500, "to": "3057-2-0-3", "width": 1}, {"from": "3057-2-0-5", "label": 0.125, "length": 500, "to": "3057-2--1-0", "width": 1}, {"from": "1751-0-1-0", "label": 0.3333333333333333, "length": 500, "to": "1751-0-1-3", "width": 1}, {"from": "1751-0-1-0", "label": 0.3333333333333333, "length": 500, "to": "1751-0-1-2", "width": 1}, {"from": "1751-0-1-0", "label": 0.3333333333333333, "length": 500, "to": "1751-0-1-1", "width": 1}, {"from": "4182-7-0-0", "label": 0.3333333333333333, "length": 500, "to": "4182-7-0-2", "width": 1}, {"from": "4182-7-0-0", "label": 0.3333333333333333, "length": 500, "to": "4182-7-0-1", "width": 1}, {"from": "4182-7-0-0", "label": 0.2, "length": 500, "to": "4182-7--1-0", "width": 1}, {"from": "4182-7-0-0", "label": 0.3333333333333333, "length": 500, "to": "4182-1-1-1", "width": 1}, {"from": "4182-7-0-2", "label": 0.5, "length": 500, "to": "4182-7-0-1", "width": 1}, {"from": "4182-7-1-1", "label": 0.2, "length": 500, "to": "4182-7-1-4", "width": 1}, {"from": "4182-7-1-1", "label": 0.2, "length": 500, "to": "4182-7-1-2", "width": 1}, {"from": "4182-7-1-1", "label": 0.2, "length": 500, "to": "4182-7-1-0", "width": 1}, {"from": "4182-7-1-1", "label": 0.2, "length": 500, "to": "4182-1-1-0", "width": 1}, {"from": "4933-7-1-1", "label": 0.5, "length": 500, "to": "4933-7-1-2", "width": 1}, {"from": "4933-7-1-1", "label": 0.5, "length": 500, "to": "4933-7-1-0", "width": 1}, {"from": "6899-1-0-3", "label": 0.25, "length": 500, "to": "6899-1-0-4", "width": 1}, {"from": "6899-1-0-3", "label": 0.25, "length": 500, "to": "6899-1-0-2", "width": 1}, {"from": "6899-1-0-3", "label": 0.25, "length": 500, "to": "6899-1-0-1", "width": 1}, {"from": "6899-1-0-3", "label": 0.25, "length": 500, "to": "6899-1-0-0", "width": 1}, {"from": "1961-2-0-6", "label": 0.1111111111111111, "length": 500, "to": "1961-3-1-4", "width": 1}, {"from": "1961-2-0-6", "label": 0.1111111111111111, "length": 500, "to": "1961-2-0-8", "width": 1}, {"from": "1961-2-0-6", "label": 0.1111111111111111, "length": 500, "to": "1961-2-0-5", "width": 1}, {"from": "1961-2-0-6", "label": 0.1111111111111111, "length": 500, "to": "1961-2-0-3", "width": 1}, {"from": "1961-2-0-6", "label": 0.1111111111111111, "length": 500, "to": "1961-2-0-2", "width": 1}, {"from": "1961-2-0-6", "label": 0.1111111111111111, "length": 500, "to": "1961-2-0-1", "width": 1}, {"from": "1961-2-0-6", "label": 0.1111111111111111, "length": 500, "to": "1961-2-0-0", "width": 1}, {"from": "4182-1-2-0", "label": 0.5, "length": 500, "to": "4182-1-2-2", "width": 1}, {"from": "4182-1--1-0", "label": 1.0, "length": 500, "to": "4182-1-0-0", "width": 1}, {"from": "3123-8-0-3", "label": 0.25, "length": 500, "to": "3123-8-0-6", "width": 1}, {"from": "3123-8-0-3", "label": 0.25, "length": 500, "to": "3123-8-0-2", "width": 1}, {"from": "3123-8-0-3", "label": 0.25, "length": 500, "to": "3123-8-0-0", "width": 1}, {"from": "3123-8-0-3", "label": 0.16666666666666666, "length": 500, "to": "3123-8--1-1", "width": 1}, {"from": "7144-5--1-0", "label": 0.125, "length": 500, "to": "4410-6--1-0", "width": 1}, {"from": "7144-5--1-0", "label": 0.125, "length": 500, "to": "3123-8--1-0", "width": 1}, {"from": "7144-5--1-0", "label": 0.125, "length": 500, "to": "3057-2--1-0", "width": 1}, {"from": "7144-5--1-0", "label": 0.125, "length": 500, "to": "7144-5-0-4", "width": 1}, {"from": "7144-5--1-0", "label": 0.125, "length": 500, "to": "7144-5-0-0", "width": 1}, {"from": "7144-5--1-1", "label": 0.5, "length": 500, "to": "7144-5-1-3", "width": 1}, {"from": "7144-5--1-1", "label": 0.5, "length": 500, "to": "7144-5-0-1", "width": 1}, {"from": "7144-5-1-1", "label": 0.25, "length": 500, "to": "7144-5-1-3", "width": 1}, {"from": "7144-5-1-1", "label": 0.25, "length": 500, "to": "7144-5-1-2", "width": 1}, {"from": "3123-8-0-0", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-6", "width": 1}, {"from": "3123-8-0-0", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-5", "width": 1}, {"from": "3123-8-0-0", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-2", "width": 1}, {"from": "3123-8-0-0", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-1", "width": 1}, {"from": "3123-8-0-0", "label": 0.14285714285714285, "length": 500, "to": "3123-8--1-0", "width": 1}, {"from": "3123-8-1-3", "label": 0.25, "length": 500, "to": "3123-8-1-1", "width": 1}, {"from": "3123-8-1-3", "label": 0.25, "length": 500, "to": "3123-8-1-0", "width": 1}, {"from": "4933-7-2-4", "label": 0.14285714285714285, "length": 500, "to": "4933-9-4-0", "width": 1}, {"from": "4933-7-2-4", "label": 0.14285714285714285, "length": 500, "to": "4933-9-3-0", "width": 1}, {"from": "4933-7-2-4", "label": 0.14285714285714285, "length": 500, "to": "4933-9-2-0", "width": 1}, {"from": "4933-7-2-4", "label": 0.14285714285714285, "length": 500, "to": "4933-7-2-1", "width": 1}, {"from": "3123-0-0-1", "label": 0.25, "length": 500, "to": "3123-0-0-3", "width": 1}, {"from": "3123-0-0-1", "label": 0.25, "length": 500, "to": "3123-0-0-0", "width": 1}, {"from": "3123-0-1-5", "label": 0.14285714285714285, "length": 500, "to": "3123-0-1-6", "width": 1}, {"from": "3123-0-1-5", "label": 0.14285714285714285, "length": 500, "to": "3123-0-1-4", "width": 1}, {"from": "3123-0-1-5", "label": 0.14285714285714285, "length": 500, "to": "3123-0-1-3", "width": 1}, {"from": "3123-0-1-5", "label": 0.14285714285714285, "length": 500, "to": "3123-0-1-2", "width": 1}, {"from": "3123-0-1-5", "label": 0.14285714285714285, "length": 500, "to": "3123-0-1-1", "width": 1}, {"from": "3123-0-1-5", "label": 0.14285714285714285, "length": 500, "to": "3123-0-1-0", "width": 1}, {"from": "4933-7-1-0", "label": 0.25, "length": 500, "to": "4933-9-4-1", "width": 1}, {"from": "4933-7-1-0", "label": 0.25, "length": 500, "to": "4933-9-0-0", "width": 1}, {"from": "4933-7-1-0", "label": 0.25, "length": 500, "to": "4933-7-1-2", "width": 1}, {"from": "4933-9-2-1", "label": 0.3333333333333333, "length": 500, "to": "4933-9-2-3", "width": 1}, {"from": "4933-9-2-1", "label": 0.3333333333333333, "length": 500, "to": "4933-9-2-2", "width": 1}, {"from": "4933-9-2-1", "label": 0.3333333333333333, "length": 500, "to": "4933-9-2-0", "width": 1}, {"from": "1961-3-0-0", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-6", "width": 1}, {"from": "1961-3-0-0", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-5", "width": 1}, {"from": "1961-3-0-0", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-4", "width": 1}, {"from": "1961-3-0-0", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-3", "width": 1}, {"from": "1961-3-0-0", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-2", "width": 1}, {"from": "1961-3-0-0", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-1", "width": 1}, {"from": "5120-4-0-6", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-5", "width": 1}, {"from": "5120-4-0-6", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-4", "width": 1}, {"from": "5120-4-0-6", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-3", "width": 1}, {"from": "5120-4-0-6", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-2", "width": 1}, {"from": "5120-4-0-6", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-1", "width": 1}, {"from": "5120-4-0-6", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-0", "width": 1}, {"from": "3123-0-0-3", "label": 0.25, "length": 500, "to": "3123-0-0-0", "width": 1}, {"from": "7144-5-1-3", "label": 0.25, "length": 500, "to": "7144-5-1-2", "width": 1}, {"from": "3057-2-2-1", "label": 1.0, "length": 500, "to": "3057-2-2-0", "width": 1}, {"from": "3057-2-2-1", "label": 0.125, "length": 500, "to": "3057-2--1-0", "width": 1}, {"from": "1961-3-0-5", "label": 0.25, "length": 500, "to": "1961-3-0-6", "width": 1}, {"from": "1961-3-0-5", "label": 0.25, "length": 500, "to": "1961-3-0-4", "width": 1}, {"from": "1961-3-0-5", "label": 0.25, "length": 500, "to": "1961-3-0-2", "width": 1}, {"from": "1961-3-0-5", "label": 0.16666666666666666, "length": 500, "to": "1961-3--1-1", "width": 1}, {"from": "4410-6-1-2", "label": 0.25, "length": 500, "to": "4410-6-1-0", "width": 1}, {"from": "3123-0-1-1", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-6", "width": 1}, {"from": "3123-0-1-1", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-4", "width": 1}, {"from": "3123-0-1-1", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-3", "width": 1}, {"from": "3123-0-1-1", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-2", "width": 1}, {"from": "3123-0-1-1", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-0", "width": 1}, {"from": "3807-4--1-0", "label": 0.2, "length": 500, "to": "4933-9--1-0", "width": 1}, {"from": "3807-4--1-0", "label": 0.2, "length": 500, "to": "4182-7--1-0", "width": 1}, {"from": "3807-4--1-0", "label": 0.2, "length": 500, "to": "3057-2--1-1", "width": 1}, {"from": "3807-4--1-0", "label": 0.2, "length": 500, "to": "3807-4-2-3", "width": 1}, {"from": "3807-4--1-0", "label": 0.2, "length": 500, "to": "3807-4-0-0", "width": 1}, {"from": "1961-3-1-4", "label": 0.16666666666666666, "length": 500, "to": "1961-3-1-3", "width": 1}, {"from": "1961-3-1-4", "label": 0.16666666666666666, "length": 500, "to": "1961-3-1-2", "width": 1}, {"from": "1961-3-1-4", "label": 0.16666666666666666, "length": 500, "to": "1961-3-1-1", "width": 1}, {"from": "1961-3-1-4", "label": 0.16666666666666666, "length": 500, "to": "1961-3-1-0", "width": 1}, {"from": "1961-3-1-4", "label": 0.16666666666666666, "length": 500, "to": "1961-2-1-3", "width": 1}, {"from": "3123-0--1-0", "label": 0.5, "length": 500, "to": "6899-1--1-0", "width": 1}, {"from": "3123-0--1-0", "label": 0.5, "length": 500, "to": "3123-0-0-0", "width": 1}, {"from": "4410-6-0-1", "label": 0.25, "length": 500, "to": "4410-6-0-6", "width": 1}, {"from": "4410-6-0-1", "label": 0.25, "length": 500, "to": "4410-6-0-4", "width": 1}, {"from": "4410-6-0-1", "label": 0.25, "length": 500, "to": "4410-6-0-2", "width": 1}, {"from": "4410-6-0-1", "label": 0.25, "length": 500, "to": "4410-6-0-0", "width": 1}, {"from": "4410-6-0-1", "label": 0.16666666666666666, "length": 500, "to": "4410-6--1-1", "width": 1}, {"from": "4410-6-0-2", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-6", "width": 1}, {"from": "4410-6-0-2", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-5", "width": 1}, {"from": "4410-6-0-2", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-4", "width": 1}, {"from": "4410-6-0-2", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-3", "width": 1}, {"from": "4410-6-0-2", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-0", "width": 1}, {"from": "4182-1-1-0", "label": 0.5, "length": 500, "to": "4182-1-1-1", "width": 1}, {"from": "2157-4--1-0", "label": 1.0, "length": 500, "to": "2157-4-0-0", "width": 1}, {"from": "5120-4--1-0", "label": 0.3333333333333333, "length": 500, "to": "4410-2--1-0", "width": 1}, {"from": "5120-4--1-0", "label": 0.3333333333333333, "length": 500, "to": "2157-4--1-1", "width": 1}, {"from": "5120-4--1-0", "label": 0.3333333333333333, "length": 500, "to": "5120-4-0-0", "width": 1}, {"from": "1751-0-1-3", "label": 0.3333333333333333, "length": 500, "to": "1751-0-1-2", "width": 1}, {"from": "1751-0-1-3", "label": 0.3333333333333333, "length": 500, "to": "1751-0-1-1", "width": 1}, {"from": "3123-0-1-4", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-6", "width": 1}, {"from": "3123-0-1-4", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-3", "width": 1}, {"from": "3123-0-1-4", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-2", "width": 1}, {"from": "3123-0-1-4", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-0", "width": 1}, {"from": "1961-3-1-2", "label": 0.25, "length": 500, "to": "1961-3-1-3", "width": 1}, {"from": "1961-3-1-2", "label": 0.25, "length": 500, "to": "1961-3-1-1", "width": 1}, {"from": "1961-3-1-2", "label": 0.25, "length": 500, "to": "1961-3-1-0", "width": 1}, {"from": "1751-0-1-2", "label": 0.3333333333333333, "length": 500, "to": "1751-0-1-1", "width": 1}, {"from": "3057-2-0-4", "label": 0.2, "length": 500, "to": "3057-2-0-3", "width": 1}, {"from": "3057-2-0-4", "label": 0.2, "length": 500, "to": "3057-2-0-0", "width": 1}, {"from": "1961-3-1-3", "label": 0.25, "length": 500, "to": "1961-3-1-1", "width": 1}, {"from": "1961-3-1-3", "label": 0.25, "length": 500, "to": "1961-3-1-0", "width": 1}, {"from": "3123-0-1-0", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-6", "width": 1}, {"from": "3123-0-1-0", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-3", "width": 1}, {"from": "3123-0-1-0", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-2", "width": 1}, {"from": "4182-1-0-0", "label": 1.0, "length": 500, "to": "4182-1-0-1", "width": 1}, {"from": "4933-9-4-1", "label": 0.3333333333333333, "length": 500, "to": "4933-9-4-0", "width": 1}, {"from": "4933-9-4-1", "label": 0.2, "length": 500, "to": "4933-9--1-0", "width": 1}, {"from": "4410-6-0-5", "label": 0.25, "length": 500, "to": "4410-6-0-6", "width": 1}, {"from": "4410-6-0-5", "label": 0.25, "length": 500, "to": "4410-6-0-4", "width": 1}, {"from": "4410-6-0-5", "label": 0.25, "length": 500, "to": "4410-6-0-0", "width": 1}, {"from": "4410-6-0-5", "label": 0.16666666666666666, "length": 500, "to": "4410-6--1-1", "width": 1}, {"from": "1961-3-0-1", "label": 0.25, "length": 500, "to": "1961-3-0-6", "width": 1}, {"from": "1961-3-0-1", "label": 0.25, "length": 500, "to": "1961-3-0-4", "width": 1}, {"from": "1961-3-0-1", "label": 0.25, "length": 500, "to": "1961-3-0-2", "width": 1}, {"from": "1961-3-0-1", "label": 0.16666666666666666, "length": 500, "to": "1961-3--1-1", "width": 1}, {"from": "3807-4-2-2", "label": 0.25, "length": 500, "to": "3807-4-2-4", "width": 1}, {"from": "3807-4-2-2", "label": 0.25, "length": 500, "to": "3807-4-2-3", "width": 1}, {"from": "3807-4-2-2", "label": 0.25, "length": 500, "to": "3807-4-2-1", "width": 1}, {"from": "3807-4-2-2", "label": 0.25, "length": 500, "to": "3807-4-2-0", "width": 1}, {"from": "4410-2-0-0", "label": 0.16666666666666666, "length": 500, "to": "4410-2-0-6", "width": 1}, {"from": "4410-2-0-0", "label": 0.16666666666666666, "length": 500, "to": "4410-2-0-5", "width": 1}, {"from": "4410-2-0-0", "label": 0.16666666666666666, "length": 500, "to": "4410-2-0-4", "width": 1}, {"from": "4410-2-0-0", "label": 0.16666666666666666, "length": 500, "to": "4410-2-0-3", "width": 1}, {"from": "4410-2-0-0", "label": 0.16666666666666666, "length": 500, "to": "4410-2-0-2", "width": 1}, {"from": "4410-2-0-0", "label": 0.16666666666666666, "length": 500, "to": "4410-2-0-1", "width": 1}, {"from": "4410-2-0-0", "label": 0.3333333333333333, "length": 500, "to": "4410-2--1-0", "width": 1}, {"from": "4182-7-2-2", "label": 0.2, "length": 500, "to": "4182-7-2-3", "width": 1}, {"from": "4182-7-2-2", "label": 0.2, "length": 500, "to": "4182-7-2-1", "width": 1}, {"from": "4182-7-2-2", "label": 0.2, "length": 500, "to": "4182-7-2-0", "width": 1}, {"from": "4182-7-2-2", "label": 0.2, "length": 500, "to": "4182-1-2-2", "width": 1}, {"from": "3123-0-1-3", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-6", "width": 1}, {"from": "3123-0-1-3", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-2", "width": 1}, {"from": "4182-7-2-0", "label": 0.25, "length": 500, "to": "4182-7-2-3", "width": 1}, {"from": "4182-7-2-0", "label": 0.25, "length": 500, "to": "4182-7-2-1", "width": 1}, {"from": "3123-8-1-0", "label": 0.25, "length": 500, "to": "3123-8-1-1", "width": 1}, {"from": "3123-8-1-0", "label": 0.16666666666666666, "length": 500, "to": "3123-8--1-1", "width": 1}, {"from": "3123-0-1-6", "label": 0.16666666666666666, "length": 500, "to": "3123-0-1-2", "width": 1}, {"from": "3807-4-2-3", "label": 0.2, "length": 500, "to": "3807-9-1-0", "width": 1}, {"from": "3807-4-2-3", "label": 0.2, "length": 500, "to": "3807-4-2-4", "width": 1}, {"from": "3807-4-2-3", "label": 0.2, "length": 500, "to": "3807-4-2-1", "width": 1}, {"from": "3807-4-2-3", "label": 0.2, "length": 500, "to": "3807-4-2-0", "width": 1}, {"from": "4182-7-2-1", "label": 0.25, "length": 500, "to": "4182-7-2-3", "width": 1}, {"from": "1961-2-0-1", "label": 0.125, "length": 500, "to": "1961-2-0-8", "width": 1}, {"from": "1961-2-0-1", "label": 0.125, "length": 500, "to": "1961-2-0-5", "width": 1}, {"from": "1961-2-0-1", "label": 0.125, "length": 500, "to": "1961-2-0-3", "width": 1}, {"from": "1961-2-0-1", "label": 0.125, "length": 500, "to": "1961-2-0-2", "width": 1}, {"from": "1961-2-0-1", "label": 0.125, "length": 500, "to": "1961-2-0-0", "width": 1}, {"from": "4410-6--1-0", "label": 0.14285714285714285, "length": 500, "to": "3123-8--1-0", "width": 1}, {"from": "4410-6--1-0", "label": 0.14285714285714285, "length": 500, "to": "3057-2--1-0", "width": 1}, {"from": "4410-6--1-0", "label": 0.14285714285714285, "length": 500, "to": "4410-6-0-0", "width": 1}, {"from": "1751-0-0-1", "label": 0.3333333333333333, "length": 500, "to": "1751-0-0-3", "width": 1}, {"from": "1751-0-0-1", "label": 0.3333333333333333, "length": 500, "to": "1751-0-0-2", "width": 1}, {"from": "1751-0-0-1", "label": 0.3333333333333333, "length": 500, "to": "1751-0-0-0", "width": 1}, {"from": "4410-6-1-0", "label": 0.16666666666666666, "length": 500, "to": "4410-6--1-1", "width": 1}, {"from": "1751-0-0-0", "label": 0.25, "length": 500, "to": "1751-4-2-0", "width": 1}, {"from": "1751-0-0-0", "label": 0.25, "length": 500, "to": "1751-0-0-3", "width": 1}, {"from": "1751-0-0-0", "label": 0.25, "length": 500, "to": "1751-0-0-2", "width": 1}, {"from": "4410-6--1-1", "label": 0.16666666666666666, "length": 500, "to": "3123-8--1-1", "width": 1}, {"from": "4410-6--1-1", "label": 0.16666666666666666, "length": 500, "to": "1961-3--1-1", "width": 1}, {"from": "4410-6--1-1", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-3", "width": 1}, {"from": "1961-3-0-6", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-4", "width": 1}, {"from": "1961-3-0-6", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-3", "width": 1}, {"from": "1961-3-0-6", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-2", "width": 1}, {"from": "4182-7-1-2", "label": 0.25, "length": 500, "to": "4182-7-1-4", "width": 1}, {"from": "4182-7-1-2", "label": 0.25, "length": 500, "to": "4182-7-1-0", "width": 1}, {"from": "4410-2--1-0", "label": 0.3333333333333333, "length": 500, "to": "2157-4--1-1", "width": 1}, {"from": "1961-2-1-3", "label": 0.25, "length": 500, "to": "1961-2-1-2", "width": 1}, {"from": "4182-7-0-1", "label": 0.3333333333333333, "length": 500, "to": "4182-1-0-1", "width": 1}, {"from": "1961-2-0-0", "label": 0.125, "length": 500, "to": "1961-2-0-8", "width": 1}, {"from": "1961-2-0-0", "label": 0.125, "length": 500, "to": "1961-2-0-5", "width": 1}, {"from": "1961-2-0-0", "label": 0.125, "length": 500, "to": "1961-2-0-3", "width": 1}, {"from": "1961-2-0-0", "label": 0.125, "length": 500, "to": "1961-2-0-2", "width": 1}, {"from": "1961-2-0-0", "label": 1.0, "length": 500, "to": "1961-2--1-0", "width": 1}, {"from": "3057-2-0-3", "label": 0.25, "length": 500, "to": "3057-2-0-0", "width": 1}, {"from": "3057-2-0-3", "label": 0.2, "length": 500, "to": "3057-2--1-1", "width": 1}, {"from": "5120-4-0-1", "label": 0.2, "length": 500, "to": "5120-4-0-5", "width": 1}, {"from": "5120-4-0-1", "label": 0.2, "length": 500, "to": "5120-4-0-3", "width": 1}, {"from": "5120-4-0-1", "label": 0.2, "length": 500, "to": "5120-4-0-2", "width": 1}, {"from": "5120-4-0-1", "label": 0.2, "length": 500, "to": "5120-4-0-0", "width": 1}, {"from": "3807-4-2-0", "label": 0.25, "length": 500, "to": "3807-4-2-4", "width": 1}, {"from": "3807-4-2-0", "label": 0.25, "length": 500, "to": "3807-4-2-1", "width": 1}, {"from": "1751-0-0-2", "label": 0.3333333333333333, "length": 500, "to": "1751-0-0-3", "width": 1}, {"from": "1961-3-0-4", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-3", "width": 1}, {"from": "1961-3-0-4", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-2", "width": 1}, {"from": "3123-8--1-1", "label": 0.16666666666666666, "length": 500, "to": "1961-3--1-1", "width": 1}, {"from": "3123-8--1-1", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-1", "width": 1}, {"from": "3123-8--1-1", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-5", "width": 1}, {"from": "6899-1-0-4", "label": 0.25, "length": 500, "to": "6899-1-0-2", "width": 1}, {"from": "6899-1-0-4", "label": 0.25, "length": 500, "to": "6899-1-0-1", "width": 1}, {"from": "6899-1-0-4", "label": 0.25, "length": 500, "to": "6899-1-0-0", "width": 1}, {"from": "3807-4-2-4", "label": 0.25, "length": 500, "to": "3807-4-2-1", "width": 1}, {"from": "3123-8-0-2", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-6", "width": 1}, {"from": "3123-8-0-2", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-5", "width": 1}, {"from": "3123-8-0-2", "label": 0.16666666666666666, "length": 500, "to": "3123-8-0-1", "width": 1}, {"from": "5120-4-0-0", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-5", "width": 1}, {"from": "5120-4-0-0", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-4", "width": 1}, {"from": "5120-4-0-0", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-3", "width": 1}, {"from": "5120-4-0-0", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-2", "width": 1}, {"from": "2157-4-0-0", "label": 0.3333333333333333, "length": 500, "to": "2157-4-0-3", "width": 1}, {"from": "2157-4-0-0", "label": 0.3333333333333333, "length": 500, "to": "2157-4-0-2", "width": 1}, {"from": "4933-9-2-0", "label": 0.25, "length": 500, "to": "4933-9-2-3", "width": 1}, {"from": "4933-9-2-0", "label": 0.25, "length": 500, "to": "4933-9-2-2", "width": 1}, {"from": "4182-7-2-3", "label": 0.2, "length": 500, "to": "4182-7--1-0", "width": 1}, {"from": "4182-7-2-3", "label": 0.2, "length": 500, "to": "4182-1-1-1", "width": 1}, {"from": "2157-4-2-0", "label": 0.25, "length": 500, "to": "2157-4--1-1", "width": 1}, {"from": "7144-5-0-4", "label": 0.3333333333333333, "length": 500, "to": "7144-5-0-2", "width": 1}, {"from": "7144-5-0-4", "label": 0.3333333333333333, "length": 500, "to": "7144-5-0-1", "width": 1}, {"from": "4410-2-0-6", "label": 0.14285714285714285, "length": 500, "to": "4410-2-0-5", "width": 1}, {"from": "4410-2-0-6", "label": 0.14285714285714285, "length": 500, "to": "4410-2-0-4", "width": 1}, {"from": "4410-2-0-6", "label": 0.14285714285714285, "length": 500, "to": "4410-2-0-3", "width": 1}, {"from": "4410-2-0-6", "label": 0.14285714285714285, "length": 500, "to": "4410-2-0-2", "width": 1}, {"from": "4410-2-0-6", "label": 0.14285714285714285, "length": 500, "to": "4410-2-0-1", "width": 1}, {"from": "4933-9-0-0", "label": 0.2, "length": 500, "to": "4933-9--1-0", "width": 1}, {"from": "3123-8-0-1", "label": 0.25, "length": 500, "to": "3123-8-0-6", "width": 1}, {"from": "6899-1-0-2", "label": 0.25, "length": 500, "to": "6899-1-0-1", "width": 1}, {"from": "6899-1-0-2", "label": 0.25, "length": 500, "to": "6899-1-0-0", "width": 1}, {"from": "4410-2-0-1", "label": 0.2, "length": 500, "to": "4410-2-0-5", "width": 1}, {"from": "4410-2-0-1", "label": 0.2, "length": 500, "to": "4410-2-0-3", "width": 1}, {"from": "4410-2-0-1", "label": 0.2, "length": 500, "to": "4410-2-0-2", "width": 1}, {"from": "1751-0-1-1", "label": 0.25, "length": 500, "to": "1751-4-2-0", "width": 1}, {"from": "2157-4-0-2", "label": 0.3333333333333333, "length": 500, "to": "2157-4-0-3", "width": 1}, {"from": "4933-9-2-2", "label": 0.3333333333333333, "length": 500, "to": "4933-9-2-3", "width": 1}, {"from": "6899-1--1-0", "label": 0.5, "length": 500, "to": "6899-1-0-0", "width": 1}, {"from": "7144-5-0-0", "label": 0.3333333333333333, "length": 500, "to": "7144-5-0-2", "width": 1}, {"from": "7144-5-0-0", "label": 0.3333333333333333, "length": 500, "to": "7144-5-0-1", "width": 1}, {"from": "5120-4-0-2", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-5", "width": 1}, {"from": "5120-4-0-2", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-4", "width": 1}, {"from": "5120-4-0-2", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-3", "width": 1}, {"from": "3123-8-0-5", "label": 0.25, "length": 500, "to": "3123-8-0-6", "width": 1}, {"from": "5120-4-0-3", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-5", "width": 1}, {"from": "5120-4-0-3", "label": 0.16666666666666666, "length": 500, "to": "5120-4-0-4", "width": 1}, {"from": "1961-3-0-2", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-3", "width": 1}, {"from": "4182-7-1-0", "label": 0.25, "length": 500, "to": "4182-7-1-4", "width": 1}, {"from": "4933-9-3-1", "label": 1.0, "length": 500, "to": "4933-9-3-0", "width": 1}, {"from": "1961-3-1-1", "label": 0.25, "length": 500, "to": "1961-3-1-0", "width": 1}, {"from": "3123-8-1-1", "label": 0.14285714285714285, "length": 500, "to": "3123-8--1-0", "width": 1}, {"from": "3807-9-1-0", "label": 0.3333333333333333, "length": 500, "to": "3807-4-0-0", "width": 1}, {"from": "1961-3--1-1", "label": 0.16666666666666666, "length": 500, "to": "1961-3-1-0", "width": 1}, {"from": "1961-3--1-1", "label": 0.16666666666666666, "length": 500, "to": "1961-3-0-3", "width": 1}, {"from": "7144-5-0-1", "label": 0.25, "length": 500, "to": "7144-5-0-2", "width": 1}, {"from": "3057-2--1-1", "label": 0.2, "length": 500, "to": "4933-9--1-0", "width": 1}, {"from": "3057-2--1-1", "label": 0.2, "length": 500, "to": "4182-7--1-0", "width": 1}, {"from": "1961-2-0-5", "label": 0.125, "length": 500, "to": "1961-2-0-8", "width": 1}, {"from": "1961-2-0-5", "label": 0.125, "length": 500, "to": "1961-2-0-3", "width": 1}, {"from": "1961-2-0-5", "label": 0.125, "length": 500, "to": "1961-2-0-2", "width": 1}, {"from": "4182-7--1-0", "label": 0.2, "length": 500, "to": "4933-9--1-0", "width": 1}, {"from": "4410-6-0-6", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-4", "width": 1}, {"from": "4410-6-0-6", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-3", "width": 1}, {"from": "4410-6-0-6", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-0", "width": 1}, {"from": "4410-2-0-4", "label": 0.2, "length": 500, "to": "4410-2-0-5", "width": 1}, {"from": "4410-2-0-4", "label": 0.2, "length": 500, "to": "4410-2-0-3", "width": 1}, {"from": "4410-2-0-4", "label": 0.2, "length": 500, "to": "4410-2-0-2", "width": 1}, {"from": "5120-4-0-4", "label": 0.2, "length": 500, "to": "5120-4-0-5", "width": 1}, {"from": "1961-2-0-2", "label": 0.125, "length": 500, "to": "1961-2-0-8", "width": 1}, {"from": "1961-2-0-2", "label": 0.125, "length": 500, "to": "1961-2-0-3", "width": 1}, {"from": "1961-2-0-3", "label": 0.125, "length": 500, "to": "1961-2-0-8", "width": 1}, {"from": "3057-2--1-0", "label": 0.125, "length": 500, "to": "3123-8--1-0", "width": 1}, {"from": "3057-2--1-0", "label": 0.125, "length": 500, "to": "3057-2-0-0", "width": 1}, {"from": "4410-6-0-0", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-4", "width": 1}, {"from": "4410-6-0-0", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-3", "width": 1}, {"from": "4410-6-0-4", "label": 0.16666666666666666, "length": 500, "to": "4410-6-0-3", "width": 1}, {"from": "6899-1-0-0", "label": 0.25, "length": 500, "to": "6899-1-0-1", "width": 1}, {"from": "4410-2-0-2", "label": 0.16666666666666666, "length": 500, "to": "4410-2-0-5", "width": 1}, {"from": "4410-2-0-2", "label": 0.16666666666666666, "length": 500, "to": "4410-2-0-3", "width": 1}, {"from": "4410-2-0-3", "label": 0.16666666666666666, "length": 500, "to": "4410-2-0-5", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

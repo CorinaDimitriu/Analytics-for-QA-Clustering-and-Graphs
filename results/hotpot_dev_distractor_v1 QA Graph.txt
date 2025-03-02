@@ -1,0 +1,913 @@
+Total no questions: 7405
+No vertices: 13695
+No edges: 7405
+
+Max no questions with the same answer: 233
+Min no questions with the same answer: 1
+
+Max no answers for a question: 1
+Min no answers for a question: 1
+
+Finding 2 questions with the same answer
+
+Question 1: Are Local H and For Against both from the United States?
+Question 2: Are Peter Balakian and James Der Derian both teachers?
+Answer: yes
+
+Question 1: Naseer & Shahab is a Pakistani band playing a genre that dominated radio in what decade?
+Question 2: As a Nazi hunter, Simon Wiesenthal, was apart of a fued in what time frame?
+Answer: 1970s
+
+Question 1: Who is the album "Look What You Made Me Do" is on being released through?
+Question 2: who released the 2012 record of red?
+Answer: Big Machine Records
+
+Question 1: At which public research university founded in 1881 Ralph Fielding served as the head football coach?
+Question 2: What school did the team, whose only sophomore starter went on to play eleven seasons with the Atlanta Falcons, represent in the 1963 college football season?
+Answer: University of Texas at Austin
+
+Question 1: Suicide's 1977 released album features a song based on what brand's comic character?
+Question 2: Which publisher produced the comic books featuring both Spider-Man and the Daredevils?
+Answer: Marvel
+
+Question 1: Before going to the London School of Theology, John Burges spent six years working for a company headquartered in what country?
+Question 2: Dance and Laugh Amongst the Rotten is a studio Album by a band from which country ?
+Answer: the Netherlands
+
+Question 1: Anna Lewandowska is married to a footballer who plays for what club?
+Question 2: What football team did Mario Gomez and Javi Martinez both play for?
+Answer: Bayern Munich
+
+Question 1:  The Nantahala National Forest and the Croatan National Forest are both located in which state?
+Question 2: The plateau region between the Atlantic Coastal Plain and the main Appalachian Mountains is in what state?
+Answer: North Carolina
+
+Question 1: What was the career that Sidney Lumet and Albert Ward share in common?
+Question 2: Worker: What professional title to both Christopher Nolan and Paul Schrader boast?
+Answer: screenwriter
+
+Question 1: What type of sport does Sergio Casal and Manuel Orantes have in common?
+Question 2: What sport is played by both Justin Gimelstob and Angelique Kerber?
+Answer: tennis
+
+Question 1: A former Australian rules football player who played with the Port Adelaide in the South Australian National Football League is the vice president of a video game company based where?
+Question 2: Where is the airline company that operated United Express Flight 3411 on April 9, 2017 on behalf of United Express headquartered?
+Answer: Indianapolis, Indiana
+
+Question 1: The 2015 Austrian thriller film Jack tells the story of a serial killer who died in what year?
+Question 2: In which year was the American politician, that both represented New York in the United States Senate and served as an adviser to President Richard Nixon, re-elected for a fourth term as U.S. Senator?
+Answer: 1994
+
+Question 1: What year did the largest convention center in the U.S. state of Georgia open?
+Question 2: Dr. Saleha Mahmood Abedin's daughter was born in what year ?
+Answer: 1976
+
+Question 1:  Jaroslav Seifert and John McGahern were both part of what shared profession? 
+Question 2: Havelock Ellis and Arnold Bennett were both what?
+Answer: writer
+
+Question 1: Liaocheng and Shayang County are both located in which country?
+Question 2: What country are both Dafeng District and Jixi in?
+Answer: China
+
+Question 1: How many times has the author of Negotiating with the Dead been shortlisted for the Booker Prize ?
+Question 2: How many times has the author of Writing with Intent been shortlisted for the Booker Prize ? 
+Answer: five times
+
+Question 1: The Duke Steps Out stars an actress who was ranked tenth on a list of greatest female Hollywood stars in what year?
+Question 2: The actress that played  Pearl Gallagher on the tv sitcom "Diff'rent Strokes" is also the voice of an animated character that debuted in what year?
+Answer: 1999
+
+Question 1: In what year was the mathematician husband of Anneli Cahn Lax born?
+Question 2: In what year did the Irish Politician who led the Introduction of the Constitution of Ireland resign as President of the legitimatist government, the Council of State?
+Answer: 1926
+
+Question 1: When was the father of Princess Mafalda of Savoy born ?
+Question 2: What is the birthdate of this King of Italy, claiming thrones of Ethiopia and Albania and father of Princess Yolanda of Savoy?
+Answer: 11 November 1869
+
+Question 1: British Airways and EasyJet are both based out of where?
+Question 2: In which city is the parent company of Sterlite Industries headquartered?
+Answer: London
+
+Question 1: Where did the father of Edward Garrison Walker live when he wrote "An Appeal to the Coloured Citizens of the World"?
+Question 2: In what city did Brian Mannal convene when he was a member of the 188th and 189th General Court?
+Answer: Boston
+
+Question 1: Multiple award-winning actor Gary Sinise appeared in The Stand in 1994 - a miniseries based on a novel and screenplay by which noted author?
+Question 2: Who wrote the novel that the movie directed by Stanley Kubrick that was sampled in the album "Where Blood and Fire Bring Rest" was based on?
+Answer: Stephen King
+
+Question 1: Is the school where Aaron Parrett currently teaches English Literature public or private?
+Question 2: Is the university that Mary Jane Phillips-Matz attended in New York a public or private school?
+Answer: private
+
+Question 1: Charles Barkley changed his jersey number to #32 in honor of a player born in which year ?
+Question 2: In what year was the writer of the drama "Ingenious" born?
+Answer: 1959
+
+Question 1: What did the main character of the Novel whose second sequel was published by Viking Adult go to college?
+Question 2: In what state is the university where Boria Sax is a lecturer and teacher located?
+Answer: New York
+
+Question 1: The 1974 Texas Tech Raiders football team represented what public research university in Lubbock, Texas?
+Question 2: What institution does 2017 Texas Tech Red Raiders baseball team and Dan Law Field at Rip Griffin Park have in common?
+Answer: Texas Tech University
+
+Question 1: Edithvale railway station is located on a line that is situated in what city?
+Question 2: where was the 2006 Commonwealth Games that Mmoloki Nogeng won a bronze medal at held?
+Answer: Melbourne, Australia
+
+Question 1: When was the earliest film of High School and The Thorn in the Heart shot?
+Question 2: When was the band who composited "Discipline" formed?
+Answer: 1968
+
+Question 1:  The 2011–12 Houston Rockets season began with the drafting of the player who now plays for what team?
+Question 2: Who did the player nicknamed "The Human Highlight Film" play for after he left the Atlanta Hawks?
+Answer: Boston Celtics
+
+Question 1: Abraham Lincoln Neiman and his wife Carrie Marcus Neiman cofounded Neiman Marcus with Carrie's brother Herbert in which American city in 1907?
+Question 2: Rosemary Willis was seen in the grass in what Texas town, where John F. Kennedy was assassinated?
+Answer: Dallas
+
+Question 1: What year was the film that starred the composer for "The Naked Brothers Band"?
+Question 2: When was the star of the 1982 remake of The Spider's Web appointed to Dame Commander of the Order of the British Empire (DBE)?
+Answer: 2014
+
+Question 1: Arbie Orenstein is known as a scholar on the life of what composer internationally regarded as France's greatest living composer? 
+Question 2: Who was born first, Maurice Ravel or William Walton?
+Answer: Maurice Ravel
+
+Question 1: What year did the biographical-comedy-crime film directed by Steven Soderbergh about the highest-level corporate executive whistleblower come out?
+Question 2: What year was the album featuring the trio made up of Posdnuos, Dave, and Maseo, alongside Lebanese-Syrian rapper Eslam Jawaad release?
+Answer: 2009
+
+Question 1: What city is the flying component of the United States Air Force 432d Wing stationed in
+Question 2: The 22nd AVN Awards took place in what Nevada county?
+Answer: Clark County
+
+Question 1: Both Phaedranassa and Mitella are considered the classification of what level of species?
+Question 2: To which taxonomic category do both Hyacinthoides and Anthriscus belong?
+Answer: genus
+
+Question 1: Born 2 B.R.E.E.D. was co-written by the late singer-songwriter who has sold over how many records worldwide?
+Question 2: Lucy Pevensie is a character in the series of fantasy novels that have sold more than how many copies?
+Answer: 100 million
+
+Question 1: Marcus Wayne Garland spent nine seasons with an American professional baseball team that is based in Baltimore, Maryland, and was one of the AMerican League's original eight charter franchises when the league was established in what year?
+Question 2: The 1984 film "Marlene" is a documentary about an actress born in what year?
+Answer: 1901
+
+Question 1: The Pioneer Helmet and the Benty Grange helmet are linked because of which feature?
+Question 2: What adorns the archaeological artefact excavated by Thomas Bateman on 3 May 1848?
+Answer: A simple iron boar crest
+
+Question 1: The songs from the sountrack to "When Harry Met Sally" are performed by a singer that has had how many top 20 US albums?
+Question 2: How many cards can a player choose from to be part of their hand in the card game that was the culmination game of the United States Poker Championship?
+Answer: seven
+
+Question 1: Did the board game San Marco or About Time come out first?
+Question 2: Which game is designed by more persons, Elfenland or San Marco?
+Answer: San Marco
+
+Question 1: Margaret Wilson and Edna St. Vincent Millay have both been given what?
+Question 2: This expansion of the 2008 magazine article "Is Google Making Us Stoopid?" was a finalist for what award?
+Answer: Pulitzer Prize
+
+Question 1: What team plays within the Big 12 Conference and has Kevin Bookout playing for them?
+Question 2: What is the name of the basketball team that trained under assistant coach, Steven Michael Henson at the University of Oklahoma ?
+Answer: Oklahoma Sooners men's basketball
+
+Question 1: Where was the world cup hosted that Algeria qualified for the first time into the round of 16?
+Question 2: Who won the 2007 Copa America Final, with help from Julio Baptista?
+Answer: Brazil
+
+Question 1: Cherie Currie and Steve Augeri were both what?
+Question 2: What are the professions of Tom Johnston and Daryl Palumbo?
+Answer: American musician
+
+Question 1: 3 Arts Entertainment had at least one coalition with what streaming service, with its 13-episode, 2015 season of a Tina Fey created sitcom?
+Question 2: What is the name of the series who's first season was released on Netflix on September 22, 2016 and stars actor pronounced as John-a-kite?
+Answer: Netflix
+
+Question 1: What football club plays in the area between the old tool gates: Brook Bar and Trafford bar?
+Question 2: Joe Ford played for which football club based out of Old Trafford?
+Answer: Manchester United
+
+Question 1: What country does Washington Dulles International Airport and Baltimore–Washington metropolitan area have in common?
+Question 2: Eleventh Dream Day and The Shins are both rock bands from where?
+Answer: United States
+
+Question 1: The song "Chim Chim Cher-ee" can be heard  in the "Mary Poppins" scene of a Disney ride that debuted in what year?
+Question 2: What year did the shopping centre on the street numbered B411 open in the space of in the retail space of the former William Whiteley Limited department store?
+Answer: 1989
+
+Question 1: What broadcasting company did both Andrew Collins and Stuart Maconie of Collins and Maconie's Hit Parade both work together from 1194 to 1197?
+Question 2: What British company was involved in recording the audiobook for the book known as The Golden Compass in North America?
+Answer: BBC
+
+Question 1: When was the federal US law made that was responsible for shutting down Braniff Airways?
+Question 2: What year did a director of a North Korean cinema film get kidnapped?
+Answer: 1978
+
+Question 1: Syracuse Orange men's basketball team was part of a conference that participated in how many total sports?
+Question 2: How many chapters does Yōko Shōji's most famous manga have?
+Answer: 24
+
+Question 1: What major city is the Faith Lutheran Middle School and High School located by?
+Question 2: The Bellagio resort owned by MGM Resorts international is located in which US city?
+Answer: Las Vegas
+
+Question 1:  Danny Jones and Aleksi Sihvonen are both what?
+Question 2: What position in their bands did both Christopher Amott and Johnny Edwards have in common?
+Answer: vocalist
+
+Question 1: Which of the teams for which Colin Kolles is the former team principal and managing director was sold and renamed Force India at the end of the 2007?
+Question 2: Midland F1 Racing was a racing team that, in 2007, competed under what name for sponsorship reasons?
+Answer: Spyker F1
+
+Question 1: In what year was the director of the 2016 American-British biographical drama film which stars Rebecca Hall as Christine Chubbuck born?
+Question 2: In what year was the American singer, who with Kiely Williams, Sabrina Bryan, and Raven-Symoné made up The Cheetah Girls, born?
+Answer: 1983
+
+Question 1: What is the birthplace of the Senator who represents the first of 62 districts in the State Senate?
+Question 2: The song "Judgment Night" was a collaboration between Onyx and the heavy metal band formed in which city?
+Answer: Brooklyn, New York
+
+Question 1:  The Alexander Dawson School is located in a community that occupies how many acres ?
+Question 2: The community that contains Downtown Summerlin occupies how many acres?
+Answer: 22,500 acres
+
+Question 1: Douglas D. Scott is an American archaeologist most notable for his work at the site of a battle that occurred in what year?
+Question 2: The maternal grandmother of Princess Marie Cécile of Prussia was born in which year ?
+Answer: 1876
+
+Question 1: Jamell Anderson plays for the basketball team from what city?
+Question 2: Where is the basketball team that Mike DiNunno plays for based ?
+Answer: Ellesmere Port
+
+Question 1: The Red Queen's Race is a science fiction short story that uses the Red Queen's race from a novel by Lewis Carroll that is the sequel to what?
+Question 2: Both Hatter and March Hare are characters in which book?
+Answer: Alice's Adventures in Wonderland
+
+Question 1: Chandgi Ram won a gold medal in 1970 in a continental multi-sport event held at which city ?
+Question 2: National Stadium BTS Station is near the shopping center in what Thai city?
+Answer: Bangkok
+
+Question 1: To where did the war criminal who is the fictional defendant in the film After the Truth flee in real life ?
+Question 2: What region has the indigenous language that includes the word Catuaba?
+Answer: South America
+
+Question 1: What country does Hatton Hill and Hatton Castle, Angus have in common?
+Question 2: Where does the descendant of the Red Setter originate? 
+Answer: Scotland
+
+Question 1: MadMaze was developed by Eric Goldberg as what type of game? 
+Question 2: The creators of the product designation TSR 2002 was the first to publish what kind of game?
+Answer: role-playing game
+
+Question 1: The father of Manning Marius Kimmel retired from the Navy in what year?
+Question 2: What year was the branch of military, who is credited with Operation Tidal Wave, created?
+Answer: 1942
+
+Question 1: In what city was the second bowl game to air on all the "big four" television networks played?
+Question 2: Palm Springs lies in Palm Beach County, the third most populated county in its state. Which major U.S. city is it near?
+Answer: Miami
+
+Question 1: The Prodigal Daughter, though a book about an American, is by a novelist of what nationality?
+Question 2: Sylvia Cecil performed musicals by the playwright and composer of what nationality?
+Answer: English
+
+Question 1: Which of the writers of "The Telltale Head"  was born on February 15, 1954?
+Question 2: Who is this American cartoonist, writer, producer, animator, and voice actor that worked with this multiple Shuster Award, Harvey Award and Eisner Award nominee and an Eisner Award–winning comic book creator?
+Answer: Matt Groening
+
+Question 1: Which song, released on December 7, 2008 was co-written by Liz Rose?
+Question 2: What Taylor swift song released December 7, 2008 was written by the same writer as "You Belong to Me"?
+Answer: White Horse
+
+Question 1: What year did the series on CBS, starring the actor who known for his role in "Rebel Without a Cause," air?
+Question 2: New Jersey politicians Linda Stender and Leonard Lance were born within a year of each other beginning in which year?
+Answer: 1952
+
+Question 1: The Greatest Event in Television History aired on the channel that was founded by whom?
+Question 2:  Underfist: Halloween Bash was going to be the setup for a new series spin-off but the contract expired with a cable and television station that was launched on October 1, 19962 by whom?
+Answer: Betty Cohen
+
+Question 1: The channel that has interviewed players such as the forward for the French national team is on what platform?
+Question 2:  Charice is the first international studio album of a singer who rose to popularity through what?
+Answer: YouTube
+
+Question 1: What season was the character introduced that becomes the main antagonist in the  following season, from the animated television series created by Bryan Konietzko and Michael Dante DiMartino as a sequel to "", which aired from 2005 to 2008? 
+Question 2: What number album is the first W.A.S.P. album to feature Steven Edward Duren playing guitar?
+Answer: third
+
+Question 1: Luisa Miller is an opera with three acts, whereas Don Quichotte is an opera with how many acts?
+Question 2: The 1994 "The Shadow" co-stars Lone, Penelope Ann Miller, Peter Boyle, Jonathan Winters, Tim Curry and an actor that has received how many Emmy Award nominations?
+Answer: five
+
+Question 1: Tefik Selim Mborja was a part of a party that held power in Albania until what year? 
+Question 2: In what year was the composer of "Anthem" born?
+Answer: 1943
+
+Question 1: Dost Mohammad Khan was killed by a ruler who became the third king of what country?
+Question 2: Trilochanapala, last king of the Kabul Shahi dynasty, ruled in the site of which modern country?
+Answer: Afghanistan
+
+Question 1: Which of the two came out first, The Wind in the Willows or The Bears and I?
+Question 2: Which of the following works was completed first, Something Wicked This Way Comes or The Wind in the Willows?
+Answer: The Wind in the Willows
+
+Question 1: How many albums did the company who released Tift Merritt's debut album release for Tif Merritt?
+Question 2: Ann Killion co-authored a memoir with the American soccer goalkeeper who won how many Olympic golds?
+Answer: two
+
+Question 1: What collegiate division does the team coached by P.W. Underwood play in?
+Question 2: In what NCAA division is the team Michael Beasley played basketball for in college?
+Answer: Division I
+
+Question 1: Alternative facts is a phrase use by this U.S. Counselor to the President born in what year?
+Question 2: What year was the voice actress of an animated television series premiered on Cartoon Network born?
+Answer: 1967
+
+Question 1: Rafael de Souza Pereira is a defensive midfielder for what organization that is the top level of the Mexican football league system?
+Question 2: What division of Mexican football is the team that Jesús Daniel García Esparza currently plays for?
+Answer: Liga MX
+
+Question 1: Seal Harris was born in what county?
+Question 2: Bill Bryson grew up in a city that is the seat of which county ?
+Answer: Polk County
+
+Question 1: Which car brand was one step above the brand started on November 3, 1911?
+Question 2: Future Rhythm is the fourth album from a rap group that is from what city?
+Answer: Oakland
+
+Question 1: What city is the band that recorded Renegade from?
+Question 2: In which city was this band formed, whose rhythm guitarist featured in "Cupid's Chokehold?"
+Answer: Chicago
+
+Question 1: How many legs does the animal, in which Karl Kraepelin discusses in "Scorpiones und Pedipalpi," have?
+Question 2: Kadeem Jack is a player in a league that started with how many teams?
+Answer: eight
+
+Question 1: In which county does the United States Navy air base located in which  Attack Squadron 174 (VA-174) was based on?
+Question 2: Which country in Florida is the airport associated with transportation in Jacksonville, Florida?
+Answer: Duval County
+
+Question 1: Which player won more Grand Slam titles, Kevin Ullyett or Billie Jean King?
+Question 2: Who won more Grand Slam Titles, Liezel Huber or Billie Jean King?
+Answer: Billie Jean King
+
+Question 1: Giovanna d'Arco is an opera that was created by the composer of what nationality?
+Question 2: What is the nationality of the composer of the Opera "Iphigénie en Aulide" ?
+Answer: Italian
+
+Question 1: Who signed into law the act made to lower barriers to adoption?
+Question 2: Which President did the American model who posed nude for Penthouse and whose story is recounted in the book 'Their Lives' gain notoriety after revealing a sexual encounter with him?
+Answer: President Bill Clinton
+
+Question 1: What man is linked to both Johnny Tremain and Magic Kingdom?
+Question 2: What company produced both The Little Mermaid and The Strongest Man in the World?
+Answer: Walt Disney
+
+Question 1: Which actor does American Beauty and American Beauty have in common?
+Question 2: Which actor, who also appeared in "The Usual Suspects" (1995), does the 2017 action crime comedy Baby Driver star?
+Answer: Kevin Spacey
+
+Question 1: What is type of philosophies is The Structure of Liberty about?
+Question 2: Pyotr Verzilov is married to a Russian conceptual artist and what kind of activist?
+Answer: political
+
+Question 1: Focus is a 2015 American romantic crime comedy-drama film starring an Australian actress who was also cast in what soap opera?
+Question 2: Kevin Yorn an American entertainment attorney who represents an Australian actor who  played the role of Josh Taylor in what soap opera?
+Answer: Neighbours
+
+Question 1: The first edition of the Dungeons & Dragons Basic Set was written by a professor at what university?
+Question 2: The 1958 Pro Bowl was played at the California stadium that is the home for which college?
+Answer: University of Southern California
+
+Question 1: Corn Ranch is a spaceport where test flights are carried out by a company headquartered in what state?
+Question 2: Kurt Cobain: Montage of Heck documents the life of Cobain until his suicide in what state?
+Answer: Washington
+
+Question 1: The Fort Worth Zoo was rated as one of the top zoos by a magazine published where? 
+Question 2: The Tennessee Volunteers football team plays as a member for a conference in what city?
+Answer: Birmingham, Alabama
+
+Question 1: Jaclyn Stapp is married to the former frontman of a band that disbanded in what year?
+Question 2: In which year did Baek Bong-ki appear in the South Korean drama film set in a high school?
+Answer: 2004
+
+Question 1: When was the University established where Laura Landweber is a professor ?
+Question 2: In what year was the college that Cal Hovde served as dean for founded?
+Answer: 1754
+
+Question 1: Ernest Foot was the best friend of the fighter pilot who had how many victories?
+Question 2: On what UHF channel is the station that Cindy Williams is on broadcast?
+Answer: 44
+
+Question 1: What age was Georgia Middleman when she started singing in the seventh-most populated city in the United States?
+Question 2: How many episodes were made for the science fiction series with Gus Birney?
+Answer: ten
+
+Questions with the same answer,type and level
+
+Type: comparison , Level: hard
+Question 1: Are Broughtonia and Laeliocattleya both orchids?
+Question 2: Is Bob Hewitt a citizen of a different country than Ray Ruffels?
+Answer: yes
+
+Type: bridge , Level: hard
+Question 1: Naseer & Shahab is a Pakistani band playing a genre that dominated radio in what decade?
+Question 2: As a Nazi hunter, Simon Wiesenthal, was apart of a fued in what time frame?
+Answer: 1970s
+
+Type: bridge , Level: hard
+Question 1: Who is the album "Look What You Made Me Do" is on being released through?
+Question 2: who released the 2012 record of red?
+Answer: Big Machine Records
+
+Type: bridge , Level: hard
+Question 1: At which public research university founded in 1881 Ralph Fielding served as the head football coach?
+Question 2: What school did the team, whose only sophomore starter went on to play eleven seasons with the Atlanta Falcons, represent in the 1963 college football season?
+Answer: University of Texas at Austin
+
+Type: bridge , Level: hard
+Question 1: Suicide's 1977 released album features a song based on what brand's comic character?
+Question 2: Which comic series involves characters such as Nick Fury and Baron von Strucker?
+Answer: Marvel
+
+Type: bridge , Level: hard
+Question 1: Before going to the London School of Theology, John Burges spent six years working for a company headquartered in what country?
+Question 2: Dance and Laugh Amongst the Rotten is a studio Album by a band from which country ?
+Answer: the Netherlands
+
+Type: bridge , Level: hard
+Question 1: Anna Lewandowska is married to a footballer who plays for what club?
+Question 2: What football team did Mario Gomez and Javi Martinez both play for?
+Answer: Bayern Munich
+
+Type: bridge , Level: hard
+Question 1:  The Nantahala National Forest and the Croatan National Forest are both located in which state?
+Question 2: The plateau region between the Atlantic Coastal Plain and the main Appalachian Mountains is in what state?
+Answer: North Carolina
+
+Type: comparison , Level: hard
+Question 1: What was the career that Sidney Lumet and Albert Ward share in common?
+Question 2: Worker: What professional title to both Christopher Nolan and Paul Schrader boast?
+Answer: screenwriter
+
+Type: comparison , Level: hard
+Question 1: What type of sport does Sergio Casal and Manuel Orantes have in common?
+Question 2: What sport does Simon Aspelin and Thomaz Koch have in common?
+Answer: tennis
+
+Type: bridge , Level: hard
+Question 1: A former Australian rules football player who played with the Port Adelaide in the South Australian National Football League is the vice president of a video game company based where?
+Question 2: Where is the airline company that operated United Express Flight 3411 on April 9, 2017 on behalf of United Express headquartered?
+Answer: Indianapolis, Indiana
+
+Type: bridge , Level: hard
+Question 1: The 2015 Austrian thriller film Jack tells the story of a serial killer who died in what year?
+Question 2: What year did the actor, who appeared in "One Life to Live" and "General Hospital" in 2012, earn a Daytime Emmy Award?
+Answer: 1994
+
+Type: bridge , Level: hard
+Question 1: What year did the largest convention center in the U.S. state of Georgia open?
+Question 2: Dr. Saleha Mahmood Abedin's daughter was born in what year ?
+Answer: 1976
+
+Type: comparison , Level: hard
+Question 1:  Jaroslav Seifert and John McGahern were both part of what shared profession? 
+Question 2: Havelock Ellis and Arnold Bennett were both what?
+Answer: writer
+
+Type: comparison , Level: hard
+Question 1: Liaocheng and Shayang County are both located in which country?
+Question 2: WHere are both Sanming and Jiutai District located?
+Answer: China
+
+Type: bridge , Level: hard
+Question 1: How many times has the author of Negotiating with the Dead been shortlisted for the Booker Prize ?
+Question 2: How many times has the author of Writing with Intent been shortlisted for the Booker Prize ? 
+Answer: five times
+
+Type: bridge , Level: hard
+Question 1: What year did Guns N Roses perform a promo for a movie starring Arnold Schwarzenegger as a former New York Police detective?
+Question 2: The 2016 San Jose State Spartans football team were members of a NCAA conference that officially began operations in what year?
+Answer: 1999
+
+Type: bridge , Level: hard
+Question 1: In what year was the mathematician husband of Anneli Cahn Lax born?
+Question 2: In what year did the Irish Politician who led the Introduction of the Constitution of Ireland resign as President of the legitimatist government, the Council of State?
+Answer: 1926
+
+Type: bridge , Level: hard
+Question 1: When was the father of Princess Mafalda of Savoy born ?
+Question 2: What is the birthdate of this King of Italy, claiming thrones of Ethiopia and Albania and father of Princess Yolanda of Savoy?
+Answer: 11 November 1869
+
+Type: bridge , Level: hard
+Question 1: British Airways and EasyJet are both based out of where?
+Question 2: Old Bushmills Distillery was in the process of transitioning from the ownership of the company that had a headquarters in what English city?
+Answer: London
+
+Type: bridge , Level: hard
+Question 1: Where did the father of Edward Garrison Walker live when he wrote "An Appeal to the Coloured Citizens of the World"?
+Question 2: In what city did Brian Mannal convene when he was a member of the 188th and 189th General Court?
+Answer: Boston
+
+Type: bridge , Level: hard
+Question 1: Multiple award-winning actor Gary Sinise appeared in The Stand in 1994 - a miniseries based on a novel and screenplay by which noted author?
+Question 2: Who wrote the novel that the movie directed by Stanley Kubrick that was sampled in the album "Where Blood and Fire Bring Rest" was based on?
+Answer: Stephen King
+
+Type: bridge , Level: hard
+Question 1: Is the school where Aaron Parrett currently teaches English Literature public or private?
+Question 2: Is the university that Mary Jane Phillips-Matz attended in New York a public or private school?
+Answer: private
+
+Type: bridge , Level: hard
+Question 1: Charles Barkley changed his jersey number to #32 in honor of a player born in which year ?
+Question 2: In what year was the narrator of "Blackadder's Christmas Carol" born?
+Answer: 1959
+
+Type: bridge , Level: hard
+Question 1: What did the main character of the Novel whose second sequel was published by Viking Adult go to college?
+Question 2: Where is the headquarters for the advertising agency which is recognized for its work on a campaign for the founder of "Complex" magazine?
+Answer: New York
+
+Type: bridge , Level: hard
+Question 1: The 1974 Texas Tech Raiders football team represented what public research university in Lubbock, Texas?
+Question 2: What institution does 2017 Texas Tech Red Raiders baseball team and Dan Law Field at Rip Griffin Park have in common?
+Answer: Texas Tech University
+
+Type: bridge , Level: hard
+Question 1: Edithvale railway station is located on a line that is situated in what city?
+Question 2: where was the 2006 Commonwealth Games that Mmoloki Nogeng won a bronze medal at held?
+Answer: Melbourne, Australia
+
+Type: bridge , Level: hard
+Question 1: What was the release year of the song which, according to Peter Viney, appeared on most subsequent live album and compilations?
+Question 2: When was the author of "Albert Speer: His Battle with Truth"  convicted? 
+Answer: 1968
+
+Type: bridge , Level: hard
+Question 1:  The 2011–12 Houston Rockets season began with the drafting of the player who now plays for what team?
+Question 2: Who did the player nicknamed "The Human Highlight Film" play for after he left the Atlanta Hawks?
+Answer: Boston Celtics
+
+Type: bridge , Level: hard
+Question 1: Abraham Lincoln Neiman and his wife Carrie Marcus Neiman cofounded Neiman Marcus with Carrie's brother Herbert in which American city in 1907?
+Question 2: Rosemary Willis was seen in the grass in what Texas town, where John F. Kennedy was assassinated?
+Answer: Dallas
+
+Type: bridge , Level: hard
+Question 1: What year was the film that starred the composer for "The Naked Brothers Band"?
+Question 2: What year did the sequel to a story that is told through a combination of narrative and vernacular photographs from the personal archives of collectors by Ransom Riggs come out?
+Answer: 2014
+
+Type: bridge , Level: hard
+Question 1: When did the English local newspaper, featuring the sculpture and war memorial in the Forbury gardens, change names?
+Question 2: What year did the biographical-comedy-crime film directed by Steven Soderbergh about the highest-level corporate executive whistleblower come out?
+Answer: 2009
+
+Type: bridge , Level: hard
+Question 1: What city is the flying component of the United States Air Force 432d Wing stationed in
+Question 2: The 22nd AVN Awards took place in what Nevada county?
+Answer: Clark County
+
+Type: comparison , Level: hard
+Question 1: Both Phaedranassa and Mitella are considered the classification of what level of species?
+Question 2: What are both Eleutherococcus and Amaryllis?
+Answer: genus
+
+Type: bridge , Level: hard
+Question 1: Born 2 B.R.E.E.D. was co-written by the late singer-songwriter who has sold over how many records worldwide?
+Question 2: Lucy Pevensie is a character in the series of fantasy novels that have sold more than how many copies?
+Answer: 100 million
+
+Type: bridge , Level: hard
+Question 1: Marcus Wayne Garland spent nine seasons with an American professional baseball team that is based in Baltimore, Maryland, and was one of the AMerican League's original eight charter franchises when the league was established in what year?
+Question 2: The 1984 film "Marlene" is a documentary about an actress born in what year?
+Answer: 1901
+
+Type: bridge , Level: hard
+Question 1: The Pioneer Helmet and the Benty Grange helmet are linked because of which feature?
+Question 2: What adorns the archaeological artefact excavated by Thomas Bateman on 3 May 1848?
+Answer: A simple iron boar crest
+
+Type: bridge , Level: hard
+Question 1: The songs from the sountrack to "When Harry Met Sally" are performed by a singer that has had how many top 20 US albums?
+Question 2: How many cards can a player choose from to be part of their hand in the card game that was the culmination game of the United States Poker Championship?
+Answer: seven
+
+Type: comparison , Level: hard
+Question 1: Did the board game San Marco or About Time come out first?
+Question 2: Which game is designed by more persons, Elfenland or San Marco?
+Answer: San Marco
+
+Type: bridge , Level: hard
+Question 1: Venus is a play by an American playwrite who what what prize?
+Question 2: This expansion of the 2008 magazine article "Is Google Making Us Stoopid?" was a finalist for what award?
+Answer: Pulitzer Prize
+
+Type: bridge , Level: hard
+Question 1: What team plays within the Big 12 Conference and has Kevin Bookout playing for them?
+Question 2: What is the name of the basketball team that trained under assistant coach, Steven Michael Henson at the University of Oklahoma ?
+Answer: Oklahoma Sooners men's basketball
+
+Type: bridge , Level: hard
+Question 1: Where was the world cup hosted that Algeria qualified for the first time into the round of 16?
+Question 2: Who won the 2007 Copa America Final, with help from Julio Baptista?
+Answer: Brazil
+
+Type: comparison , Level: hard
+Question 1: Cherie Currie and Steve Augeri were both what?
+Question 2: What are the professions of Tom Johnston and Daryl Palumbo?
+Answer: American musician
+
+Type: bridge , Level: hard
+Question 1: 3 Arts Entertainment had at least one coalition with what streaming service, with its 13-episode, 2015 season of a Tina Fey created sitcom?
+Question 2: What is the name of the series who's first season was released on Netflix on September 22, 2016 and stars actor pronounced as John-a-kite?
+Answer: Netflix
+
+Type: bridge , Level: hard
+Question 1: What football club plays in the area between the old tool gates: Brook Bar and Trafford bar?
+Question 2: Joe Ford played for which football club based out of Old Trafford?
+Answer: Manchester United
+
+Type: comparison , Level: hard
+Question 1: Monroe Regional Airport and Deadhorse Airport are both in this country?
+Question 2: Eleventh Dream Day and The Shins are both rock bands from where?
+Answer: United States
+
+Type: bridge , Level: hard
+Question 1: When was the Chinese American electronic musician and singer who collaborated on the album I Remember born?
+Question 2: The song "Chim Chim Cher-ee" can be heard  in the "Mary Poppins" scene of a Disney ride that debuted in what year?
+Answer: 1989
+
+Type: bridge , Level: hard
+Question 1: What broadcasting company did both Andrew Collins and Stuart Maconie of Collins and Maconie's Hit Parade both work together from 1194 to 1197?
+Question 2: What British company was involved in recording the audiobook for the book known as The Golden Compass in North America?
+Answer: BBC
+
+Type: bridge , Level: hard
+Question 1: The director of Panic 5 Bravo was born in what year?
+Question 2: Bobby Arora is the trading director of a retail chain that was formed in what year?
+Answer: 1978
+
+Type: bridge , Level: hard
+Question 1: Syracuse Orange men's basketball team was part of a conference that participated in how many total sports?
+Question 2: How many chapters does Yōko Shōji's most famous manga have?
+Answer: 24
+
+Type: bridge , Level: hard
+Question 1: What major city is the Faith Lutheran Middle School and High School located by?
+Question 2: Thomas Tull produced the comedy movie The Hangover, which was based in which city?
+Answer: Las Vegas
+
+Type: comparison , Level: hard
+Question 1: What do Park So-yeon and Michael Crafter have in common?
+Question 2: What position in their bands did both Christopher Amott and Johnny Edwards have in common?
+Answer: vocalist
+
+Type: bridge , Level: hard
+Question 1: Which of the teams for which Colin Kolles is the former team principal and managing director was sold and renamed Force India at the end of the 2007?
+Question 2: Midland F1 Racing was a racing team that, in 2007, competed under what name for sponsorship reasons?
+Answer: Spyker F1
+
+Type: bridge , Level: hard
+Question 1: The name od the Jason Hook album "Safety Dunce" is a play on the words of a song released in what year? 
+Question 2: In what year was the director of the 2016 American-British biographical drama film which stars Rebecca Hall as Christine Chubbuck born?
+Answer: 1983
+
+Type: bridge , Level: hard
+Question 1: What is the birthplace of the Senator who represents the first of 62 districts in the State Senate?
+Question 2: The song "Judgment Night" was a collaboration between Onyx and the heavy metal band formed in which city?
+Answer: Brooklyn, New York
+
+Type: bridge , Level: hard
+Question 1:  The Alexander Dawson School is located in a community that occupies how many acres ?
+Question 2: The community that contains Downtown Summerlin occupies how many acres?
+Answer: 22,500 acres
+
+Type: bridge , Level: hard
+Question 1: Douglas D. Scott is an American archaeologist most notable for his work at the site of a battle that occurred in what year?
+Question 2: The maternal grandmother of Princess Marie Cécile of Prussia was born in which year ?
+Answer: 1876
+
+Type: bridge , Level: hard
+Question 1: Jamell Anderson plays for the basketball team from what city?
+Question 2: Where is the basketball team that Mike DiNunno plays for based ?
+Answer: Ellesmere Port
+
+Type: bridge , Level: hard
+Question 1: The Red Queen's Race is a science fiction short story that uses the Red Queen's race from a novel by Lewis Carroll that is the sequel to what?
+Question 2: Both Hatter and March Hare are characters in which book?
+Answer: Alice's Adventures in Wonderland
+
+Type: bridge , Level: hard
+Question 1: Chandgi Ram won a gold medal in 1970 in a continental multi-sport event held at which city ?
+Question 2: National Stadium BTS Station is near the shopping center in what Thai city?
+Answer: Bangkok
+
+Type: bridge , Level: hard
+Question 1: To where did the war criminal who is the fictional defendant in the film After the Truth flee in real life ?
+Question 2: What region has the indigenous language that includes the word Catuaba?
+Answer: South America
+
+Type: bridge , Level: hard
+Question 1: Abraham Lokin was born on an archipelago between the Norwegian Sea and North Atlantic, that is about 200 miles north-northwest of where?
+Question 2: What country does Hatton Hill and Hatton Castle, Angus have in common?
+Answer: Scotland
+
+Type: bridge , Level: hard
+Question 1: MadMaze was developed by Eric Goldberg as what type of game? 
+Question 2: The creators of the product designation TSR 2002 was the first to publish what kind of game?
+Answer: role-playing game
+
+Type: bridge , Level: hard
+Question 1: What year was the Argentine singer and actor who both directed and starred in El Tio Disparate born?
+Question 2: What year did a blacklisted screenwriter share an Academy Award with Michael Kanin?
+Answer: 1942
+
+Type: bridge , Level: hard
+Question 1: In what city was the second bowl game to air on all the "big four" television networks played?
+Question 2: Palm Springs lies in Palm Beach County, the third most populated county in its state. Which major U.S. city is it near?
+Answer: Miami
+
+Type: bridge , Level: hard
+Question 1: What country of origin does Jerry Barrett and Florence Nightingale have in common?
+Question 2: The Prodigal Daughter, though a book about an American, is by a novelist of what nationality?
+Answer: English
+
+Type: bridge , Level: hard
+Question 1: Who is the creator of the animated television series that its fourteenth episode of season three's title is "Time Keeps on Slippin"?
+Question 2: Who is this American cartoonist, writer, producer, animator, and voice actor that worked with this multiple Shuster Award, Harvey Award and Eisner Award nominee and an Eisner Award–winning comic book creator?
+Answer: Matt Groening
+
+Type: bridge , Level: hard
+Question 1: Which song, released on December 7, 2008 was co-written by Liz Rose?
+Question 2: What Taylor swift song released December 7, 2008 was written by the same writer as "You Belong to Me"?
+Answer: White Horse
+
+Type: bridge , Level: hard
+Question 1: What year did the series on CBS, starring the actor who known for his role in "Rebel Without a Cause," air?
+Question 2: New Jersey politicians Linda Stender and Leonard Lance were born within a year of each other beginning in which year?
+Answer: 1952
+
+Type: bridge , Level: hard
+Question 1: The Greatest Event in Television History aired on the channel that was founded by whom?
+Question 2:  Underfist: Halloween Bash was going to be the setup for a new series spin-off but the contract expired with a cable and television station that was launched on October 1, 19962 by whom?
+Answer: Betty Cohen
+
+Type: bridge , Level: hard
+Question 1: The channel that has interviewed players such as the forward for the French national team is on what platform?
+Question 2: How did the singer of Pyramid rise to fame?
+Answer: YouTube
+
+Type: bridge , Level: hard
+Question 1: What season was the character introduced that becomes the main antagonist in the  following season, from the animated television series created by Bryan Konietzko and Michael Dante DiMartino as a sequel to "", which aired from 2005 to 2008? 
+Question 2: What number album is the first W.A.S.P. album to feature Steven Edward Duren playing guitar?
+Answer: third
+
+Type: bridge , Level: hard
+Question 1: How many Golden Globe Awards did the artist who published the photo book "In Mexico" win?
+Question 2: California joined the Union due to the passage of a package of how many separate bills?
+Answer: five
+
+Type: bridge , Level: hard
+Question 1: Tefik Selim Mborja was a part of a party that held power in Albania until what year? 
+Question 2: When was the multinational group headquartered in the Netherlands adjacent to the Junction 27 Retail Park near Birstall, Batley, West Yorkshite, England, founded?
+Answer: 1943
+
+Type: bridge , Level: hard
+Question 1: Dost Mohammad Khan was killed by a ruler who became the third king of what country?
+Question 2: Trilochanapala, last king of the Kabul Shahi dynasty, ruled in the site of which modern country?
+Answer: Afghanistan
+
+Type: comparison , Level: hard
+Question 1: Which of the two came out first, The Wind in the Willows or The Bears and I?
+Question 2: Which of the following works was completed first, Something Wicked This Way Comes or The Wind in the Willows?
+Answer: The Wind in the Willows
+
+Type: bridge , Level: hard
+Question 1: How many albums did the company who released Tift Merritt's debut album release for Tif Merritt?
+Question 2: The Rainmaker starred the actor who has been nominated for how many British Academy Film Awards?
+Answer: two
+
+Type: bridge , Level: hard
+Question 1: What collegiate division does the team coached by P.W. Underwood play in?
+Question 2: In what NCAA division is the team Michael Beasley played basketball for in college?
+Answer: Division I
+
+Type: bridge , Level: hard
+Question 1: In what year year was the believed subject of the Lenny Kravitz song "Lady" born?
+Question 2: "Tunak", is a bhangra/pop love song by an artist born in which year ?
+Answer: 1967
+
+Type: bridge , Level: hard
+Question 1: Rafael de Souza Pereira is a defensive midfielder for what organization that is the top level of the Mexican football league system?
+Question 2: What division of Mexican football is the team that Jesús Daniel García Esparza currently plays for?
+Answer: Liga MX
+
+Type: bridge , Level: hard
+Question 1: Seal Harris was born in what county?
+Question 2: Bill Bryson grew up in a city that is the seat of which county ?
+Answer: Polk County
+
+Type: bridge , Level: hard
+Question 1: Which car brand was one step above the brand started on November 3, 1911?
+Question 2: Future Rhythm is the fourth album from a rap group that is from what city?
+Answer: Oakland
+
+Type: bridge , Level: hard
+Question 1: What city is the band that recorded Renegade from?
+Question 2: In which city was this band formed, whose rhythm guitarist featured in "Cupid's Chokehold?"
+Answer: Chicago
+
+Type: bridge , Level: hard
+Question 1: How many legs does the animal, in which Karl Kraepelin discusses in "Scorpiones und Pedipalpi," have?
+Question 2: Kadeem Jack is a player in a league that started with how many teams?
+Answer: eight
+
+Type: bridge , Level: hard
+Question 1: In which county does the United States Navy air base located in which  Attack Squadron 174 (VA-174) was based on?
+Question 2: Which country in Florida is the airport associated with transportation in Jacksonville, Florida?
+Answer: Duval County
+
+Type: comparison , Level: hard
+Question 1: Which player won more Grand Slam titles, Kevin Ullyett or Billie Jean King?
+Question 2: Who won more Grand Slam Titles, Liezel Huber or Billie Jean King?
+Answer: Billie Jean King
+
+Type: bridge , Level: hard
+Question 1: Giovanna d'Arco is an opera that was created by the composer of what nationality?
+Question 2: What is the nationality of the composer of the Opera "Iphigénie en Aulide" ?
+Answer: Italian
+
+Type: bridge , Level: hard
+Question 1: Who signed into law the act made to lower barriers to adoption?
+Question 2: Which President did the American model who posed nude for Penthouse and whose story is recounted in the book 'Their Lives' gain notoriety after revealing a sexual encounter with him?
+Answer: President Bill Clinton
+
+Type: comparison , Level: hard
+Question 1: What man is linked to both Johnny Tremain and Magic Kingdom?
+Question 2: What company produced both The Little Mermaid and The Strongest Man in the World?
+Answer: Walt Disney
+
+Type: bridge , Level: hard
+Question 1: Which actor does American Beauty and American Beauty have in common?
+Question 2: Which actor, who also appeared in "The Usual Suspects" (1995), does the 2017 action crime comedy Baby Driver star?
+Answer: Kevin Spacey
+
+Type: bridge , Level: hard
+Question 1: What is type of philosophies is The Structure of Liberty about?
+Question 2: Pyotr Verzilov is married to a Russian conceptual artist and what kind of activist?
+Answer: political
+
+Type: bridge , Level: hard
+Question 1: Focus is a 2015 American romantic crime comedy-drama film starring an Australian actress who was also cast in what soap opera?
+Question 2: Kevin Yorn an American entertainment attorney who represents an Australian actor who  played the role of Josh Taylor in what soap opera?
+Answer: Neighbours
+
+Type: bridge , Level: hard
+Question 1: The first edition of the Dungeons & Dragons Basic Set was written by a professor at what university?
+Question 2: The 1958 Pro Bowl was played at the California stadium that is the home for which college?
+Answer: University of Southern California
+
+Type: bridge , Level: hard
+Question 1: Corn Ranch is a spaceport where test flights are carried out by a company headquartered in what state?
+Question 2: Kurt Cobain: Montage of Heck documents the life of Cobain until his suicide in what state?
+Answer: Washington
+
+Type: bridge , Level: hard
+Question 1: The Fort Worth Zoo was rated as one of the top zoos by a magazine published where? 
+Question 2: The Tennessee Volunteers football team plays as a member for a conference in what city?
+Answer: Birmingham, Alabama
+
+Type: bridge , Level: hard
+Question 1: Jaclyn Stapp is married to the former frontman of a band that disbanded in what year?
+Question 2: In which year did Baek Bong-ki appear in the South Korean drama film set in a high school?
+Answer: 2004
+
+Type: bridge , Level: hard
+Question 1: When was the University established where Laura Landweber is a professor ?
+Question 2: In what year was the college that Cal Hovde served as dean for founded?
+Answer: 1754
+
+Type: bridge , Level: hard
+Question 1: Ernest Foot was the best friend of the fighter pilot who had how many victories?
+Question 2: On what UHF channel is the station that Cindy Williams is on broadcast?
+Answer: 44
+
+Type: bridge , Level: hard
+Question 1: How many episodes were in the season of "Rick and Morty" that featured an episode called "The Ricks Must Be Crazy"?
+Question 2: How many episodes were made for the science fiction series with Gus Birney?
+Answer: ten
+
+Type: bridge , Level: hard
+Question 1: In what ecclesiastical province is Stephen Conway currently part of?
+Question 2: Grimsby Minster is located in which English Province?
+Answer: Province of Canterbury

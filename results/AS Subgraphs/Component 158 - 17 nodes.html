@@ -1,0 +1,388 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a13188">a13188</option>
+                                
+                                    <option value="a64954">a64954</option>
+                                
+                                    <option value="a41751">a41751</option>
+                                
+                                    <option value="a21406">a21406</option>
+                                
+                                    <option value="a28651">a28651</option>
+                                
+                                    <option value="a28947">a28947</option>
+                                
+                                    <option value="a6574">a6574</option>
+                                
+                                    <option value="a2255">a2255</option>
+                                
+                                    <option value="a6001">a6001</option>
+                                
+                                    <option value="a28655">a28655</option>
+                                
+                                    <option value="a34647">a34647</option>
+                                
+                                    <option value="a4524">a4524</option>
+                                
+                                    <option value="a40067">a40067</option>
+                                
+                                    <option value="a34710">a34710</option>
+                                
+                                    <option value="a8009">a8009</option>
+                                
+                                    <option value="a35022">a35022</option>
+                                
+                                    <option value="a65498">a65498</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 8, "id": "a13188", "label": "Answer:Lassie\nPage Rank:0.56\nLabel:8", "shape": "square", "size": 3, "title": "Page Rank:0.5603073685719271\nQuestion:Never Love A Stranger is a 1958 crime and gangster film that is based on Harold Robbins\u0027 1948 debut novel with the same title, the film was shot in black and white, starring Robert E. Bray, was an American film and television actor probably best remembered for his role as the forest ranger Corey Stuart, in which long-running CBS series?\nAnswer:Lassie\nLevel:easy\nType:bridge"}, {"group": 8, "id": "a64954", "label": "Answer:Lolita\nPage Rank:1.58\nLabel:8", "shape": "square", "size": 8, "title": "Page Rank:1.5774724395256443\nQuestion:Which screenplay was written by Vladimir Nabokov and produced by Ray Stark?\nAnswer:Lolita\nLevel:medium\nType:bridge"}, {"group": 8, "id": "a41751", "label": "Answer:Girls\nPage Rank:0.92\nLabel:8", "shape": "square", "size": 5, "title": "Page Rank:0.916511105071351\nQuestion:Grace Dunham is the sister of the creator of which HBO series?\nAnswer:Girls\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a21406", "label": "Answer:Amazons\nPage Rank:0.84\nLabel:2", "shape": "square", "size": 4, "title": "Page Rank:0.8371342278569948\nQuestion:What members of Greek mythology shares the name of the place the argyroeides tricolor moth is found?\nAnswer:Amazons\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a28651", "label": "Answer:Lulu\nPage Rank:1.19\nLabel:2", "shape": "square", "size": 6, "title": "Page Rank:1.1929162746962176\nQuestion:What Scottish singer covered \"The Man Who Sold the World\"?\nAnswer:Lulu\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a28947", "label": "Answer:Donna\nPage Rank:2.21\nLabel:2", "shape": "square", "size": 11, "title": "Page Rank:2.206895108188003\nQuestion:What was the duck character\u0027s name in the Disney cartoon with the music that sounded like The Mexican Hat Dance?\nAnswer:Donna\nLevel:hard\nType:bridge"}, {"group": 2, "id": "a6574", "label": "Answer:Woman\nPage Rank:0.61\nLabel:2", "shape": "square", "size": 3, "title": "Page Rank:0.6132252867148312\nQuestion:Under Cover is the ninth studio album by heavy metal vocalist Ozzy Osbourne, additional songs on this album which are not featured include which song written and performed, by John Lennon from his 1980 album \"Double Fantasy\"?\nAnswer:Woman\nLevel:easy\nType:bridge"}, {"group": 2, "id": "a2255", "label": "Answer:Cinderella\nPage Rank:0.56\nLabel:2", "shape": "square", "size": 3, "title": "Page Rank:0.5603073685719271\nQuestion:DysEnchanted is a short subject about seven storybook characters: Snow White, Goldilocks, Sleeping Beauty, Alice In Wonderland, Dorothy, a European fairy tale young girl and a Big Bad Wolf and which other fairytale character? \nAnswer:Cinderella\nLevel:easy\nType:bridge"}, {"group": 2, "id": "a6001", "label": "Answer:women\nPage Rank:0.56\nLabel:2", "shape": "square", "size": 3, "title": "Page Rank:0.5603073685719271\nQuestion:Which piece of their target audience is similar to both Femina and Today\u0027s Housewife?\nAnswer:women\nLevel:hard\nType:comparison"}, {"group": 2, "id": "a28655", "label": "Answer:Girlfriends\nPage Rank:0.68\nLabel:2", "shape": "square", "size": 3, "title": "Page Rank:0.6783804734282821\nQuestion:Which magazine had a greater number of founders, Honey or Girlfriends?\nAnswer:Girlfriends\nLevel:medium\nType:comparison"}, {"group": 11, "id": "a34647", "label": "Answer:Rebecca\nPage Rank:0.91\nLabel:11", "shape": "square", "size": 5, "title": "Page Rank:0.9053156580142429\nQuestion:Of all Hitchcock films that Dorothea Holt Redmond collaborated in, which film stars Laurence Olivier?\nAnswer:Rebecca\nLevel:medium\nType:bridge"}, {"group": 11, "id": "a4524", "label": "Answer:Rachel\nPage Rank:0.56\nLabel:11", "shape": "square", "size": 3, "title": "Page Rank:0.5603073685719271\nQuestion:which census-designated place (CDP) in Lincoln County, Nevada, United States.is  Crystal Springs a popular destination forits passersby \nAnswer:Rachel\nLevel:medium\nType:bridge"}, {"group": 11, "id": "a40067", "label": "Answer:Catherine\nPage Rank:2.39\nLabel:11", "shape": "square", "size": 12, "title": "Page Rank:2.3866384034400476\nQuestion:Who was an alternative rock band from Chicago, Illinois that was active from 1985 to 1998, Veridia or Catherine ?\nAnswer:Catherine\nLevel:easy\nType:comparison"}, {"group": 11, "id": "a34710", "label": "Answer:Sarah\nPage Rank:1.29\nLabel:11", "shape": "square", "size": 6, "title": "Page Rank:1.2900748126702961\nQuestion:What is the first name of the wife of the author of \"A Web of Air\"?\nAnswer:Sarah\nLevel:medium\nType:bridge"}, {"group": 11, "id": "a8009", "label": "Answer:wife\nPage Rank:0.80\nLabel:11", "shape": "square", "size": 4, "title": "Page Rank:0.7974457892498167\nQuestion:Rebecca Akufo-Addo is the current First Lady of Ghana and gets her title by being what relationship to the president?\nAnswer:wife\nLevel:medium\nType:bridge"}, {"group": 2, "id": "a35022", "label": "Answer:Eve\nPage Rank:0.68\nLabel:2", "shape": "square", "size": 3, "title": "Page Rank:0.6783804734282821\nQuestion:Eve features an ensemble cast consisting of who?\nAnswer:Eve\nLevel:easy\nType:bridge"}, {"group": 2, "id": "a65498", "label": "Answer:woman\nPage Rank:0.68\nLabel:2", "shape": "square", "size": 3, "title": "Page Rank:0.6783804734282821\nQuestion:Women in geology concerns the history and contributions of which term to denote a female human being, to the field of geology?\nAnswer:woman\nLevel:easy\nType:bridge"}]);
+                  edges = new vis.DataSet([{"from": "a13188", "label": 0.5, "length": 500, "to": "a64954", "width": 1}, {"from": "a13188", "label": 0.5, "length": 500, "to": "a41751", "width": 1}, {"from": "a21406", "label": 0.5, "length": 500, "to": "a28651", "width": 1}, {"from": "a21406", "label": 0.5, "length": 500, "to": "a28947", "width": 1}, {"from": "a21406", "label": 0.125, "length": 500, "to": "a6574", "width": 1}, {"from": "a21406", "label": 0.3333333333333333, "length": 500, "to": "a2255", "width": 1}, {"from": "a21406", "label": 0.1111111111111111, "length": 500, "to": "a6001", "width": 1}, {"from": "a2255", "label": 0.3333333333333333, "length": 500, "to": "a28947", "width": 1}, {"from": "a2255", "label": 0.3333333333333333, "length": 500, "to": "a28651", "width": 1}, {"from": "a28651", "label": 1.0, "length": 500, "to": "a28947", "width": 1}, {"from": "a28651", "label": 0.1111111111111111, "length": 500, "to": "a6001", "width": 1}, {"from": "a28651", "label": 0.125, "length": 500, "to": "a6574", "width": 1}, {"from": "a28655", "label": 0.1111111111111111, "length": 500, "to": "a6001", "width": 1}, {"from": "a28655", "label": 0.125, "length": 500, "to": "a6574", "width": 1}, {"from": "a28947", "label": 0.125, "length": 500, "to": "a6574", "width": 1}, {"from": "a28947", "label": 0.1111111111111111, "length": 500, "to": "a6001", "width": 1}, {"from": "a34647", "label": 0.25, "length": 500, "to": "a4524", "width": 1}, {"from": "a34647", "label": 0.5, "length": 500, "to": "a40067", "width": 1}, {"from": "a34647", "label": 0.5, "length": 500, "to": "a34710", "width": 1}, {"from": "a34647", "label": 0.3333333333333333, "length": 500, "to": "a8009", "width": 1}, {"from": "a34710", "label": 0.3333333333333333, "length": 500, "to": "a8009", "width": 1}, {"from": "a34710", "label": 0.25, "length": 500, "to": "a4524", "width": 1}, {"from": "a34710", "label": 1.0, "length": 500, "to": "a40067", "width": 1}, {"from": "a35022", "label": 0.1111111111111111, "length": 500, "to": "a6001", "width": 1}, {"from": "a35022", "label": 0.125, "length": 500, "to": "a6574", "width": 1}, {"from": "a40067", "label": 0.25, "length": 500, "to": "a4524", "width": 1}, {"from": "a40067", "label": 0.3333333333333333, "length": 500, "to": "a8009", "width": 1}, {"from": "a41751", "label": 0.125, "length": 500, "to": "a6574", "width": 1}, {"from": "a41751", "label": 1.0, "length": 500, "to": "a64954", "width": 1}, {"from": "a41751", "label": 0.1111111111111111, "length": 500, "to": "a6001", "width": 1}, {"from": "a4524", "label": 0.25, "length": 500, "to": "a8009", "width": 1}, {"from": "a6001", "label": 0.1111111111111111, "length": 500, "to": "a65498", "width": 1}, {"from": "a6001", "label": 0.1111111111111111, "length": 500, "to": "a6574", "width": 1}, {"from": "a6001", "label": 0.1111111111111111, "length": 500, "to": "a8009", "width": 1}, {"from": "a65498", "label": 0.125, "length": 500, "to": "a6574", "width": 1}, {"from": "a6574", "label": 0.125, "length": 500, "to": "a8009", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"hover": true, "navigationButtons": true, "keyboard": true}, "manipulation": {"enabled": true}, "physics": {"enabled": true, "repulsion": {"nodeDistance": 450, "springLength": 500}}, "layout": {"hierarchical": {"enabled": false}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

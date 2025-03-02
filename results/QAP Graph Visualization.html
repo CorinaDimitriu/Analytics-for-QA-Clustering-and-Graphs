@@ -1,0 +1,981 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script>function neighbourhoodHighlight(params) {
+  // console.log("in nieghbourhoodhighlight");
+  allNodes = nodes.get({ returnType: "Object" });
+  // originalNodes = JSON.parse(JSON.stringify(allNodes));
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    highlightActive = true;
+    var i, j;
+    var selectedNode = params.nodes[0];
+    var degrees = 2;
+
+    // mark all nodes as hard to read.
+    for (let nodeId in allNodes) {
+      // nodeColors[nodeId] = allNodes[nodeId].color;
+      allNodes[nodeId].color = "rgba(200,200,200,0.5)";
+      if (allNodes[nodeId].hiddenLabel === undefined) {
+        allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+    var connectedNodes = network.getConnectedNodes(selectedNode);
+    var allConnectedNodes = [];
+
+    // get the second degree nodes
+    for (i = 1; i < degrees; i++) {
+      for (j = 0; j < connectedNodes.length; j++) {
+        allConnectedNodes = allConnectedNodes.concat(
+          network.getConnectedNodes(connectedNodes[j])
+        );
+      }
+    }
+
+    // all second degree nodes get a different color and their label back
+    for (i = 0; i < allConnectedNodes.length; i++) {
+      // allNodes[allConnectedNodes[i]].color = "pink";
+      allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
+      if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[allConnectedNodes[i]].label =
+          allNodes[allConnectedNodes[i]].hiddenLabel;
+        allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // all first degree nodes get their own color and their label back
+    for (i = 0; i < connectedNodes.length; i++) {
+      // allNodes[connectedNodes[i]].color = undefined;
+      allNodes[connectedNodes[i]].color = nodeColors[connectedNodes[i]];
+      if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+        allNodes[connectedNodes[i]].label =
+          allNodes[connectedNodes[i]].hiddenLabel;
+        allNodes[connectedNodes[i]].hiddenLabel = undefined;
+      }
+    }
+
+    // the main node gets its own color and its label back.
+    // allNodes[selectedNode].color = undefined;
+    allNodes[selectedNode].color = nodeColors[selectedNode];
+    if (allNodes[selectedNode].hiddenLabel !== undefined) {
+      allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+      allNodes[selectedNode].hiddenLabel = undefined;
+    }
+  } else if (highlightActive === true) {
+    // console.log("highlightActive was true");
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      // allNodes[nodeId].color = "purple";
+      allNodes[nodeId].color = nodeColors[nodeId];
+      // delete allNodes[nodeId].color;
+      if (allNodes[nodeId].hiddenLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+        allNodes[nodeId].hiddenLabel = undefined;
+      }
+    }
+    highlightActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    // console.log("Nothing was selected");
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        // console.log(allNodes[nodeId]);
+        // allNodes[nodeId].color = {};
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function filterHighlight(params) {
+  allNodes = nodes.get({ returnType: "Object" });
+  // if something is selected:
+  if (params.nodes.length > 0) {
+    filterActive = true;
+    let selectedNodes = params.nodes;
+
+    // hiding all nodes and saving the label
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = true;
+      if (allNodes[nodeId].savedLabel === undefined) {
+        allNodes[nodeId].savedLabel = allNodes[nodeId].label;
+        allNodes[nodeId].label = undefined;
+      }
+    }
+
+    for (let i=0; i < selectedNodes.length; i++) {
+      allNodes[selectedNodes[i]].hidden = false;
+      if (allNodes[selectedNodes[i]].savedLabel !== undefined) {
+        allNodes[selectedNodes[i]].label = allNodes[selectedNodes[i]].savedLabel;
+        allNodes[selectedNodes[i]].savedLabel = undefined;
+      }
+    }
+
+  } else if (filterActive === true) {
+    // reset all nodes
+    for (let nodeId in allNodes) {
+      allNodes[nodeId].hidden = false;
+      if (allNodes[nodeId].savedLabel !== undefined) {
+        allNodes[nodeId].label = allNodes[nodeId].savedLabel;
+        allNodes[nodeId].savedLabel = undefined;
+      }
+    }
+    filterActive = false;
+  }
+
+  // transform the object into an array
+  var updateArray = [];
+  if (params.nodes.length > 0) {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  } else {
+    for (let nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    nodes.update(updateArray);
+  }
+}
+
+function selectNode(nodes) {
+  network.selectNodes(nodes);
+  neighbourhoodHighlight({ nodes: nodes });
+  return nodes;
+}
+
+function selectNodes(nodes) {
+  network.selectNodes(nodes);
+  filterHighlight({nodes: nodes});
+  return nodes;
+}
+
+function highlightFilter(filter) {
+  let selectedNodes = []
+  let selectedProp = filter['property']
+  if (filter['item'] === 'node') {
+    let allNodes = nodes.get({ returnType: "Object" });
+    for (let nodeId in allNodes) {
+      if (allNodes[nodeId][selectedProp] && filter['value'].includes((allNodes[nodeId][selectedProp]).toString())) {
+        selectedNodes.push(nodeId)
+      }
+    }
+  }
+  else if (filter['item'] === 'edge'){
+    let allEdges = edges.get({returnType: 'object'});
+    // check if the selected property exists for selected edge and select the nodes connected to the edge
+    for (let edge in allEdges) {
+      if (allEdges[edge][selectedProp] && filter['value'].includes((allEdges[edge][selectedProp]).toString())) {
+        selectedNodes.push(allEdges[edge]['from'])
+        selectedNodes.push(allEdges[edge]['to'])
+      }
+    }
+  }
+  selectNodes(selectedNodes)
+}</script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+            
+            
+            
+            
+            
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/css/tom-select.min.css" integrity="sha512-43fHB3GLgZfz8QXl1RPQ8O66oIgv3po9cJ5erMt1c4QISq9dYb195T3vr5ImnJPXuVroKcGBPXBFKETW8jrPNQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/tom-select/2.0.0-rc.4/js/tom-select.complete.js" integrity="sha512-jeF9CfnvzDiw9G9xiksVjxR2lib44Gnovvkv+3CgCG6NXCD4gqlA5nDAVW5WjpA+i+/zKsUWV5xNEbW1X/HH0Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1700px;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 1700px;
+                 height: 900px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+                <div id="select-menu" class="card-header">
+                    <div class="row no-gutters">
+                        <div class="col-10 pb-2">
+                            <select
+                            class="form-select"
+                            aria-label="Default select example"
+                            onchange="selectNode([value]);"
+                            id="select-node"
+                            placeholder="Select node..."
+                            >
+                                <option selected>Select a Node by ID</option>
+                                
+                                    <option value="a0">a0</option>
+                                
+                                    <option value="q0">q0</option>
+                                
+                                    <option value="p0">p0</option>
+                                
+                                    <option value="p1">p1</option>
+                                
+                                    <option value="a30">a30</option>
+                                
+                                    <option value="q32">q32</option>
+                                
+                                    <option value="a1">a1</option>
+                                
+                                    <option value="q1">q1</option>
+                                
+                                    <option value="p2">p2</option>
+                                
+                                    <option value="p3">p3</option>
+                                
+                                    <option value="a2">a2</option>
+                                
+                                    <option value="q2">q2</option>
+                                
+                                    <option value="p4">p4</option>
+                                
+                                    <option value="p5">p5</option>
+                                
+                                    <option value="a3">a3</option>
+                                
+                                    <option value="q3">q3</option>
+                                
+                                    <option value="p6">p6</option>
+                                
+                                    <option value="p7">p7</option>
+                                
+                                    <option value="a4">a4</option>
+                                
+                                    <option value="q4">q4</option>
+                                
+                                    <option value="p8">p8</option>
+                                
+                                    <option value="p9">p9</option>
+                                
+                                    <option value="a5">a5</option>
+                                
+                                    <option value="q5">q5</option>
+                                
+                                    <option value="p10">p10</option>
+                                
+                                    <option value="p11">p11</option>
+                                
+                                    <option value="a6">a6</option>
+                                
+                                    <option value="q6">q6</option>
+                                
+                                    <option value="p12">p12</option>
+                                
+                                    <option value="p13">p13</option>
+                                
+                                    <option value="a7">a7</option>
+                                
+                                    <option value="q7">q7</option>
+                                
+                                    <option value="p14">p14</option>
+                                
+                                    <option value="p15">p15</option>
+                                
+                                    <option value="a8">a8</option>
+                                
+                                    <option value="q8">q8</option>
+                                
+                                    <option value="p16">p16</option>
+                                
+                                    <option value="p17">p17</option>
+                                
+                                    <option value="q15">q15</option>
+                                
+                                    <option value="p30">p30</option>
+                                
+                                    <option value="p31">p31</option>
+                                
+                                    <option value="a9">a9</option>
+                                
+                                    <option value="q9">q9</option>
+                                
+                                    <option value="p18">p18</option>
+                                
+                                    <option value="p19">p19</option>
+                                
+                                    <option value="a10">a10</option>
+                                
+                                    <option value="q10">q10</option>
+                                
+                                    <option value="p20">p20</option>
+                                
+                                    <option value="p21">p21</option>
+                                
+                                    <option value="a11">a11</option>
+                                
+                                    <option value="q11">q11</option>
+                                
+                                    <option value="p22">p22</option>
+                                
+                                    <option value="p23">p23</option>
+                                
+                                    <option value="a12">a12</option>
+                                
+                                    <option value="q12">q12</option>
+                                
+                                    <option value="p24">p24</option>
+                                
+                                    <option value="p25">p25</option>
+                                
+                                    <option value="a13">a13</option>
+                                
+                                    <option value="q13">q13</option>
+                                
+                                    <option value="p26">p26</option>
+                                
+                                    <option value="p27">p27</option>
+                                
+                                    <option value="a14">a14</option>
+                                
+                                    <option value="q14">q14</option>
+                                
+                                    <option value="p28">p28</option>
+                                
+                                    <option value="p29">p29</option>
+                                
+                                    <option value="a15">a15</option>
+                                
+                                    <option value="q16">q16</option>
+                                
+                                    <option value="p32">p32</option>
+                                
+                                    <option value="p33">p33</option>
+                                
+                                    <option value="a16">a16</option>
+                                
+                                    <option value="q17">q17</option>
+                                
+                                    <option value="p34">p34</option>
+                                
+                                    <option value="p35">p35</option>
+                                
+                                    <option value="a17">a17</option>
+                                
+                                    <option value="q18">q18</option>
+                                
+                                    <option value="p36">p36</option>
+                                
+                                    <option value="p37">p37</option>
+                                
+                                    <option value="a18">a18</option>
+                                
+                                    <option value="q19">q19</option>
+                                
+                                    <option value="p38">p38</option>
+                                
+                                    <option value="p39">p39</option>
+                                
+                                    <option value="a19">a19</option>
+                                
+                                    <option value="q20">q20</option>
+                                
+                                    <option value="p40">p40</option>
+                                
+                                    <option value="p41">p41</option>
+                                
+                                    <option value="a20">a20</option>
+                                
+                                    <option value="q21">q21</option>
+                                
+                                    <option value="p42">p42</option>
+                                
+                                    <option value="p43">p43</option>
+                                
+                                    <option value="a21">a21</option>
+                                
+                                    <option value="q22">q22</option>
+                                
+                                    <option value="p44">p44</option>
+                                
+                                    <option value="p45">p45</option>
+                                
+                                    <option value="a22">a22</option>
+                                
+                                    <option value="q23">q23</option>
+                                
+                                    <option value="p46">p46</option>
+                                
+                                    <option value="p47">p47</option>
+                                
+                                    <option value="a23">a23</option>
+                                
+                                    <option value="q24">q24</option>
+                                
+                                    <option value="p48">p48</option>
+                                
+                                    <option value="p49">p49</option>
+                                
+                                    <option value="a24">a24</option>
+                                
+                                    <option value="q25">q25</option>
+                                
+                                    <option value="p50">p50</option>
+                                
+                                    <option value="p51">p51</option>
+                                
+                                    <option value="a25">a25</option>
+                                
+                                    <option value="q26">q26</option>
+                                
+                                    <option value="p52">p52</option>
+                                
+                                    <option value="p53">p53</option>
+                                
+                                    <option value="a26">a26</option>
+                                
+                                    <option value="q27">q27</option>
+                                
+                                    <option value="p54">p54</option>
+                                
+                                    <option value="p55">p55</option>
+                                
+                                    <option value="q28">q28</option>
+                                
+                                    <option value="p56">p56</option>
+                                
+                                    <option value="p57">p57</option>
+                                
+                                    <option value="q49">q49</option>
+                                
+                                    <option value="p97">p97</option>
+                                
+                                    <option value="p98">p98</option>
+                                
+                                    <option value="a27">a27</option>
+                                
+                                    <option value="q29">q29</option>
+                                
+                                    <option value="p58">p58</option>
+                                
+                                    <option value="p59">p59</option>
+                                
+                                    <option value="a28">a28</option>
+                                
+                                    <option value="q30">q30</option>
+                                
+                                    <option value="p60">p60</option>
+                                
+                                    <option value="p61">p61</option>
+                                
+                                    <option value="a29">a29</option>
+                                
+                                    <option value="q31">q31</option>
+                                
+                                    <option value="p62">p62</option>
+                                
+                                    <option value="p63">p63</option>
+                                
+                                    <option value="p64">p64</option>
+                                
+                                    <option value="a31">a31</option>
+                                
+                                    <option value="q33">q33</option>
+                                
+                                    <option value="p65">p65</option>
+                                
+                                    <option value="p66">p66</option>
+                                
+                                    <option value="a32">a32</option>
+                                
+                                    <option value="q34">q34</option>
+                                
+                                    <option value="p67">p67</option>
+                                
+                                    <option value="p68">p68</option>
+                                
+                                    <option value="a33">a33</option>
+                                
+                                    <option value="q35">q35</option>
+                                
+                                    <option value="p69">p69</option>
+                                
+                                    <option value="p70">p70</option>
+                                
+                                    <option value="a34">a34</option>
+                                
+                                    <option value="q36">q36</option>
+                                
+                                    <option value="p71">p71</option>
+                                
+                                    <option value="p72">p72</option>
+                                
+                                    <option value="a35">a35</option>
+                                
+                                    <option value="q37">q37</option>
+                                
+                                    <option value="p73">p73</option>
+                                
+                                    <option value="p74">p74</option>
+                                
+                                    <option value="a36">a36</option>
+                                
+                                    <option value="q38">q38</option>
+                                
+                                    <option value="p75">p75</option>
+                                
+                                    <option value="p76">p76</option>
+                                
+                                    <option value="a37">a37</option>
+                                
+                                    <option value="q39">q39</option>
+                                
+                                    <option value="p77">p77</option>
+                                
+                                    <option value="p78">p78</option>
+                                
+                                    <option value="a38">a38</option>
+                                
+                                    <option value="q40">q40</option>
+                                
+                                    <option value="p79">p79</option>
+                                
+                                    <option value="p80">p80</option>
+                                
+                                    <option value="a39">a39</option>
+                                
+                                    <option value="q41">q41</option>
+                                
+                                    <option value="p81">p81</option>
+                                
+                                    <option value="p82">p82</option>
+                                
+                                    <option value="a40">a40</option>
+                                
+                                    <option value="q42">q42</option>
+                                
+                                    <option value="p83">p83</option>
+                                
+                                    <option value="p84">p84</option>
+                                
+                                    <option value="a41">a41</option>
+                                
+                                    <option value="q43">q43</option>
+                                
+                                    <option value="p85">p85</option>
+                                
+                                    <option value="p86">p86</option>
+                                
+                                    <option value="a42">a42</option>
+                                
+                                    <option value="q44">q44</option>
+                                
+                                    <option value="p87">p87</option>
+                                
+                                    <option value="p88">p88</option>
+                                
+                                    <option value="a43">a43</option>
+                                
+                                    <option value="q45">q45</option>
+                                
+                                    <option value="p89">p89</option>
+                                
+                                    <option value="p90">p90</option>
+                                
+                                    <option value="a44">a44</option>
+                                
+                                    <option value="q46">q46</option>
+                                
+                                    <option value="p91">p91</option>
+                                
+                                    <option value="p92">p92</option>
+                                
+                                    <option value="a45">a45</option>
+                                
+                                    <option value="q47">q47</option>
+                                
+                                    <option value="p93">p93</option>
+                                
+                                    <option value="p94">p94</option>
+                                
+                                    <option value="a46">a46</option>
+                                
+                                    <option value="q48">q48</option>
+                                
+                                    <option value="p95">p95</option>
+                                
+                                    <option value="p96">p96</option>
+                                
+                                    <option value="a47">a47</option>
+                                
+                                    <option value="q50">q50</option>
+                                
+                                    <option value="p99">p99</option>
+                                
+                                    <option value="p100">p100</option>
+                                
+                                    <option value="a48">a48</option>
+                                
+                                    <option value="q51">q51</option>
+                                
+                                    <option value="p101">p101</option>
+                                
+                                    <option value="p102">p102</option>
+                                
+                                    <option value="a49">a49</option>
+                                
+                                    <option value="q52">q52</option>
+                                
+                                    <option value="p103">p103</option>
+                                
+                                    <option value="p104">p104</option>
+                                
+                                    <option value="a50">a50</option>
+                                
+                                    <option value="q53">q53</option>
+                                
+                                    <option value="p105">p105</option>
+                                
+                                    <option value="p106">p106</option>
+                                
+                                    <option value="a51">a51</option>
+                                
+                                    <option value="q54">q54</option>
+                                
+                                    <option value="p107">p107</option>
+                                
+                                    <option value="p108">p108</option>
+                                
+                                    <option value="a52">a52</option>
+                                
+                                    <option value="q55">q55</option>
+                                
+                                    <option value="p109">p109</option>
+                                
+                                    <option value="p110">p110</option>
+                                
+                                    <option value="a53">a53</option>
+                                
+                                    <option value="q56">q56</option>
+                                
+                                    <option value="p111">p111</option>
+                                
+                                    <option value="p112">p112</option>
+                                
+                                    <option value="a54">a54</option>
+                                
+                                    <option value="q57">q57</option>
+                                
+                                    <option value="p113">p113</option>
+                                
+                                    <option value="p114">p114</option>
+                                
+                                    <option value="a55">a55</option>
+                                
+                                    <option value="q58">q58</option>
+                                
+                                    <option value="p115">p115</option>
+                                
+                                    <option value="p116">p116</option>
+                                
+                                    <option value="a56">a56</option>
+                                
+                                    <option value="q59">q59</option>
+                                
+                                    <option value="p117">p117</option>
+                                
+                                    <option value="p118">p118</option>
+                                
+                                    <option value="a57">a57</option>
+                                
+                                    <option value="q60">q60</option>
+                                
+                                    <option value="p119">p119</option>
+                                
+                                    <option value="p120">p120</option>
+                                
+                                    <option value="a58">a58</option>
+                                
+                                    <option value="q61">q61</option>
+                                
+                                    <option value="p121">p121</option>
+                                
+                                    <option value="p122">p122</option>
+                                
+                                    <option value="a59">a59</option>
+                                
+                                    <option value="q62">q62</option>
+                                
+                                    <option value="p123">p123</option>
+                                
+                                    <option value="p124">p124</option>
+                                
+                                    <option value="a60">a60</option>
+                                
+                                    <option value="q63">q63</option>
+                                
+                                    <option value="p125">p125</option>
+                                
+                                    <option value="p126">p126</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-2 pb-2">
+                            <button type="button" class="btn btn-primary btn-block" onclick="neighbourhoodHighlight({nodes: []});">Reset Selection</button>
+                        </div>
+                    </div>
+                </div>
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+                  new TomSelect("#select-node",{
+                      create: false,
+                      sortField: {
+                          field: "text",
+                          direction: "asc"
+                      }
+                  });
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"group": 0, "id": "a0", "label": "a0", "shape": "triangle", "size": 5, "title": "Answer:Arthur\u0027s Magazine"}, {"group": 0, "id": "q0", "label": "q0", "shape": "square", "size": 5, "title": "Question:Which magazine was started first Arthur\u0027s Magazine or First for Women?\nLevel:medium\nType:comparison"}, {"group": 0, "id": "p0", "label": "p0", "shape": "circle", "size": 5, "title": "Arthur\u0027s Magazine"}, {"group": 0, "id": "p1", "label": "p1", "shape": "circle", "size": 5, "title": "First for Women"}, {"group": 0, "id": "a30", "label": "a30", "shape": "triangle", "size": 5, "title": "Answer:yes"}, {"group": 0, "id": "q32", "label": "q32", "shape": "square", "size": 5, "title": "Question:Are Jane and First for Women both women\u0027s magazines?\nLevel:medium\nType:comparison"}, {"group": 1, "id": "a1", "label": "a1", "shape": "triangle", "size": 5, "title": "Answer:Delhi"}, {"group": 1, "id": "q1", "label": "q1", "shape": "square", "size": 5, "title": "Question:The Oberoi family is part of a hotel company that has a head office in what city?\nLevel:medium\nType:bridge"}, {"group": 1, "id": "p2", "label": "p2", "shape": "circle", "size": 5, "title": "The Oberoi Group"}, {"group": 1, "id": "p3", "label": "p3", "shape": "circle", "size": 5, "title": "Oberoi family"}, {"group": 12, "id": "a2", "label": "a2", "shape": "triangle", "size": 5, "title": "Answer:President Richard Nixon"}, {"group": 12, "id": "q2", "label": "q2", "shape": "square", "size": 5, "title": "Question:Musician and satirist Allie Goertz wrote a song about the \"The Simpsons\" character Milhouse, who Matt Groening named after who?\nLevel:hard\nType:bridge"}, {"group": 12, "id": "p4", "label": "p4", "shape": "circle", "size": 5, "title": "Milhouse Van Houten"}, {"group": 12, "id": "p5", "label": "p5", "shape": "circle", "size": 5, "title": "Allie Goertz"}, {"group": 23, "id": "a3", "label": "a3", "shape": "triangle", "size": 5, "title": "Answer:American"}, {"group": 23, "id": "q3", "label": "q3", "shape": "square", "size": 5, "title": "Question: What nationality was James Henry Miller\u0027s wife?\nLevel:medium\nType:bridge"}, {"group": 23, "id": "p6", "label": "p6", "shape": "circle", "size": 5, "title": "Peggy Seeger"}, {"group": 23, "id": "p7", "label": "p7", "shape": "circle", "size": 5, "title": "Ewan MacColl"}, {"group": 34, "id": "a4", "label": "a4", "shape": "triangle", "size": 5, "title": "Answer:alcohol"}, {"group": 34, "id": "q4", "label": "q4", "shape": "square", "size": 5, "title": "Question:Cadmium Chloride is slightly soluble in this chemical, it is also called what?\nLevel:medium\nType:bridge"}, {"group": 34, "id": "p8", "label": "p8", "shape": "circle", "size": 5, "title": "Cadmium chloride"}, {"group": 34, "id": "p9", "label": "p9", "shape": "circle", "size": 5, "title": "Ethanol"}, {"group": 45, "id": "a5", "label": "a5", "shape": "triangle", "size": 5, "title": "Answer:Jonathan Stark"}, {"group": 45, "id": "q5", "label": "q5", "shape": "square", "size": 5, "title": "Question:Which tennis player won more Grand Slam titles, Henri Leconte or Jonathan Stark?\nLevel:medium\nType:comparison"}, {"group": 45, "id": "p10", "label": "p10", "shape": "circle", "size": 5, "title": "Henri Leconte"}, {"group": 45, "id": "p11", "label": "p11", "shape": "circle", "size": 5, "title": "Jonathan Stark (tennis)"}, {"group": 56, "id": "a6", "label": "a6", "shape": "triangle", "size": 5, "title": "Answer:Crambidae"}, {"group": 56, "id": "q6", "label": "q6", "shape": "square", "size": 5, "title": "Question:Which genus of moth in the world\u0027s seventh-largest country contains only one species?\nLevel:hard\nType:bridge"}, {"group": 56, "id": "p12", "label": "p12", "shape": "circle", "size": 5, "title": "India"}, {"group": 56, "id": "p13", "label": "p13", "shape": "circle", "size": 5, "title": "Indogrammodes"}, {"group": 58, "id": "a7", "label": "a7", "shape": "triangle", "size": 5, "title": "Answer:Badr Hari"}, {"group": 58, "id": "q7", "label": "q7", "shape": "square", "size": 5, "title": "Question:Who was once considered the best kick boxer in the world, however he has been involved in a number of controversies relating to his \"unsportsmanlike conducts\" in the sport and crimes of violence outside of the ring.\nLevel:easy\nType:bridge"}, {"group": 58, "id": "p14", "label": "p14", "shape": "circle", "size": 5, "title": "Badr Hari"}, {"group": 58, "id": "p15", "label": "p15", "shape": "circle", "size": 5, "title": "Global Fighting Championship"}, {"group": 59, "id": "a8", "label": "a8", "shape": "triangle", "size": 5, "title": "Answer:2006"}, {"group": 59, "id": "q8", "label": "q8", "shape": "square", "size": 5, "title": "Question:The Dutch-Belgian television series that \"House of Anubis\" was based on first aired in what year?\nLevel:medium\nType:bridge"}, {"group": 59, "id": "p16", "label": "p16", "shape": "circle", "size": 5, "title": "House of Anubis"}, {"group": 59, "id": "p17", "label": "p17", "shape": "circle", "size": 5, "title": "Het Huis Anubis"}, {"group": 59, "id": "q15", "label": "q15", "shape": "square", "size": 5, "title": "Question:The 1988 American comedy film, The Great Outdoors, starred a four-time Academy Award nominee, who received a star on the Hollywood Walk of Fame in what year?\nLevel:medium\nType:bridge"}, {"group": 59, "id": "p30", "label": "p30", "shape": "circle", "size": 5, "title": "Annette Bening"}, {"group": 59, "id": "p31", "label": "p31", "shape": "circle", "size": 5, "title": "The Great Outdoors (film)"}, {"group": 60, "id": "a9", "label": "a9", "shape": "triangle", "size": 5, "title": "Answer:6.213 km long"}, {"group": 60, "id": "q9", "label": "q9", "shape": "square", "size": 5, "title": "Question:What is the length of the track where the 2013 Liqui Moly Bathurst 12 Hour was staged?\nLevel:hard\nType:bridge"}, {"group": 60, "id": "p18", "label": "p18", "shape": "circle", "size": 5, "title": "2013 Liqui Moly Bathurst 12 Hour"}, {"group": 60, "id": "p19", "label": "p19", "shape": "circle", "size": 5, "title": "Mount Panorama Circuit"}, {"group": 2, "id": "a10", "label": "a10", "shape": "triangle", "size": 5, "title": "Answer:Jaime Meline"}, {"group": 2, "id": "q10", "label": "q10", "shape": "square", "size": 5, "title": "Question:Fast Cars, Danger, Fire and Knives includes guest appearances from which hip hop record executive?\nLevel:medium\nType:bridge"}, {"group": 2, "id": "p20", "label": "p20", "shape": "circle", "size": 5, "title": "El-P"}, {"group": 2, "id": "p21", "label": "p21", "shape": "circle", "size": 5, "title": "Fast Cars, Danger, Fire and Knives"}, {"group": 3, "id": "a11", "label": "a11", "shape": "triangle", "size": 5, "title": "Answer:Walter Darwin Coy"}, {"group": 3, "id": "q11", "label": "q11", "shape": "square", "size": 5, "title": "Question:Gunmen from Laredo starred which narrator of \"Frontier\"?\nLevel:medium\nType:bridge"}, {"group": 3, "id": "p22", "label": "p22", "shape": "circle", "size": 5, "title": "Gunmen from Laredo"}, {"group": 3, "id": "p23", "label": "p23", "shape": "circle", "size": 5, "title": "Walter Coy"}, {"group": 4, "id": "a12", "label": "a12", "shape": "triangle", "size": 5, "title": "Answer:United States"}, {"group": 4, "id": "q12", "label": "q12", "shape": "square", "size": 5, "title": "Question:Where did the form of music played by Die Rh\u00f6ner S\u00e4uw\u00e4ntzt originate?\nLevel:medium\nType:bridge"}, {"group": 4, "id": "p24", "label": "p24", "shape": "circle", "size": 5, "title": "Die Rh\u00f6ner S\u00e4uw\u00e4ntzt"}, {"group": 4, "id": "p25", "label": "p25", "shape": "circle", "size": 5, "title": "Skiffle"}, {"group": 5, "id": "a13", "label": "a13", "shape": "triangle", "size": 5, "title": "Answer:Super Bowl XLVIII"}, {"group": 5, "id": "q13", "label": "q13", "shape": "square", "size": 5, "title": "Question:In which American football game was Malcolm Smith named Most Valuable player?\nLevel:easy\nType:bridge"}, {"group": 5, "id": "p26", "label": "p26", "shape": "circle", "size": 5, "title": "Malcolm Smith (American football)"}, {"group": 5, "id": "p27", "label": "p27", "shape": "circle", "size": 5, "title": "Super Bowl XLVIII"}, {"group": 6, "id": "a14", "label": "a14", "shape": "triangle", "size": 5, "title": "Answer:US 60"}, {"group": 6, "id": "q14", "label": "q14", "shape": "square", "size": 5, "title": "Question:What U.S Highway gives access to Zilpo Road, and is also known as Midland Trail?\nLevel:hard\nType:bridge"}, {"group": 6, "id": "p28", "label": "p28", "shape": "circle", "size": 5, "title": "Morehead, Kentucky"}, {"group": 6, "id": "p29", "label": "p29", "shape": "circle", "size": 5, "title": "Zilpo Road"}, {"group": 7, "id": "a15", "label": "a15", "shape": "triangle", "size": 5, "title": "Answer:Hetfield and Ulrich, longtime lead guitarist Kirk Hammett, and bassist Robert Trujillo."}, {"group": 7, "id": "q16", "label": "q16", "shape": "square", "size": 5, "title": "Question:What are the names of the current members of  American heavy metal band who wrote the music for  Hurt Locker The Musical? \nLevel:easy\nType:bridge"}, {"group": 7, "id": "p32", "label": "p32", "shape": "circle", "size": 5, "title": "Metallica"}, {"group": 7, "id": "p33", "label": "p33", "shape": "circle", "size": 5, "title": "Hurt Locker (musical)"}, {"group": 8, "id": "a16", "label": "a16", "shape": "triangle", "size": 5, "title": "Answer:Fox"}, {"group": 8, "id": "q17", "label": "q17", "shape": "square", "size": 5, "title": "Question:Human Error\" is the season finale of the third season of a tv show that aired on what network?\nLevel:medium\nType:bridge"}, {"group": 8, "id": "p34", "label": "p34", "shape": "circle", "size": 5, "title": "House (TV series)"}, {"group": 8, "id": "p35", "label": "p35", "shape": "circle", "size": 5, "title": "Human Error (House)"}, {"group": 9, "id": "a17", "label": "a17", "shape": "triangle", "size": 5, "title": "Answer:2017"}, {"group": 9, "id": "q18", "label": "q18", "shape": "square", "size": 5, "title": "Question:Dua Lipa, an English singer, songwriter and model, the album spawned the number-one single \"New Rules\" is a song by English singer Dua Lipa from her eponymous debut studio album, released in what year?\nLevel:easy\nType:bridge"}, {"group": 9, "id": "p36", "label": "p36", "shape": "circle", "size": 5, "title": "Dua Lipa"}, {"group": 9, "id": "p37", "label": "p37", "shape": "circle", "size": 5, "title": "New Rules (song)"}, {"group": 10, "id": "a18", "label": "a18", "shape": "triangle", "size": 5, "title": "Answer:Nevada"}, {"group": 10, "id": "q19", "label": "q19", "shape": "square", "size": 5, "title": "Question:American politician Joe Heck ran unsuccessfully against Democrat Catherine Cortez Masto, a woman who previously served as the 32nd Attorney General of where?\nLevel:easy\nType:bridge"}, {"group": 10, "id": "p38", "label": "p38", "shape": "circle", "size": 5, "title": "Joe Heck"}, {"group": 10, "id": "p39", "label": "p39", "shape": "circle", "size": 5, "title": "Catherine Cortez Masto"}, {"group": 11, "id": "a19", "label": "a19", "shape": "triangle", "size": 5, "title": "Answer:Hawaii"}, {"group": 11, "id": "q20", "label": "q20", "shape": "square", "size": 5, "title": "Question:Which state does the drug stores, of which the CEO is Warren Bryant, are located?\nLevel:medium\nType:bridge"}, {"group": 11, "id": "p40", "label": "p40", "shape": "circle", "size": 5, "title": "Longs Drugs"}, {"group": 11, "id": "p41", "label": "p41", "shape": "circle", "size": 5, "title": "Warren Bryant"}, {"group": 13, "id": "a20", "label": "a20", "shape": "triangle", "size": 5, "title": "Answer:Kelli Ward"}, {"group": 13, "id": "q21", "label": "q21", "shape": "square", "size": 5, "title": "Question:Which  American politician did Donahue replaced \nLevel:easy\nType:bridge"}, {"group": 13, "id": "p42", "label": "p42", "shape": "circle", "size": 5, "title": "Kelli Ward"}, {"group": 13, "id": "p43", "label": "p43", "shape": "circle", "size": 5, "title": "Sue Donahue"}, {"group": 14, "id": "a21", "label": "a21", "shape": "triangle", "size": 5, "title": "Answer:The Wolfhounds"}, {"group": 14, "id": "q22", "label": "q22", "shape": "square", "size": 5, "title": "Question:Which band was founded first, Hole, the rock band that Courtney Love was a frontwoman of, or The Wolfhounds?\nLevel:medium\nType:comparison"}, {"group": 14, "id": "p44", "label": "p44", "shape": "circle", "size": 5, "title": "The Wolfhounds"}, {"group": 14, "id": "p45", "label": "p45", "shape": "circle", "size": 5, "title": "Courtney Love"}, {"group": 15, "id": "a22", "label": "a22", "shape": "triangle", "size": 5, "title": "Answer:16-year-old"}, {"group": 15, "id": "q23", "label": "q23", "shape": "square", "size": 5, "title": "Question:How old is the female main protagonist of Catching Fire?\nLevel:medium\nType:bridge"}, {"group": 15, "id": "p46", "label": "p46", "shape": "circle", "size": 5, "title": "Catching Fire"}, {"group": 15, "id": "p47", "label": "p47", "shape": "circle", "size": 5, "title": "The Hunger Games (novel)"}, {"group": 16, "id": "a23", "label": "a23", "shape": "triangle", "size": 5, "title": "Answer:World War II"}, {"group": 16, "id": "q24", "label": "q24", "shape": "square", "size": 5, "title": "Question:Chang Ucchin was born in korea during a time that ended with the conclusion of what? \nLevel:medium\nType:bridge"}, {"group": 16, "id": "p48", "label": "p48", "shape": "circle", "size": 5, "title": "Chang Ucchin"}, {"group": 16, "id": "p49", "label": "p49", "shape": "circle", "size": 5, "title": "Korea under Japanese rule"}, {"group": 17, "id": "a24", "label": "a24", "shape": "triangle", "size": 5, "title": "Answer:Todd Phillips"}, {"group": 17, "id": "q25", "label": "q25", "shape": "square", "size": 5, "title": "Question:Who is the director of the 2003 film which has scenes in it filmed at the Quality Cafe in Los Angeles?\nLevel:hard\nType:bridge"}, {"group": 17, "id": "p50", "label": "p50", "shape": "circle", "size": 5, "title": "Quality Cafe (diner)"}, {"group": 17, "id": "p51", "label": "p51", "shape": "circle", "size": 5, "title": "Old School (film)"}, {"group": 18, "id": "a25", "label": "a25", "shape": "triangle", "size": 5, "title": "Answer:Carol Lawrence"}, {"group": 18, "id": "q26", "label": "q26", "shape": "square", "size": 5, "title": "Question:New Faces of 1952 is a musical revue with songs and comedy skits, it helped jump start the career of which young performer, and American actress?\nLevel:easy\nType:bridge"}, {"group": 18, "id": "p52", "label": "p52", "shape": "circle", "size": 5, "title": "Carol Lawrence"}, {"group": 18, "id": "p53", "label": "p53", "shape": "circle", "size": 5, "title": "New Faces of 1952"}, {"group": 19, "id": "a26", "label": "a26", "shape": "triangle", "size": 5, "title": "Answer:no"}, {"group": 19, "id": "q27", "label": "q27", "shape": "square", "size": 5, "title": "Question:Were Pavel Urysohn and Leonid Levin known for the same type of work?\nLevel:medium\nType:comparison"}, {"group": 19, "id": "p54", "label": "p54", "shape": "circle", "size": 5, "title": "Pavel Urysohn"}, {"group": 19, "id": "p55", "label": "p55", "shape": "circle", "size": 5, "title": "Leonid Levin"}, {"group": 19, "id": "q28", "label": "q28", "shape": "square", "size": 5, "title": "Question:Are both The New Pornographers and Kings of Leon American rock bands?\nLevel:hard\nType:comparison"}, {"group": 19, "id": "p56", "label": "p56", "shape": "circle", "size": 5, "title": "The New Pornographers"}, {"group": 19, "id": "p57", "label": "p57", "shape": "circle", "size": 5, "title": "Kings of Leon"}, {"group": 19, "id": "q49", "label": "q49", "shape": "square", "size": 5, "title": "Question:Are Gin and tonic and Paloma both cocktails based on tequila?\nLevel:medium\nType:comparison"}, {"group": 19, "id": "p97", "label": "p97", "shape": "circle", "size": 5, "title": "Gin and tonic"}, {"group": 19, "id": "p98", "label": "p98", "shape": "circle", "size": 5, "title": "Paloma (cocktail)"}, {"group": 20, "id": "a27", "label": "a27", "shape": "triangle", "size": 5, "title": "Answer:New York City"}, {"group": 20, "id": "q29", "label": "q29", "shape": "square", "size": 5, "title": "Question:750 7th Avenue and 101 Park Avenue, are located in which city?\nLevel:easy\nType:comparison"}, {"group": 20, "id": "p58", "label": "p58", "shape": "circle", "size": 5, "title": "750 7th Avenue"}, {"group": 20, "id": "p59", "label": "p59", "shape": "circle", "size": 5, "title": "101 Park Avenue"}, {"group": 21, "id": "a28", "label": "a28", "shape": "triangle", "size": 5, "title": "Answer:Amy Jo Johnson"}, {"group": 21, "id": "q30", "label": "q30", "shape": "square", "size": 5, "title": "Question:Which actress played the part of fictitious character Kimberly Ann Hart, in the franchise built around a live action superhero television series taking much of its footage from the Japanese tokusatsu \u0027Super Sentai\u0027?\nLevel:easy\nType:bridge"}, {"group": 21, "id": "p60", "label": "p60", "shape": "circle", "size": 5, "title": "Power Rangers"}, {"group": 21, "id": "p61", "label": "p61", "shape": "circle", "size": 5, "title": "Kimberly Hart"}, {"group": 22, "id": "a29", "label": "a29", "shape": "triangle", "size": 5, "title": "Answer:Aleksander Ford"}, {"group": 22, "id": "q31", "label": "q31", "shape": "square", "size": 5, "title": "Question:Who was born first, Pablo Trapero or Aleksander Ford?\nLevel:hard\nType:comparison"}, {"group": 22, "id": "p62", "label": "p62", "shape": "circle", "size": 5, "title": "Aleksander Ford"}, {"group": 22, "id": "p63", "label": "p63", "shape": "circle", "size": 5, "title": "Pablo Trapero"}, {"group": 0, "id": "p64", "label": "p64", "shape": "circle", "size": 5, "title": "Jane (magazine)"}, {"group": 25, "id": "a31", "label": "a31", "shape": "triangle", "size": 5, "title": "Answer:director"}, {"group": 25, "id": "q33", "label": "q33", "shape": "square", "size": 5, "title": "Question:What profession does Nicholas Ray and Elia Kazan have in common?\nLevel:medium\nType:comparison"}, {"group": 25, "id": "p65", "label": "p65", "shape": "circle", "size": 5, "title": "Elia Kazan"}, {"group": 25, "id": "p66", "label": "p66", "shape": "circle", "size": 5, "title": "Nicholas Ray"}, {"group": 26, "id": "a32", "label": "a32", "shape": "triangle", "size": 5, "title": "Answer:Roseau, Minnesota, USA"}, {"group": 26, "id": "q34", "label": "q34", "shape": "square", "size": 5, "title": "Question:Where is the company that purchased Aixam based in?\nLevel:medium\nType:bridge"}, {"group": 26, "id": "p67", "label": "p67", "shape": "circle", "size": 5, "title": "Aixam"}, {"group": 26, "id": "p68", "label": "p68", "shape": "circle", "size": 5, "title": "Polaris Industries"}, {"group": 27, "id": "a33", "label": "a33", "shape": "triangle", "size": 5, "title": "Answer:The Saimaa Gesture"}, {"group": 27, "id": "q35", "label": "q35", "shape": "square", "size": 5, "title": "Question:Which documentary is about Finnish rock groups, Adam Clayton Powell or The Saimaa Gesture?\nLevel:medium\nType:comparison"}, {"group": 27, "id": "p69", "label": "p69", "shape": "circle", "size": 5, "title": "The Saimaa Gesture"}, {"group": 27, "id": "p70", "label": "p70", "shape": "circle", "size": 5, "title": "Adam Clayton Powell (film)"}, {"group": 28, "id": "a34", "label": "a34", "shape": "triangle", "size": 5, "title": "Answer:David Lee Roth"}, {"group": 28, "id": "q36", "label": "q36", "shape": "square", "size": 5, "title": "Question:Who was inducted into the Rock and Roll Hall of Fame, David Lee Roth or Cia Berg?\nLevel:medium\nType:comparison"}, {"group": 28, "id": "p71", "label": "p71", "shape": "circle", "size": 5, "title": "Cia Berg"}, {"group": 28, "id": "p72", "label": "p72", "shape": "circle", "size": 5, "title": "David Lee Roth"}, {"group": 29, "id": "a35", "label": "a35", "shape": "triangle", "size": 5, "title": "Answer:Nassau County"}, {"group": 29, "id": "q37", "label": "q37", "shape": "square", "size": 5, "title": "Question:Zimbabwe\u0027s Guwe Secondary School has a sister school in what New York cunty?\nLevel:medium\nType:bridge"}, {"group": 29, "id": "p73", "label": "p73", "shape": "circle", "size": 5, "title": "Carle Place High School"}, {"group": 29, "id": "p74", "label": "p74", "shape": "circle", "size": 5, "title": "Guwe Secondary School"}, {"group": 30, "id": "a36", "label": "a36", "shape": "triangle", "size": 5, "title": "Answer:Australia"}, {"group": 30, "id": "q38", "label": "q38", "shape": "square", "size": 5, "title": "Question:The Royal Commission into Drug Trafficking (1977\u20131979) or Woodward Royal Commission was a royal commission initiated by the New South Wales Government to investigate drug trafficking in New South Wales, Australia, especially links between the New South Wales Police and Mafia, The Honoured Society, is a Calabrian \u0027Ndrangheta criminal confederation, started in Melbourne and currently active in all of which country?  \nLevel:easy\nType:bridge"}, {"group": 30, "id": "p75", "label": "p75", "shape": "circle", "size": 5, "title": "Royal Commission into Drug Trafficking"}, {"group": 30, "id": "p76", "label": "p76", "shape": "circle", "size": 5, "title": "Honoured Society (Australia)"}, {"group": 31, "id": "a37", "label": "a37", "shape": "triangle", "size": 5, "title": "Answer:California"}, {"group": 31, "id": "q39", "label": "q39", "shape": "square", "size": 5, "title": "Question:The 337th Flight Test Squadron (337 FLTS) was most recently part of the 46th Test Wing and based at McClellan Air Force Base, a former United States Air Force base located in the North Highlands area of Sacramento County, in which US state?\nLevel:easy\nType:bridge"}, {"group": 31, "id": "p77", "label": "p77", "shape": "circle", "size": 5, "title": "337th Flight Test Squadron"}, {"group": 31, "id": "p78", "label": "p78", "shape": "circle", "size": 5, "title": "McClellan Air Force Base"}, {"group": 32, "id": "a38", "label": "a38", "shape": "triangle", "size": 5, "title": "Answer:Dessau"}, {"group": 32, "id": "q40", "label": "q40", "shape": "square", "size": 5, "title": "Question:The axial turbojet Pirna 014 was designed by engineers from this German aircraft and aircraft engine manufacturer based in which city?\nLevel:medium\nType:bridge"}, {"group": 32, "id": "p79", "label": "p79", "shape": "circle", "size": 5, "title": "Pirna 014"}, {"group": 32, "id": "p80", "label": "p80", "shape": "circle", "size": 5, "title": "Junkers"}, {"group": 33, "id": "a39", "label": "a39", "shape": "triangle", "size": 5, "title": "Answer:Roman Catholic"}, {"group": 33, "id": "q41", "label": "q41", "shape": "square", "size": 5, "title": "Question:Which faith is designated to the University of Providence, private university accredited by the NW association of Schools and Colleges and located in a third largest city in Montana after being passed by Missoula? \nLevel:easy\nType:bridge"}, {"group": 33, "id": "p81", "label": "p81", "shape": "circle", "size": 5, "title": "University of Providence"}, {"group": 33, "id": "p82", "label": "p82", "shape": "circle", "size": 5, "title": "Great Falls, Montana"}, {"group": 35, "id": "a40", "label": "a40", "shape": "triangle", "size": 5, "title": "Answer:The Joshua Tree"}, {"group": 35, "id": "q42", "label": "q42", "shape": "square", "size": 5, "title": "Question:Pauline Henry was known as the vocalist of a very popular cover song. Which album was this song from?\nLevel:medium\nType:bridge"}, {"group": 35, "id": "p83", "label": "p83", "shape": "circle", "size": 5, "title": "I Still Haven\u0027t Found What I\u0027m Looking For"}, {"group": 35, "id": "p84", "label": "p84", "shape": "circle", "size": 5, "title": "Pauline Henry"}, {"group": 36, "id": "a41", "label": "a41", "shape": "triangle", "size": 5, "title": "Answer:Ulster County"}, {"group": 36, "id": "q43", "label": "q43", "shape": "square", "size": 5, "title": "Question:Guitars for Wounded Warriors is an album that was recorded in the village in which New York county?\nLevel:hard\nType:bridge"}, {"group": 36, "id": "p85", "label": "p85", "shape": "circle", "size": 5, "title": "Guitars for Wounded Warriors"}, {"group": 36, "id": "p86", "label": "p86", "shape": "circle", "size": 5, "title": "New Paltz (village), New York"}, {"group": 37, "id": "a42", "label": "a42", "shape": "triangle", "size": 5, "title": "Answer:Tammy Wynette"}, {"group": 37, "id": "q44", "label": "q44", "shape": "square", "size": 5, "title": "Question:What American country music singer-songwriter, born in May of 1942, sang a duet with her ex-husband the same year that he released the song \"The Battle?\"\nLevel:medium\nType:bridge"}, {"group": 37, "id": "p87", "label": "p87", "shape": "circle", "size": 5, "title": "Tammy Wynette"}, {"group": 37, "id": "p88", "label": "p88", "shape": "circle", "size": 5, "title": "The Battle (George Jones song)"}, {"group": 38, "id": "a43", "label": "a43", "shape": "triangle", "size": 5, "title": "Answer:Sir Francis Nethersole"}, {"group": 38, "id": "q45", "label": "q45", "shape": "square", "size": 5, "title": "Question:Who was born first, Francis Nethersole or Elizabeth Stuart?\nLevel:hard\nType:bridge"}, {"group": 38, "id": "p89", "label": "p89", "shape": "circle", "size": 5, "title": "Elizabeth Stuart, Queen of Bohemia"}, {"group": 38, "id": "p90", "label": "p90", "shape": "circle", "size": 5, "title": "Francis Nethersole"}, {"group": 39, "id": "a44", "label": "a44", "shape": "triangle", "size": 5, "title": "Answer:ingredients in beer"}, {"group": 39, "id": "q46", "label": "q46", "shape": "square", "size": 5, "title": "Question:What does the Hacker-Pschorr Brewery have to limit in order to comply with German regulations?\nLevel:hard\nType:bridge"}, {"group": 39, "id": "p91", "label": "p91", "shape": "circle", "size": 5, "title": "Hacker-Pschorr Brewery"}, {"group": 39, "id": "p92", "label": "p92", "shape": "circle", "size": 5, "title": "Reinheitsgebot"}, {"group": 40, "id": "a45", "label": "a45", "shape": "triangle", "size": 5, "title": "Answer:Dennis Howard Marks"}, {"group": 40, "id": "q47", "label": "q47", "shape": "square", "size": 5, "title": "Question:Don Barry Mason was the founder of the Psychedelic Shamanistic Institute (PSI), which other member that\u0027s Welsh, that died on 10 April 2016?\nLevel:easy\nType:bridge"}, {"group": 40, "id": "p93", "label": "p93", "shape": "circle", "size": 5, "title": "Howard Marks"}, {"group": 40, "id": "p94", "label": "p94", "shape": "circle", "size": 5, "title": "Don Barry Mason"}, {"group": 41, "id": "a46", "label": "a46", "shape": "triangle", "size": 5, "title": "Answer:Robert Sheehan"}, {"group": 41, "id": "q48", "label": "q48", "shape": "square", "size": 5, "title": "Question:What male actor starred in The Messenger?\nLevel:easy\nType:bridge"}, {"group": 41, "id": "p95", "label": "p95", "shape": "circle", "size": 5, "title": "Robert Sheehan"}, {"group": 41, "id": "p96", "label": "p96", "shape": "circle", "size": 5, "title": "The Messenger (2015 horror film)"}, {"group": 42, "id": "a47", "label": "a47", "shape": "triangle", "size": 5, "title": "Answer:Glenn Hughes"}, {"group": 42, "id": "q50", "label": "q50", "shape": "square", "size": 5, "title": "Question:Who is older Glenn Hughes or Ross Lynch?\nLevel:hard\nType:comparison"}, {"group": 42, "id": "p99", "label": "p99", "shape": "circle", "size": 5, "title": "Glenn Hughes"}, {"group": 42, "id": "p100", "label": "p100", "shape": "circle", "size": 5, "title": "Ross Lynch"}, {"group": 43, "id": "a48", "label": "a48", "shape": "triangle", "size": 5, "title": "Answer:March 28, 1941"}, {"group": 43, "id": "q51", "label": "q51", "shape": "square", "size": 5, "title": "Question:In what year was the creator of the current arrangement of the \"Simpson\u0027s Theme\" born?\nLevel:hard\nType:bridge"}, {"group": 43, "id": "p101", "label": "p101", "shape": "circle", "size": 5, "title": "The Simpsons Theme"}, {"group": 43, "id": "p102", "label": "p102", "shape": "circle", "size": 5, "title": "Alf Clausen"}, {"group": 44, "id": "a49", "label": "a49", "shape": "triangle", "size": 5, "title": "Answer:standard gauge track"}, {"group": 44, "id": "q52", "label": "q52", "shape": "square", "size": 5, "title": "Question:The Southern Railway runs from Vienna to Graz and the border with Slovenia at Spielfeld via the first mountain railway built in Europe to use what kind of track?\nLevel:hard\nType:bridge"}, {"group": 44, "id": "p103", "label": "p103", "shape": "circle", "size": 5, "title": "Southern Railway (Austria)"}, {"group": 44, "id": "p104", "label": "p104", "shape": "circle", "size": 5, "title": "Semmering railway"}, {"group": 46, "id": "a50", "label": "a50", "shape": "triangle", "size": 5, "title": "Answer:Sex and the City"}, {"group": 46, "id": "q53", "label": "q53", "shape": "square", "size": 5, "title": "Question:In what show did Cynthia Nixon receive the 2004 Primetime Emmy Award for Outstanding Supporting Actress in a Comedy Series and a Screen Actors Guild Award for her performance?\nLevel:easy\nType:bridge"}, {"group": 46, "id": "p105", "label": "p105", "shape": "circle", "size": 5, "title": "Miranda Hobbes"}, {"group": 46, "id": "p106", "label": "p106", "shape": "circle", "size": 5, "title": "Cynthia Nixon"}, {"group": 47, "id": "a51", "label": "a51", "shape": "triangle", "size": 5, "title": "Answer:Kato"}, {"group": 47, "id": "q54", "label": "q54", "shape": "square", "size": 5, "title": "Question:Lee Jun-fan played what character in \"The Green Hornet\" television series?\nLevel:medium\nType:bridge"}, {"group": 47, "id": "p107", "label": "p107", "shape": "circle", "size": 5, "title": "Kato (The Green Hornet)"}, {"group": 47, "id": "p108", "label": "p108", "shape": "circle", "size": 5, "title": "Bruce Lee"}, {"group": 48, "id": "a52", "label": "a52", "shape": "triangle", "size": 5, "title": "Answer:England"}, {"group": 48, "id": "q55", "label": "q55", "shape": "square", "size": 5, "title": "Question:The 1895/96 Football League season was the eighth in Football League history with Everton, their Goodison Park home, is a football stadium located in Walton, Liverpool, in which country?\nLevel:easy\nType:bridge"}, {"group": 48, "id": "p109", "label": "p109", "shape": "circle", "size": 5, "title": "1895\u201396 Everton F.C. season"}, {"group": 48, "id": "p110", "label": "p110", "shape": "circle", "size": 5, "title": "Goodison Park"}, {"group": 49, "id": "a53", "label": "a53", "shape": "triangle", "size": 5, "title": "Answer:Province of Buenos Aires"}, {"group": 49, "id": "q56", "label": "q56", "shape": "square", "size": 5, "title": "Question:A Head Full of Dreams Tour is the seventh tour by Coldplay, and which had it\u0027s first show at a stadium that is known as Estadio Unico and is owned by who?\nLevel:medium\nType:bridge"}, {"group": 49, "id": "p111", "label": "p111", "shape": "circle", "size": 5, "title": "A Head Full of Dreams Tour"}, {"group": 49, "id": "p112", "label": "p112", "shape": "circle", "size": 5, "title": "Estadio Ciudad de La Plata"}, {"group": 50, "id": "a54", "label": "a54", "shape": "triangle", "size": 5, "title": "Answer:Robert Zemeckis"}, {"group": 50, "id": "q57", "label": "q57", "shape": "square", "size": 5, "title": "Question:Roger Avary (born August 23, 1965) is a Canadian film and television producer, screenwriter and director in the American mass media industry, he wrote the screenplay for Beowulf, a 2007 British-American 3D motion capture epic fantasy film, directed by who?\nLevel:easy\nType:bridge"}, {"group": 50, "id": "p113", "label": "p113", "shape": "circle", "size": 5, "title": "Roger Avary"}, {"group": 50, "id": "p114", "label": "p114", "shape": "circle", "size": 5, "title": "Beowulf (2007 film)"}, {"group": 51, "id": "a55", "label": "a55", "shape": "triangle", "size": 5, "title": "Answer:1932"}, {"group": 51, "id": "q58", "label": "q58", "shape": "square", "size": 5, "title": "Question:The American Pre-Code comedy film featuring an American actress, dancer, and singer, widely known for performing in films and RKO\u0027s musical films, was released in what year?\nLevel:medium\nType:bridge"}, {"group": 51, "id": "p115", "label": "p115", "shape": "circle", "size": 5, "title": "Ginger Rogers"}, {"group": 51, "id": "p116", "label": "p116", "shape": "circle", "size": 5, "title": "Hat Check Girl"}, {"group": 52, "id": "a56", "label": "a56", "shape": "triangle", "size": 5, "title": "Answer:nine"}, {"group": 52, "id": "q59", "label": "q59", "shape": "square", "size": 5, "title": "Question:An edited version of \"Just the Two of Us\" reached number two on the \"Billboard\" Hot 100 behind a song written and composed by Donna Weiss and Jackie DeShannon which spend how many weeks at No. 1 on the \"Billboard\" hot 100?\nLevel:medium\nType:bridge"}, {"group": 52, "id": "p117", "label": "p117", "shape": "circle", "size": 5, "title": "Just the Two of Us (Grover Washington Jr. song)"}, {"group": 52, "id": "p118", "label": "p118", "shape": "circle", "size": 5, "title": "Bette Davis Eyes"}, {"group": 53, "id": "a57", "label": "a57", "shape": "triangle", "size": 5, "title": "Answer:Saint Motel"}, {"group": 53, "id": "q60", "label": "q60", "shape": "square", "size": 5, "title": "Question:Which band has more members, Saint Motel or Curve?\nLevel:hard\nType:comparison"}, {"group": 53, "id": "p119", "label": "p119", "shape": "circle", "size": 5, "title": "Curve (band)"}, {"group": 53, "id": "p120", "label": "p120", "shape": "circle", "size": 5, "title": "Saint Motel"}, {"group": 54, "id": "a58", "label": "a58", "shape": "triangle", "size": 5, "title": "Answer:South Park"}, {"group": 54, "id": "q61", "label": "q61", "shape": "square", "size": 5, "title": "Question:\"Funnybot\" is the second episode of the fifteenth season of which American animated television series, created by Trey Parker and Matt Stone?  \nLevel:easy\nType:bridge"}, {"group": 54, "id": "p121", "label": "p121", "shape": "circle", "size": 5, "title": "South Park (season 10)"}, {"group": 54, "id": "p122", "label": "p122", "shape": "circle", "size": 5, "title": "Funnybot"}, {"group": 55, "id": "a59", "label": "a59", "shape": "triangle", "size": 5, "title": "Answer:Boston College"}, {"group": 55, "id": "q62", "label": "q62", "shape": "square", "size": 5, "title": "Question:Which private research university is located in Chestnut Hill, Massachusetts Boston College or Stanford University? \nLevel:easy\nType:comparison"}, {"group": 55, "id": "p123", "label": "p123", "shape": "circle", "size": 5, "title": "Stanford University"}, {"group": 55, "id": "p124", "label": "p124", "shape": "circle", "size": 5, "title": "Boston College"}, {"group": 57, "id": "a60", "label": "a60", "shape": "triangle", "size": 5, "title": "Answer:Victor John Mature"}, {"group": 57, "id": "q63", "label": "q63", "shape": "square", "size": 5, "title": "Question:What American stage, film, and television actor  who also appeared in a large number of musicals, played Samson in the 1949 film \"Samson and Delilah\".\nLevel:easy\nType:bridge"}, {"group": 57, "id": "p125", "label": "p125", "shape": "circle", "size": 5, "title": "Samson and Delilah (1984 film)"}, {"group": 57, "id": "p126", "label": "p126", "shape": "circle", "size": 5, "title": "Victor Mature"}]);
+                  edges = new vis.DataSet([{"from": "a0", "to": "q0", "width": 1}, {"from": "a0", "to": "p0", "width": 1}, {"from": "a0", "to": "p1", "width": 1}, {"from": "q0", "to": "p0", "width": 1}, {"from": "q0", "to": "p1", "width": 1}, {"from": "p1", "to": "a30", "width": 1}, {"from": "p1", "to": "q32", "width": 1}, {"from": "a1", "to": "q1", "width": 1}, {"from": "a1", "to": "p2", "width": 1}, {"from": "a1", "to": "p3", "width": 1}, {"from": "q1", "to": "p2", "width": 1}, {"from": "q1", "to": "p3", "width": 1}, {"from": "a2", "to": "q2", "width": 1}, {"from": "a2", "to": "p4", "width": 1}, {"from": "a2", "to": "p5", "width": 1}, {"from": "q2", "to": "p4", "width": 1}, {"from": "q2", "to": "p5", "width": 1}, {"from": "a3", "to": "q3", "width": 1}, {"from": "a3", "to": "p6", "width": 1}, {"from": "a3", "to": "p7", "width": 1}, {"from": "q3", "to": "p6", "width": 1}, {"from": "q3", "to": "p7", "width": 1}, {"from": "a4", "to": "q4", "width": 1}, {"from": "a4", "to": "p8", "width": 1}, {"from": "a4", "to": "p9", "width": 1}, {"from": "q4", "to": "p8", "width": 1}, {"from": "q4", "to": "p9", "width": 1}, {"from": "a5", "to": "q5", "width": 1}, {"from": "a5", "to": "p10", "width": 1}, {"from": "a5", "to": "p11", "width": 1}, {"from": "q5", "to": "p10", "width": 1}, {"from": "q5", "to": "p11", "width": 1}, {"from": "a6", "to": "q6", "width": 1}, {"from": "a6", "to": "p12", "width": 1}, {"from": "a6", "to": "p13", "width": 1}, {"from": "q6", "to": "p12", "width": 1}, {"from": "q6", "to": "p13", "width": 1}, {"from": "a7", "to": "q7", "width": 1}, {"from": "a7", "to": "p14", "width": 1}, {"from": "a7", "to": "p15", "width": 1}, {"from": "q7", "to": "p14", "width": 1}, {"from": "q7", "to": "p15", "width": 1}, {"from": "a8", "to": "q8", "width": 1}, {"from": "a8", "to": "p16", "width": 1}, {"from": "a8", "to": "p17", "width": 1}, {"from": "a8", "to": "q15", "width": 1}, {"from": "a8", "to": "p30", "width": 1}, {"from": "a8", "to": "p31", "width": 1}, {"from": "q8", "to": "p16", "width": 1}, {"from": "q8", "to": "p17", "width": 1}, {"from": "a9", "to": "q9", "width": 1}, {"from": "a9", "to": "p18", "width": 1}, {"from": "a9", "to": "p19", "width": 1}, {"from": "q9", "to": "p18", "width": 1}, {"from": "q9", "to": "p19", "width": 1}, {"from": "a10", "to": "q10", "width": 1}, {"from": "a10", "to": "p20", "width": 1}, {"from": "a10", "to": "p21", "width": 1}, {"from": "q10", "to": "p20", "width": 1}, {"from": "q10", "to": "p21", "width": 1}, {"from": "a11", "to": "q11", "width": 1}, {"from": "a11", "to": "p22", "width": 1}, {"from": "a11", "to": "p23", "width": 1}, {"from": "q11", "to": "p22", "width": 1}, {"from": "q11", "to": "p23", "width": 1}, {"from": "a12", "to": "q12", "width": 1}, {"from": "a12", "to": "p24", "width": 1}, {"from": "a12", "to": "p25", "width": 1}, {"from": "q12", "to": "p24", "width": 1}, {"from": "q12", "to": "p25", "width": 1}, {"from": "a13", "to": "q13", "width": 1}, {"from": "a13", "to": "p26", "width": 1}, {"from": "a13", "to": "p27", "width": 1}, {"from": "q13", "to": "p26", "width": 1}, {"from": "q13", "to": "p27", "width": 1}, {"from": "a14", "to": "q14", "width": 1}, {"from": "a14", "to": "p28", "width": 1}, {"from": "a14", "to": "p29", "width": 1}, {"from": "q14", "to": "p28", "width": 1}, {"from": "q14", "to": "p29", "width": 1}, {"from": "q15", "to": "p30", "width": 1}, {"from": "q15", "to": "p31", "width": 1}, {"from": "a15", "to": "q16", "width": 1}, {"from": "a15", "to": "p32", "width": 1}, {"from": "a15", "to": "p33", "width": 1}, {"from": "q16", "to": "p32", "width": 1}, {"from": "q16", "to": "p33", "width": 1}, {"from": "a16", "to": "q17", "width": 1}, {"from": "a16", "to": "p34", "width": 1}, {"from": "a16", "to": "p35", "width": 1}, {"from": "q17", "to": "p34", "width": 1}, {"from": "q17", "to": "p35", "width": 1}, {"from": "a17", "to": "q18", "width": 1}, {"from": "a17", "to": "p36", "width": 1}, {"from": "a17", "to": "p37", "width": 1}, {"from": "q18", "to": "p36", "width": 1}, {"from": "q18", "to": "p37", "width": 1}, {"from": "a18", "to": "q19", "width": 1}, {"from": "a18", "to": "p38", "width": 1}, {"from": "a18", "to": "p39", "width": 1}, {"from": "q19", "to": "p38", "width": 1}, {"from": "q19", "to": "p39", "width": 1}, {"from": "a19", "to": "q20", "width": 1}, {"from": "a19", "to": "p40", "width": 1}, {"from": "a19", "to": "p41", "width": 1}, {"from": "q20", "to": "p40", "width": 1}, {"from": "q20", "to": "p41", "width": 1}, {"from": "a20", "to": "q21", "width": 1}, {"from": "a20", "to": "p42", "width": 1}, {"from": "a20", "to": "p43", "width": 1}, {"from": "q21", "to": "p42", "width": 1}, {"from": "q21", "to": "p43", "width": 1}, {"from": "a21", "to": "q22", "width": 1}, {"from": "a21", "to": "p44", "width": 1}, {"from": "a21", "to": "p45", "width": 1}, {"from": "q22", "to": "p44", "width": 1}, {"from": "q22", "to": "p45", "width": 1}, {"from": "a22", "to": "q23", "width": 1}, {"from": "a22", "to": "p46", "width": 1}, {"from": "a22", "to": "p47", "width": 1}, {"from": "q23", "to": "p46", "width": 1}, {"from": "q23", "to": "p47", "width": 1}, {"from": "a23", "to": "q24", "width": 1}, {"from": "a23", "to": "p48", "width": 1}, {"from": "a23", "to": "p49", "width": 1}, {"from": "q24", "to": "p48", "width": 1}, {"from": "q24", "to": "p49", "width": 1}, {"from": "a24", "to": "q25", "width": 1}, {"from": "a24", "to": "p50", "width": 1}, {"from": "a24", "to": "p51", "width": 1}, {"from": "q25", "to": "p50", "width": 1}, {"from": "q25", "to": "p51", "width": 1}, {"from": "a25", "to": "q26", "width": 1}, {"from": "a25", "to": "p52", "width": 1}, {"from": "a25", "to": "p53", "width": 1}, {"from": "q26", "to": "p52", "width": 1}, {"from": "q26", "to": "p53", "width": 1}, {"from": "a26", "to": "q27", "width": 1}, {"from": "a26", "to": "p54", "width": 1}, {"from": "a26", "to": "p55", "width": 1}, {"from": "a26", "to": "q28", "width": 1}, {"from": "a26", "to": "p56", "width": 1}, {"from": "a26", "to": "p57", "width": 1}, {"from": "a26", "to": "q49", "width": 1}, {"from": "a26", "to": "p97", "width": 1}, {"from": "a26", "to": "p98", "width": 1}, {"from": "q27", "to": "p54", "width": 1}, {"from": "q27", "to": "p55", "width": 1}, {"from": "q28", "to": "p56", "width": 1}, {"from": "q28", "to": "p57", "width": 1}, {"from": "a27", "to": "q29", "width": 1}, {"from": "a27", "to": "p58", "width": 1}, {"from": "a27", "to": "p59", "width": 1}, {"from": "q29", "to": "p58", "width": 1}, {"from": "q29", "to": "p59", "width": 1}, {"from": "a28", "to": "q30", "width": 1}, {"from": "a28", "to": "p60", "width": 1}, {"from": "a28", "to": "p61", "width": 1}, {"from": "q30", "to": "p60", "width": 1}, {"from": "q30", "to": "p61", "width": 1}, {"from": "a29", "to": "q31", "width": 1}, {"from": "a29", "to": "p62", "width": 1}, {"from": "a29", "to": "p63", "width": 1}, {"from": "q31", "to": "p62", "width": 1}, {"from": "q31", "to": "p63", "width": 1}, {"from": "a30", "to": "q32", "width": 1}, {"from": "a30", "to": "p64", "width": 1}, {"from": "q32", "to": "p64", "width": 1}, {"from": "a31", "to": "q33", "width": 1}, {"from": "a31", "to": "p65", "width": 1}, {"from": "a31", "to": "p66", "width": 1}, {"from": "q33", "to": "p65", "width": 1}, {"from": "q33", "to": "p66", "width": 1}, {"from": "a32", "to": "q34", "width": 1}, {"from": "a32", "to": "p67", "width": 1}, {"from": "a32", "to": "p68", "width": 1}, {"from": "q34", "to": "p67", "width": 1}, {"from": "q34", "to": "p68", "width": 1}, {"from": "a33", "to": "q35", "width": 1}, {"from": "a33", "to": "p69", "width": 1}, {"from": "a33", "to": "p70", "width": 1}, {"from": "q35", "to": "p69", "width": 1}, {"from": "q35", "to": "p70", "width": 1}, {"from": "a34", "to": "q36", "width": 1}, {"from": "a34", "to": "p71", "width": 1}, {"from": "a34", "to": "p72", "width": 1}, {"from": "q36", "to": "p71", "width": 1}, {"from": "q36", "to": "p72", "width": 1}, {"from": "a35", "to": "q37", "width": 1}, {"from": "a35", "to": "p73", "width": 1}, {"from": "a35", "to": "p74", "width": 1}, {"from": "q37", "to": "p73", "width": 1}, {"from": "q37", "to": "p74", "width": 1}, {"from": "a36", "to": "q38", "width": 1}, {"from": "a36", "to": "p75", "width": 1}, {"from": "a36", "to": "p76", "width": 1}, {"from": "q38", "to": "p75", "width": 1}, {"from": "q38", "to": "p76", "width": 1}, {"from": "a37", "to": "q39", "width": 1}, {"from": "a37", "to": "p77", "width": 1}, {"from": "a37", "to": "p78", "width": 1}, {"from": "q39", "to": "p77", "width": 1}, {"from": "q39", "to": "p78", "width": 1}, {"from": "a38", "to": "q40", "width": 1}, {"from": "a38", "to": "p79", "width": 1}, {"from": "a38", "to": "p80", "width": 1}, {"from": "q40", "to": "p79", "width": 1}, {"from": "q40", "to": "p80", "width": 1}, {"from": "a39", "to": "q41", "width": 1}, {"from": "a39", "to": "p81", "width": 1}, {"from": "a39", "to": "p82", "width": 1}, {"from": "q41", "to": "p81", "width": 1}, {"from": "q41", "to": "p82", "width": 1}, {"from": "a40", "to": "q42", "width": 1}, {"from": "a40", "to": "p83", "width": 1}, {"from": "a40", "to": "p84", "width": 1}, {"from": "q42", "to": "p83", "width": 1}, {"from": "q42", "to": "p84", "width": 1}, {"from": "a41", "to": "q43", "width": 1}, {"from": "a41", "to": "p85", "width": 1}, {"from": "a41", "to": "p86", "width": 1}, {"from": "q43", "to": "p85", "width": 1}, {"from": "q43", "to": "p86", "width": 1}, {"from": "a42", "to": "q44", "width": 1}, {"from": "a42", "to": "p87", "width": 1}, {"from": "a42", "to": "p88", "width": 1}, {"from": "q44", "to": "p87", "width": 1}, {"from": "q44", "to": "p88", "width": 1}, {"from": "a43", "to": "q45", "width": 1}, {"from": "a43", "to": "p89", "width": 1}, {"from": "a43", "to": "p90", "width": 1}, {"from": "q45", "to": "p89", "width": 1}, {"from": "q45", "to": "p90", "width": 1}, {"from": "a44", "to": "q46", "width": 1}, {"from": "a44", "to": "p91", "width": 1}, {"from": "a44", "to": "p92", "width": 1}, {"from": "q46", "to": "p91", "width": 1}, {"from": "q46", "to": "p92", "width": 1}, {"from": "a45", "to": "q47", "width": 1}, {"from": "a45", "to": "p93", "width": 1}, {"from": "a45", "to": "p94", "width": 1}, {"from": "q47", "to": "p93", "width": 1}, {"from": "q47", "to": "p94", "width": 1}, {"from": "a46", "to": "q48", "width": 1}, {"from": "a46", "to": "p95", "width": 1}, {"from": "a46", "to": "p96", "width": 1}, {"from": "q48", "to": "p95", "width": 1}, {"from": "q48", "to": "p96", "width": 1}, {"from": "q49", "to": "p97", "width": 1}, {"from": "q49", "to": "p98", "width": 1}, {"from": "a47", "to": "q50", "width": 1}, {"from": "a47", "to": "p99", "width": 1}, {"from": "a47", "to": "p100", "width": 1}, {"from": "q50", "to": "p99", "width": 1}, {"from": "q50", "to": "p100", "width": 1}, {"from": "a48", "to": "q51", "width": 1}, {"from": "a48", "to": "p101", "width": 1}, {"from": "a48", "to": "p102", "width": 1}, {"from": "q51", "to": "p101", "width": 1}, {"from": "q51", "to": "p102", "width": 1}, {"from": "a49", "to": "q52", "width": 1}, {"from": "a49", "to": "p103", "width": 1}, {"from": "a49", "to": "p104", "width": 1}, {"from": "q52", "to": "p103", "width": 1}, {"from": "q52", "to": "p104", "width": 1}, {"from": "a50", "to": "q53", "width": 1}, {"from": "a50", "to": "p105", "width": 1}, {"from": "a50", "to": "p106", "width": 1}, {"from": "q53", "to": "p105", "width": 1}, {"from": "q53", "to": "p106", "width": 1}, {"from": "a51", "to": "q54", "width": 1}, {"from": "a51", "to": "p107", "width": 1}, {"from": "a51", "to": "p108", "width": 1}, {"from": "q54", "to": "p107", "width": 1}, {"from": "q54", "to": "p108", "width": 1}, {"from": "a52", "to": "q55", "width": 1}, {"from": "a52", "to": "p109", "width": 1}, {"from": "a52", "to": "p110", "width": 1}, {"from": "q55", "to": "p109", "width": 1}, {"from": "q55", "to": "p110", "width": 1}, {"from": "a53", "to": "q56", "width": 1}, {"from": "a53", "to": "p111", "width": 1}, {"from": "a53", "to": "p112", "width": 1}, {"from": "q56", "to": "p111", "width": 1}, {"from": "q56", "to": "p112", "width": 1}, {"from": "a54", "to": "q57", "width": 1}, {"from": "a54", "to": "p113", "width": 1}, {"from": "a54", "to": "p114", "width": 1}, {"from": "q57", "to": "p113", "width": 1}, {"from": "q57", "to": "p114", "width": 1}, {"from": "a55", "to": "q58", "width": 1}, {"from": "a55", "to": "p115", "width": 1}, {"from": "a55", "to": "p116", "width": 1}, {"from": "q58", "to": "p115", "width": 1}, {"from": "q58", "to": "p116", "width": 1}, {"from": "a56", "to": "q59", "width": 1}, {"from": "a56", "to": "p117", "width": 1}, {"from": "a56", "to": "p118", "width": 1}, {"from": "q59", "to": "p117", "width": 1}, {"from": "q59", "to": "p118", "width": 1}, {"from": "a57", "to": "q60", "width": 1}, {"from": "a57", "to": "p119", "width": 1}, {"from": "a57", "to": "p120", "width": 1}, {"from": "q60", "to": "p119", "width": 1}, {"from": "q60", "to": "p120", "width": 1}, {"from": "a58", "to": "q61", "width": 1}, {"from": "a58", "to": "p121", "width": 1}, {"from": "a58", "to": "p122", "width": 1}, {"from": "q61", "to": "p121", "width": 1}, {"from": "q61", "to": "p122", "width": 1}, {"from": "a59", "to": "q62", "width": 1}, {"from": "a59", "to": "p123", "width": 1}, {"from": "a59", "to": "p124", "width": 1}, {"from": "q62", "to": "p123", "width": 1}, {"from": "q62", "to": "p124", "width": 1}, {"from": "a60", "to": "q63", "width": 1}, {"from": "a60", "to": "p125", "width": 1}, {"from": "a60", "to": "p126", "width": 1}, {"from": "q63", "to": "p125", "width": 1}, {"from": "q63", "to": "p126", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+                    network.on("selectNode", neighbourhoodHighlight);
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

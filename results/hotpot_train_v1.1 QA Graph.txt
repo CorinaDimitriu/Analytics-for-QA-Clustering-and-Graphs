@@ -1,0 +1,913 @@
+Total no questions: 90447
+No vertices: 143684
+No edges: 90447
+
+Max no questions with the same answer: 2748
+Min no questions with the same answer: 1
+
+Max no answers for a question: 1
+Min no answers for a question: 1
+
+Finding 2 questions with the same answer
+
+Question 1: Which magazine was started first Arthur's Magazine or First for Women?
+Question 2: Which magazine was created first, Chatelaine or Arthur's Magazine?
+Answer: Arthur's Magazine
+
+Question 1: What retailer is the second-largest in the United States and has a commercial featuring the American artist who was 1st runner-up in the 2005 USA Weekend Magazine's songwriting competition?
+Question 2: What is the name of the business that George Dayton founded and later Bruce Dayton expanded?
+Answer: Target Corporation
+
+Question 1: Who is the Las Vegas businessman and reality television personality, currently retired, that co-owns a pawn shop Chumlee currently works at?
+Question 2: What is the name of the grandfather of one of the panelist on "Pawnography", as well as the co-owner of a Las-Vegas store?
+Answer: Richard Benjamin Harrison
+
+Question 1: What party did the man who has served as a US representative , and had  a Minnesota politician and member of the Minnesota House of Representatives consider running against him in 2016?
+Question 2: What is one of the state Democratic party affiliates of a different name that has a member who is president of the Saint Paul City Council?
+Answer: Minnesota Democratic–Farmer–Labor Party
+
+Question 1: When was the player who made his debut for the Los Angeles Rams against the New York Giants on November 11, 1990 born ?
+Question 2: The player who made his debut on November 11,1990 was born on which day ?
+Answer: May 22, 1964
+
+Question 1: Who starred in the short film shown in line for the first versions of Disney's Hollywood Studios' original attraction featuring a walking and tram tour of the backlot area of the park?
+Question 2: Aside from Toni Braxton, Rod Stewart, and the singer who died in April 2016, what other musician has Arnold Stiefel worked with?
+Answer: Bette Midler
+
+Question 1: Kathy Jordan and Jack Sock, share which occupation?
+Question 2: What sport are Mary-Ann Eisel and Christo van Rensburg known for playing?
+Answer: tennis player
+
+Question 1: Which English actor of stage, film and television from the 1978 BBC drama "Pennies From Heaven" appeared in the 2006 BBC Four television play "Kenneth Williams: Fantabulosa!?"
+Question 2: What "Pennies From Heaven" star also appeared in "Greystoke: The Legend of Tarzan, Lord of the Apes"?
+Answer: Cheryl Campbell
+
+Question 1: Abhayam had a musical score directed by the composer affectionately called what?
+Question 2: What name is called by his admirers  who is the music composer and created the music for the Hindi movie Musafir ?
+Answer: Salilda
+
+Question 1: Quit was a pop punk band that played shows with which American alternative metal band from New York City?
+Question 2: John Stanier, is an American drummer who is currently the drummer of experimental rock band Battles, and a former member of which American alternative metal band from New York City formed in 1989?
+Answer: Helmet
+
+Question 1: An amusement ride that is also known as the Starship, is a modicfication of a ride that was  first demonstrated at Oktoberfest 1949 and was desgned by who?,
+Question 2: Who designed the earlier ride that was modified to become the Gravitron?
+Answer: Ernst Hoffmeister
+
+Question 1: What is the name of the sister act of this American funk band that recorded The Electric Spanking of War Babies that pioneered the funk music culture of the 1970s?
+Question 2: Jane Ann, Lady Winterton's husband was a member of what?
+Answer: Parliament
+
+Question 1: Alles außer Sex was a German "dramedy" television series that was thematically similar to an American romantic comedy television series created by who?
+Question 2: Trelise Cooper had designs that featured in the comedy television series created by whom?
+Answer: Darren Star
+
+Question 1:  GoodWill & MGI produced with what Australian Singer born in 1968 and starred in he Australian soap opera "Neighbours"
+Question 2: Which former performer at the Forest National has been recognized as the "Goddess of Pop"?
+Answer: Kylie Minogue
+
+Question 1: Henry Ephraim Robins the the eighth President of a college in a state with what capital?
+Question 2: Mary Farrar advocated for victim in the agency that has headquarters in what Maine city?
+Answer: Augusta
+
+Question 1: Which movie was made first, Aladdin or Zootopia?
+Question 2: What upcoming American musical romantic fantasy film directed by Guy Ritchie from a screenplay written by John August, Ritchie and Vanessa Taylor, will feature Naomi Scott in the role of Princess Jasmine?
+Answer: Aladdin
+
+Question 1: Zayn Malik and Liam Payne both were eliminated as solo artists on which British television show? 
+Question 2: What 1995 Iron Maiden album  graphically depicts the band's mascot, Eddie, being vivisected by machine?
+Answer: "The X Factor"
+
+Question 1: In what year was the hymnbook that Elisha J. King compiled first published?
+Question 2: This 1922 American silent film produced and distributed by Fox Film Corporation was based on an adventure novel completed in what year?
+Answer: 1844
+
+Question 1: The Seychelles parakeet, occurred in the Indian Ocean islands of the Seychelles group, it resembled the Alexandrine parakeet, a member of the psittaciformes order and of the family Psittaculidae, the species is named after who?
+Question 2: What leader, born in Pella in 356 BC, conquered the army of Darius III in 331 BC?
+Answer: Alexander the Great
+
+Question 1: Which album by the Beatles contains "With a Little Help from My Friends" and introduces a fictional band in the title song?
+Question 2: Al Vandenberg was a photographer who assisted with the cover for which 1967 Beatles album?
+Answer: Sgt. Pepper's Lonely Hearts Club Band
+
+Question 1: What rivers provide boundaries for Manhattan, the most densely populated borough in New York City and the 111 Murray Street residential skyscraper located in Manhattan?
+Question 2: The Gerald Schoenfeld Theatre is located in a borough bounded by what three rivers?
+Answer: Hudson, East, and Harlem rivers
+
+Question 1: Hunt Brothers Pizza and Dion's, sell which type food?
+Question 2: Aurelio's Pizza and Cottage Inn Pizza, are which type restaurant?
+Answer: pizza
+
+Question 1: The Tri-City ValleyCats play at which stadium located on the campus of Hudson Valley Community College in Troy, New York?
+Question 2: The Tri-City ValleyCats (often shortened to ' Cats) are a minor league baseball team based in Troy, New York, the ValleyCats play at which stadium located on the campus of Hudson Valley Community College in Troy, New York?
+Answer: Joseph L. Bruno Stadium
+
+Question 1: Which biographical drama directed by Anton Corbijn stars Dane DeHaan?
+Question 2: What 2015 biographical drama features Dane William DeHaan?
+Answer: Life
+
+Question 1: What actor was in "My Super Ex-Girlfriend" and also in the TV series "the Riches"?
+Question 2: What is the name of the British comedian who performed Unrepeatable at the Albery Theatre in 1994 and has also starred in movies such as Ocean's Thirteen, Valkyrie and Shadow of the Vampire?
+Answer: Eddie Izzard
+
+Question 1: What Indian playback singer stars in "Iru Mugan" directed by Anand Shankar?
+Question 2: Janatha Garage, is a 2016 Indian Telugu-language action drama film, stars include which Indian film actress and playback singer, and has acted in Malayalam, Telugu, Tamil and Kannada films?
+Answer: Nithya Menen
+
+Question 1: The artwork of Gustav Klimt's protégé is featured in which city in Austria?
+Question 2: The Literaturhaus awards a €7000 prize to young writers in which European capital city?
+Answer: Vienna
+
+Question 1: What was the capital of the union of provinces in the Río de la Plata comprised by most of the former dependencies from the last to be organized and also the shortest-lived of the Viceroyalties of the Spanish Empire in the Americas?
+Question 2: Botineras is an Argentine telenovela airing on a television station located in which city ?
+Answer: Buenos Aires
+
+Question 1: Who was born first, Mordecai Richler or Judy Blume?
+Question 2: What author writes for younger audiences William Kent Krueger or Mordecai Richler?
+Answer: Mordecai Richler
+
+Question 1: Which man worked more jobs in his lifetime, Charles Reisner or Herbert Ross?
+Question 2: Who has has filled more film industry job titles, Dorothy Arzner or Herbert Ross?
+Answer: Herbert David Ross
+
+Question 1: What was the 2010 population of the city where The B'nai Abraham Synagogue was located?
+Question 2: Joe Rooney attended high school in a city that had was population as of the 2010 census?
+Answer: 8,712
+
+Question 1: What is the name of the baseball park located in the historic warehouse distric of downtown Minneapolis and is home of the Minnesota Twins?
+Question 2: What historic warehouse district field held the 2013 Big Ten Conference Baseball Tournament and is also the occasional home of Minnesota Golder Gophers baseball?
+Answer: Target Field
+
+Question 1: How many Deftones albums were released before their album released in 2000?
+Question 2: Max Abramson is a former Libertarian member of the New Hampshire House of Representatives, representing Rockingham District number what, for Seabrook, in Hampton Falls, a New England town in Rockingham County, New Hampshire, United States?
+Answer: 20
+
+Question 1: What was Miriam Auhea Kekāuluohi Crowningburg relation to the man known as "The People's King"?
+Question 2: How is Damon Stoudamire related to Terrence Jones?
+Answer: cousin
+
+Question 1: Old Rectory is in a small town and civil parish where?
+Question 2: Where is the village which River Trent face located 
+Answer: North Lincolnshire, England
+
+Question 1: The 1985 European Grand Prix was held in which town?
+Question 2: Where is the motor racing circuit that the 2nd Silver City Trophy was run at located?
+Answer: West Kingsdown in Kent, England
+
+Question 1: Eclipse is the third novel in the "Twilight" Saga by who, it continues the story of Bella Swan, a character and the protagonist of the "Twilight" series?
+Question 2: The Twilight Saga: Breaking Dawn – Part 1 was based on the books by which American young adult writer?
+Answer: Stephenie Meyer
+
+Question 1: how is Harry S. Truman and Franklin D. Roosevelt connected?
+Question 2: What position in the Janata Party did the man who inaugurated Academic Hinduphobia hold?
+Answer: President
+
+Question 1: Laurence Naismith starred in a 1970 musical film adaption in Panavision of which Charles Dickens' story?
+Question 2: Reina King played actress Alfre Woodard's oldest daughter, Lanell Cooley, in the movie "Scrooged, a 1988 American Christmas comedy film, and a modernization of what by Charles Dickens?
+Answer: "A Christmas Carol"
+
+Question 1: What position does the American football player Troy Aikman play; the owner of the club being Jerry Jones?
+Question 2: What position did both Baker Mayfield and Trevor Knight play?
+Answer: quarterback
+
+Question 1: A soccer kick, also known as a soccer ball kick in puroresu and shoot fighting, is a reference to a kick that is similar to kicks used in association football, Gerard Gordeau, a Dutch former savateur, karateka, and mixed martial artist, defeated who with a soccer kick, which also knocked out one of his teeth?
+Question 2: The 1991 World Champion Savate defeated whom at UFC 1 in 1993?
+Answer: Teila Tuli
+
+Question 1: On which stock exchange is listed the global business process management, services and IT corporation Genpact, with 77,000 employees in 20 countries and have a campus close to the Singapore Township in India?
+Question 2: The 1994 Miami Dolphins season, was the franchise's 29th season in the National Football League, on March 23, the NFL approved the transfer of majority interest in the club from the Robbie family to Wayne Huizenga, an American businessman and entrepreneur, and is responsible for six listed companies, of which organization?
+Answer: New York Stock Exchange
+
+Question 1: Which did Adrian Lyne direct that starred Louisanna Knop and used stylized light?
+Question 2: The hit single "The Best Is Yet To Come" was featured on which motion picture soundtrack starring Kim Basinger?
+Answer: 9½ Weeks
+
+Question 1: Who was with the cosmonaut who commanded the historic Voskhod 2 mission which saw the first man walk in space in 1965 ?
+Question 2: Who rode with the cosmonaut who commanded the historic Voskhod 2 mission?
+Answer: Alexey Leonov
+
+Question 1: Which actress was named the seventh-greatest female screen legend by the American Film Institute and said "art lives on forever" at an AIDS benefit?
+Question 2: What British-American actress stared in "Raintree County"?
+Answer: Elizabeth Taylor
+
+Question 1: The first college basketball team that David Padgett played for are part of what NCAA conference?
+Question 2: What conference does the team Stacey Totman was head coach for compete as a member of?
+Answer: Big 12 Conference
+
+Question 1: The Korean Buddhist temple Kwanŭm-sa is named after which East Asian buddhist bodhisattva venerated by Mahayana Buddhists?
+Question 2: Lin Fa Temple was used as a worship place for what East Asian bodhisattva?
+Answer: Guanyin
+
+Question 1: Who directed the 2003 South Korean melodrama film that Lee Ki-woo acted in?
+Question 2: Who directed this 2001 South Korean romantic comedy film starring Jun Ji-hyun and the actor from "Hello Ghost" (2010)?
+Answer: Kwak Jae-yong
+
+Question 1: Who is more versatile in artistry, Anders Nyström or Marilyn Manson?
+Question 2: Who has more job titles, Marilyn Manson or Michael McKean?
+Answer: Marilyn Manson
+
+Question 1: A Lady's Morals starred which English aviator and amateur boxing champion?
+Question 2: Which actor, who stars in the 1926 silent film comedy directed by William A. Seiter, was an amateur boxing champion?
+Answer: Reginald Denny
+
+Question 1: What German-American Contract killer that was a member of Chicago's North Side Gange was a vitvim of the Saint Valentine's Day massacre?
+Question 2: Who is a brother of Peter Gusenberg and victim of a massacre?
+Answer: Frank Gusenberg
+
+Question 1: In which industry did female composers Shirley Walker and Suzanne Ciani earn a solo score credit, the latter having found success with innovative electronic music?
+Question 2: K. Subash and Ted Kotcheff both worked in what industry?
+Answer: film industry
+
+Question 1: Burgos Pointer and Japanese Spitz, is a breed of what?
+Question 2: Poitevin and Moscow Water Dog, are breeds of what?
+Answer: dog
+
+Question 1: What Australian footballer born in August 1983 scored 2 goals in the final game of the 2004-05 Scottish Premier League?
+Question 2: Which Australian striker led the Rangers to a win in the 2004-05 Scottish Premier League?
+Answer: Scott McDonald
+
+Question 1: What is an American retired professional basketball player toured with LaVar Walker?
+Question 2: What other real-life basketball stars in blue chips with Anfernee "Penny" Hardaway
+Answer: Shaquille O'Neal
+
+Question 1: Which of the band artist Sleeping with Sirens or Augie March released more albums during their careers?
+Question 2: What was formed in 2009 by members of For All We Know and Paddock Park,  Air Traffic or Sleeping with Sirens ?
+Answer: Sleeping with Sirens
+
+Question 1: What was the official communication including over 100 emails which contained classified information which was investigated by the 7th director of the Federal Bureau of Investigation?
+Question 2: The 7th director of the Federal Bureau of Investigation, James Comey, was dismissed who had been under public and political pressure in his role in which controversy that involves communication of classified information of a prominent U. S. politician?
+Answer: Hillary Clinton email controversy
+
+Question 1: Which place lies 100 miles north-east of London and the home of a band active in 2001?
+Question 2: The nonconformist minister divine lived in what city on the River Wensum in East Anglia?
+Answer: Norwich
+
+Question 1:  The 2008–09 Copa del Rey final was held at a football stadium which as a seating capacity of what?
+Question 2: How many seats are in the stadium that hosted the 1998 Copa del Rey Final?
+Answer: 49,500
+
+Question 1: Who designed the ride which was installed following the removal of Mill Race  ?
+Question 2: Who manufactured the third fastest roller coaster in the UK?
+Answer: Bolliger & Mabillard
+
+Question 1: Surrender the Pink is a romance novel by an author who was known for plaing Princess Leia in what films?
+Question 2: What franchise did both R2-D2 and Luke Skywalker appear in?
+Answer: Star Wars
+
+Question 1: What American period drama television series created by Matthew Weiner has had episodes written by David Iverson?
+Question 2: Andre Jacquemetton is the producer of what drama television series created by Matthew Weiner?
+Answer: Mad Men
+
+Question 1: What movie starring Bill Stewart is based on an animated adaptation of a 1956 novel by Dodie Smith?
+Question 2: What film directed by Stephen Herek did an actor who appeared on Z-Cars and MacGyver also appear in?
+Answer: 101 Dalmatians
+
+Question 1: "The Hunting Party" was produced by Mike Shinoda and Brad Delson. Who was the only other producer for Linkin Park's albums?
+Question 2: Who produced the album that "My Apocalypse" is a single on?
+Answer: Rick Rubin
+
+Question 1: Richard Linklater and Ralph Bakshi both have done what in the entertainment industry? 
+Question 2: What is the occupation of Luc Besson and Pan Anzi?
+Answer: Director
+
+Question 1: Which is a type of fern, Adiantum or Hylomecon?
+Question 2: Which genus has more species Adiantum or Nasturtium ?
+Answer: Adiantum
+
+Question 1: Who is Cameron Michelle Diaz-Madden's costar in the Ameican action comedy, Knight and Day?
+Question 2: Who starred in the military action drama film written by Jim Cash and directed by Tony Scott?
+Answer: Tom Cruise
+
+Question 1: Which documentary  was directed in part by James Cameron, Aliens of the Deep or Earth?
+Question 2: Which was filmed in the 3D format, Portrait of Gina or Aliens of the Deep?
+Answer: Aliens of the Deep
+
+Question 1: Where is the company who released Uno for Game Boy Color headquartered?
+Question 2: In what city and state is the company that produced the P.J. Sparkles doll headquartered?
+Answer: El Segundo, California
+
+Question 1: Who invented the gun where  The Blish Lock was first used?
+Question 2: Auto-Ordnance Company developed a sub-machine gun invented by who ?
+Answer: John T. Thompson
+
+Question 1: In which year did this 235-acre amusement park in Kansas City, Missouri open that features the wooden roller coaster called "Timber Wolf?"
+Question 2: The Adventurer: The Curse of the Midas Box stars an English actress, voice actress, and film producer who was born on October 3rd in what year?
+Answer: 1973
+
+Question 1: Which of the following is a rock band led by singer and guitarist Bob Mould: Bracket or Sugar?
+Question 2: Which group contains the most members: Sugar or State Radio?
+Answer: Sugar
+
+Question 1: Between The Shaggy Dog and The Santa Clause, which film spun more sequels?
+Question 2: Which Christmas fantasy family comedy features Judge Reinhold?
+Answer: The Santa Clause
+
+Question 1: What role is played in the series "Famous in Love" by the singer of Jersey?  
+Question 2: Which character does the star of "Perfect High" play on the series "Famous in Love"?
+Answer: Paige
+
+Question 1: Which airport is located closer to the equator, Greater Rochester International Airport or Flagstaff Pulliam Airport?
+Question 2: Which airport, Flagstaff Pulliam Airport or Palm Beach International Airport, is serviced by one airline, American Eagle, and is also used for general aviation?
+Answer: Flagstaff Pulliam Airport
+
+Question 1: Ravindra Kumar Ray won the general election as a candidate to the country's largest political party in terms of representation in the national parliament and state assemblies known as?
+Question 2: Rashtriya Swayamsevak Sangh, abbreviated as RSS, is an Indian right-wing, Hindu nationalist, paramilitary volunteer organisation that is widely regarded as the parent organisation of which ruling party of India, and is one of the two major political parties in India, along with the Indian National Congress?
+Answer: Bharatiya Janata Party
+
+Question 1: What building has an Art Deco style and was appraised by Robert Von Ancken?
+Question 2: Which building is taller, One Manhattan Square or the Chrysler Building?
+Answer: Chrysler Building
+
+Question 1: Robinson's Onion grows in Ferry County in a specific state; what is the capital of that state?
+Question 2: Which film came out first, Olympia or Greetings from Out Here ?
+Answer: Olympia
+
+Question 1: In what ocean did the USS Cyclops disappear?
+Question 2: Doggerland was submerged by a tsunami formed in what ocean?
+Answer: North Atlantic Ocean
+
+Question 1: István Javorek is a retired head strength and conditioning coach at college located in what city and state?
+Question 2: What city is the school associated with America's largest United Methodist congregation based in?
+Answer: Overland Park, Kansas
+
+Question 1: What is the name of this 2015 South Korean martial arts/ romance period drama, starring Kim Ge-eun?
+Question 2: What Kim Go-eun film was a South Korean martial arts/romance?
+Answer: Memories of the Sword
+
+Question 1: which series directed by South Korean filmmaker Park Chan-wook is Lady Vengeance third installment
+Question 2: The works of South Korean film director Park Chan-wook includes a mystery thriller based on the Japanese manga and is one of three films which collectively are known by what name?
+Answer: The Vengeance Trilogy
+
+Question 1: Which mountain is higer Lupghar Sar or Shishapangma?
+Question 2: Which mountain is higher, Shishapangma or Momhil Sar?
+Answer: Shishapangma
+
+Question 1: What NCAA Division II conference featured former NFL and CFL star SHadrick McAfee?
+Question 2: Which conference affiliated National Collegiate Athletic Association has a team coached by Chris Willis in it?
+Answer: Gulf South Conference
+
+Question 1: What is the name of the band who released an album named after a city known for its large number of psychics?
+Question 2: Which band, He Is We or Bright Eyes, was founded by singer-songwriter and guitarist Conor Oberst?
+Answer: Bright Eyes
+
+Question 1: Which animated Walt Disney Feature had original songs written by Elton John and scores composed by Nick Glennie-Smith?
+Question 2: Which film, The Lion King and Midnight Madness, is an upcoming American computer-animated epic musical drama film, directed and co-produced by Jon Favreau?
+Answer: The Lion King
+
+Question 1: What team holds the contract for the former team captain of the Union Dutchmen?
+Question 2: What hockey team is Wesley Walz the former assistant coach and has one Stanley Cup championship?
+Answer: Tampa Bay Lightning
+
+Question 1: Hey, Hey, Hey, It's Fat Albert is an animated primetime special which originally aired on November 12, 1969 on NBC, it would later inspire the long-running 1972 animated series "Fat Albert and the Cosby Kids", an American animated series created, produced, and hosted (in live action bookends), by which comedian?
+Question 2: What stand-up comedian starred in The Electric Company and Mother, Jugs & Speed?
+Answer: Bill Cosby
+
+Question 1: Which of the following is a title that is responsible for the daily operations of the company: Chief Visionary Officer or Chief Operating Officer?
+Question 2: What position does Corey Sanders hold for the company that owns the hotel and casino located on the Las Vegas Strip at 3790 Las Vegas Boulevard South, in Paradise, Nevada?
+Answer: Chief Operating Officer
+
+Question 1: The club song of the Adelaide Football Club is to the tune of the oldest official song in what?
+Question 2: Punchbowl Crater is an extinct volcanic tuff cone and the location of a memorial to honor men and women who served in wthat?
+Answer: the United States Armed Forces
+
+Question 1: Zach McGowan played in what 2009 American post-apocalyptic science fiction war film? 
+Question 2: Which post-apocalyptic film did Mathieu Raynault work on?
+Answer: Terminator Salvation
+
+Question 1: The Social Network is a 2010 film produced by company which was formed by Kevin Spacey?
+Question 2: Ross Partridge, is an American actor, director, screenwriter and producer, he worked on a number of films produced by Kevin Spacey's production company, called what?
+Answer: Trigger Street Productions
+
+Question 1: Who directed the film, for which Thomas Bangalter  supplied compositions as a solo artist ? 
+Question 2: Paz de la Huerta starred in a 2009 movie that was written and directed by who?
+Answer: Gaspar Noé
+
+Question 1: Which breed of dog is extinct, the Bracco Italiano or the St. John's water dog?
+Question 2: Between St. John's water dog and the Polish Hunting Dog which was known to be a landrace bred for a specific purpose? 
+Answer: St. John's water dog
+
+Question 1: Which actor played the American retired airline captain in the movie celebrating a water landing of a US Airways flight? 
+Question 2: Who plays the other star role alongside Meg Ryan in Joe Versus the Volcano?
+Answer: Tom Hanks
+
+Question 1: One of the guests of VHIs Big in '06 Awards, who has appeared on shows like "Star Search" and "The All-New Mickey Mouse Club", was the youngest member of which band?
+Question 2: What American group was launched in Germany and appeared live from Orlando, Florida for the 1999 Kids' Choice Awards? 
+Answer: NSYNC
+
+Question 1: What year was S. Aishwarya's grandmother born in?
+Question 2: Cart and Cwidder is a fantasy novel for young adults by an author born in which year ?
+Answer: 1934
+
+Question 1: Who is the owner of the company that operates Sears México?
+Question 2: Who is the Mexican business magnate, investor, and philanthropist that owns the historic building located in downtown Detroit, Michigan built in 1905?
+Answer: Carlos Slim
+
+Question 1: Low is the first EP by which city in Minnesota, slowcore group Low, released in 1994, it's a major port city in the U.S. state of Minnesota and the county seat of Saint Louis County?
+Question 2: Pete Dawkins held an executive position at a company which is headquartered in which Georgia city?
+Answer: Duluth
+
+Question 1: Leonard Norman Wein, was an American comic book writer and editor best known for co-creating DC Comics' Swamp Thing and Marvel Comics' Wolverine, and was the editor for writer Alan Moore and illustrator Dave Gibbons' influential DC miniseries "Watchmen", Watchmen is an American comic-book limited series published by DC Comics, in which years?
+Question 2: In what years was the comic-book series which had the duo "Nite Owl" published?
+Answer: 1986 and 1987
+
+Questions with the same answer,type and level
+
+Type: comparison , Level: medium
+Question 1: Which magazine was started first Arthur's Magazine or First for Women?
+Question 2: Which magazine was created first, Chatelaine or Arthur's Magazine?
+Answer: Arthur's Magazine
+
+Type: bridge , Level: medium
+Question 1: Who is the Las Vegas businessman and reality television personality, currently retired, that co-owns a pawn shop Chumlee currently works at?
+Question 2: What is the name of the grandfather of one of the panelist on "Pawnography", as well as the co-owner of a Las-Vegas store?
+Answer: Richard Benjamin Harrison
+
+Type: bridge , Level: medium
+Question 1: What is one of the state Democratic party affiliates of a different name that has a member who is president of the Saint Paul City Council?
+Question 2: Which party is the politician who authorized the Minnesota Civil War Commemoration Task Force a member of?
+Answer: Minnesota Democratic–Farmer–Labor Party
+
+Type: bridge , Level: hard
+Question 1: Which institute is this Indian theoretical physicist who contributed to studies of S-branes a visiting professor at?
+Question 2: Ligo Scientific Collaboration appointed an American physicist as it's first spokesperson, who was a professor of physics at what university?
+Answer: MIT
+
+Type: bridge , Level: medium
+Question 1: Who starred in the short film shown in line for the first versions of Disney's Hollywood Studios' original attraction featuring a walking and tram tour of the backlot area of the park?
+Question 2: Aside from Toni Braxton, Rod Stewart, and the singer who died in April 2016, what other musician has Arnold Stiefel worked with?
+Answer: Bette Midler
+
+Type: comparison , Level: easy
+Question 1: Kathy Jordan and Jack Sock, share which occupation?
+Question 2: Édouard Roger-Vasselin and Sergi Bruguera, has which occupation?
+Answer: tennis player
+
+Type: bridge , Level: medium
+Question 1: Which English actor of stage, film and television from the 1978 BBC drama "Pennies From Heaven" appeared in the 2006 BBC Four television play "Kenneth Williams: Fantabulosa!?"
+Question 2: What "Pennies From Heaven" star also appeared in "Greystoke: The Legend of Tarzan, Lord of the Apes"?
+Answer: Cheryl Campbell
+
+Type: comparison , Level: medium
+Question 1: Who was known for interpolation, Nikolay Mitrofanovich Krylov or Leonty Magnitsky?
+Question 2: Which mathematician is known in part for his work on interpolation, Nikolay Mitrofanovich Krylov or Mikhail Leonidovich Gromov?
+Answer: Nikolay Mitrofanovich Krylov
+
+Type: bridge , Level: medium
+Question 1: What city is Unanderra an Nan Tien Temple located?
+Question 2: The Thirroul Railway Depot is located in what Australian city?
+Answer: Wollongong
+
+Type: bridge , Level: medium
+Question 1: What is the name of the sister act of this American funk band that recorded The Electric Spanking of War Babies that pioneered the funk music culture of the 1970s?
+Question 2: What legislature does Greg Pope and Hyndburn have in common?
+Answer: Parliament
+
+Type: bridge , Level: medium
+Question 1: Which of the producer of March of the Meanies died on  8 March 2016?
+Question 2: What English composer/musician, known as the "Fifth Beatle," produced two records by British vocal group, The Master Singers?  
+Answer: George Martin
+
+Type: bridge , Level: medium
+Question 1: Alles außer Sex was a German "dramedy" television series that was thematically similar to an American romantic comedy television series created by who?
+Question 2: Trelise Cooper had designs that featured in the comedy television series created by whom?
+Answer: Darren Star
+
+Type: comparison , Level: medium
+Question 1: Which director directed more films, Sydney Pollack or Millard Webb?
+Question 2: Which of the following directors won an Academy Award for his 1985 film "Out of Africa": Jim Sharman or Sydney Pollack?
+Answer: Sydney Irwin Pollack
+
+Type: bridge , Level: medium
+Question 1: What is the capital of the state where Daniel Goodenow served three one year terms in the House of Representatives?
+Question 2: Mary Farrar advocated for victim in the agency that has headquarters in what Maine city?
+Answer: Augusta
+
+Type: bridge , Level: easy
+Question 1: A sucessful auditionee for The Saturdays, whom also was in another girl band, appeared on what reality tv show?
+Question 2: What 1995 Iron Maiden album  graphically depicts the band's mascot, Eddie, being vivisected by machine?
+Answer: "The X Factor"
+
+Type: bridge , Level: medium
+Question 1: In what year was the hymnbook that Elisha J. King compiled first published?
+Question 2: St. Cuthbert's Co-operative Society followed the set of ideals first set out in what year?
+Answer: 1844
+
+Type: bridge , Level: medium
+Question 1: What was the Title of the Beatles eight studio album, that featured English Footballer Albert Stubbins on the cover of the album?
+Question 2: Egon Bondy's Happy Hearts Club Banned is a parody of which 1967 Beatles album?
+Answer: Sgt. Pepper's Lonely Hearts Club Band
+
+Type: bridge , Level: medium
+Question 1: The Mars One organization's proposal to establish a human colony on Mars is advocated by what famous Astronaut?
+Question 2: The Neil Modular Tracker, a Free Software project to create a Jeskola Buzz clone for Linux, which was based on a currently unmaintained deprogram called "Aldrin", is named after a wordplay on Neil Armstrong and what former American astronaut?
+Answer: Buzz Aldrin
+
+Type: comparison , Level: easy
+Question 1: Hunt Brothers Pizza and Dion's, sell which type food?
+Question 2: LaRosa's Pizzeria and Extreme Pizza, are both privately held restaurants franchises specializing in which type food?
+Answer: pizza
+
+Type: bridge , Level: medium
+Question 1: Which biographical drama directed by Anton Corbijn stars Dane DeHaan?
+Question 2: What 2015 biographical drama features Dane William DeHaan?
+Answer: Life
+
+Type: bridge , Level: medium
+Question 1: What actor was in "My Super Ex-Girlfriend" and also in the TV series "the Riches"?
+Question 2: What is the name of the British comedian who performed Unrepeatable at the Albery Theatre in 1994 and has also starred in movies such as Ocean's Thirteen, Valkyrie and Shadow of the Vampire?
+Answer: Eddie Izzard
+
+Type: bridge , Level: medium
+Question 1: When was the fort commanded by George Armistead during the Battle of Baltimore first built?
+Question 2: In what year was the fort that George Armistead commanded during the Battle of Baltimore first built?
+Answer: 1798
+
+Type: bridge , Level: medium
+Question 1: Death Race 3: Inferno was considered the prequel to the 2008 film directed by whom?
+Question 2: Harald Kloser created the score for the 2004 sci-fi horror film directed by whom?
+Answer: Paul W. S. Anderson
+
+Type: bridge , Level: easy
+Question 1: The artwork of Gustav Klimt's protégé is featured in which city in Austria?
+Question 2: Which city is a home to OPEC and birth place of an Australian community worker, internee, Lutheran pastor and refugee?
+Answer: Vienna
+
+Type: bridge , Level: easy
+Question 1: Fabulosos Calavera, released in 1997 is the eleventh album by Argentine band Los Fabulosos Cadillacs, an Argentine ska band from where?
+Question 2: The AMIA bombing was an attack on the Asociación Mutual Israelita Argentina, a Jewish Community Center located in what city?
+Answer: Buenos Aires
+
+Type: comparison , Level: medium
+Question 1: Who was born first, Mordecai Richler or Judy Blume?
+Question 2: What author writes for younger audiences William Kent Krueger or Mordecai Richler?
+Answer: Mordecai Richler
+
+Type: comparison , Level: hard
+Question 1: Which man worked more jobs in his lifetime, Charles Reisner or Herbert Ross?
+Question 2: Who has has filled more film industry job titles, Dorothy Arzner or Herbert Ross?
+Answer: Herbert David Ross
+
+Type: bridge , Level: medium
+Question 1: What was the 2010 population of the city where The B'nai Abraham Synagogue was located?
+Question 2: Joe Rooney attended high school in a city that had was population as of the 2010 census?
+Answer: 8,712
+
+Type: comparison , Level: medium
+Question 1: Who was born first, Richard Z. Kruspe or Tom Smith?
+Question 2: Who has been in more bands, Shifty Shellshock or Richard Z. Kruspe?
+Answer: Richard Zven Kruspe
+
+Type: bridge , Level: medium
+Question 1: What is the name of the baseball park located in the historic warehouse distric of downtown Minneapolis and is home of the Minnesota Twins?
+Question 2: The spaghetti sandwich has been purveyed at what baseball park in the historic warehouse district of downtown Minneapolis?
+Answer: Target Field
+
+Type: bridge , Level: easy
+Question 1: France–Saudi Arabia relations refer to foreign relations between France and Saudi Arabia, both countries are members of G20, an international forum for the governments and central bank governors from how many major economies?
+Question 2: Fiserv, Inc., is an American provider of financial services technology, the company's clients includes thrifts, a savings and loan association (S&L), or thrift institution, is a financial institution that specializes in accepting savings, deposits, and making mortgage and other loans, by law, thrifts can have no more than what number percent, of their lending in commercial loans?
+Answer: 20
+
+Type: bridge , Level: medium
+Question 1: "Lost in Space" aired on Fox's programming block on which day of the week?
+Question 2: What day is the magazine released for which Gareth Cook is a contributing writer for?
+Answer: Sunday
+
+Type: comparison , Level: medium
+Question 1: Which magazine is published by the America's Test Kitchen company, Cook's Illustrated or Disney Magazine?
+Question 2: Which of the following magazines accepts no advertising: Red Herring or Cook's Illustrated?
+Answer: Cook's Illustrated
+
+Type: bridge , Level: easy
+Question 1: What position did both Baker Mayfield and Trevor Knight play?
+Question 2: What position in football did the nephew of Wade Watts play?
+Answer: quarterback
+
+Type: bridge , Level: easy
+Question 1: On which stock exchange is listed the global business process management, services and IT corporation Genpact, with 77,000 employees in 20 countries and have a campus close to the Singapore Township in India?
+Question 2: Élan Corporation plc was a major drugs firm based in Dublin, Ireland, which had major interests in the United States, it was listed on which American stock exchange located at 11 Wall Street, Lower Manhattan, New York City, New York, as ELN?
+Answer: New York Stock Exchange
+
+Type: bridge , Level: medium
+Question 1: Which did Adrian Lyne direct that starred Louisanna Knop and used stylized light?
+Question 2: The hit single "The Best Is Yet To Come" was featured on which motion picture soundtrack starring Kim Basinger?
+Answer: 9½ Weeks
+
+Type: bridge , Level: easy
+Question 1: Who was with the cosmonaut who commanded the historic Voskhod 2 mission which saw the first man walk in space in 1965 ?
+Question 2: Who rode with the cosmonaut who commanded the historic Voskhod 2 mission?
+Answer: Alexey Leonov
+
+Type: bridge , Level: medium
+Question 1: What British-American actress stared in "Raintree County"?
+Question 2: What popular Hollywood star of the 1950s was featured in the movie adaption of the short story "Babylon Revisited"?
+Answer: Elizabeth Taylor
+
+Type: bridge , Level: medium
+Question 1: What conference does the team Stacey Totman was head coach for compete as a member of?
+Question 2: In what conference does the team for which Charlie Weis is known most recently for coaching compete?
+Answer: Big 12 Conference
+
+Type: bridge , Level: medium
+Question 1: The Korean Buddhist temple Kwanŭm-sa is named after which East Asian buddhist bodhisattva venerated by Mahayana Buddhists?
+Question 2: Lin Fa Temple was used as a worship place for what East Asian bodhisattva?
+Answer: Guanyin
+
+Type: bridge , Level: medium
+Question 1: Who directed the 2003 South Korean melodrama film that Lee Ki-woo acted in?
+Question 2: Who directed this 2001 South Korean romantic comedy film starring Jun Ji-hyun and the actor from "Hello Ghost" (2010)?
+Answer: Kwak Jae-yong
+
+Type: comparison , Level: medium
+Question 1: Which band was formed earlier, Marilyn Manson or Walk the Moon?
+Question 2: Who has more job titles, Marilyn Manson or Michael McKean?
+Answer: Marilyn Manson
+
+Type: comparison , Level: medium
+Question 1: Which film was created first, Almost Sunrise or Mysterious Castles of Clay?
+Question 2: Which film is older, The Tillman Story or the Mysterious Castles of Clay?
+Answer: Mysterious Castles of Clay
+
+Type: bridge , Level: medium
+Question 1: Q: Relying on État second, writers such as Julio Cortázar are known for founding which literary movement? 
+Question 2: What was the author of Blow-Up and Other Stories known as the founder of?
+Answer: Latin American Boom
+
+Type: bridge , Level: medium
+Question 1: What is the playing grown of the team Fredrick Peter Hinds is on loan from?
+Question 2: What is the name of the staduim when Matty Taylor played for Britol City F.C?
+Answer: Ashton Gate
+
+Type: comparison , Level: medium
+Question 1: which sport is played by both Tracy Austin and Sébastien Lareau?
+Question 2: What sport does both Menno Oosting and Sania Mirza professionally play?
+Answer: Tennis
+
+Type: comparison , Level: easy
+Question 1: Great Pyrenees and Slovak Cuvac, are a breed of which animal?
+Question 2: Bull Terrier and Coton de Tulear, breeds of what?
+Answer: dog
+
+Type: bridge , Level: medium
+Question 1: What Australian footballer born in August 1983 scored 2 goals in the final game of the 2004-05 Scottish Premier League?
+Question 2: Which Australian striker led the Rangers to a win in the 2004-05 Scottish Premier League?
+Answer: Scott McDonald
+
+Type: bridge , Level: easy
+Question 1: What is an American retired professional basketball player toured with LaVar Walker?
+Question 2: What other real-life basketball stars in blue chips with Anfernee "Penny" Hardaway
+Answer: Shaquille O'Neal
+
+Type: bridge , Level: medium
+Question 1: What city did the key suspect in the 2001 anthrax attacks work in?
+Question 2: In what city is the Fort that Lester Martínez López headed the Army Medical and Research Command at located?
+Answer: Frederick, Maryland
+
+Type: comparison , Level: medium
+Question 1: Which of the band artist Sleeping with Sirens or Augie March released more albums during their careers?
+Question 2: In between Verona and Sleeping with Sirens who's fifth studio album is "Gossip"?
+Answer: Sleeping with Sirens
+
+Type: bridge , Level: medium
+Question 1: The host of "Next Great Baker: Latin America" is the owner of what bakery?
+Question 2: MasterChef Australia's fourth season included a guest chef who is the owner of what pastry shop?
+Answer: Carlo's Bakery
+
+Type: bridge , Level: medium
+Question 1: Which place lies 100 miles north-east of London and the home of a band active in 2001?
+Question 2: The nonconformist minister divine lived in what city on the River Wensum in East Anglia?
+Answer: Norwich
+
+Type: bridge , Level: medium
+Question 1:  The 2008–09 Copa del Rey final was held at a football stadium which as a seating capacity of what?
+Question 2: How many seats are in the stadium that hosted the 1998 Copa del Rey Final?
+Answer: 49,500
+
+Type: bridge , Level: medium
+Question 1: Who designed the ride which was installed following the removal of Mill Race  ?
+Question 2: Who designed the rollercoaster that replaced Mill Race?
+Answer: Bolliger & Mabillard
+
+Type: comparison , Level: hard
+Question 1: Which building is still under construction, 30 Hudson Yards or the New York World Building?
+Question 2: Which building is also known as the North Tower, Langham Place, New York or 30 Hudson Yards?
+Answer: 30 Hudson Yards
+
+Type: bridge , Level: medium
+Question 1: Surrender the Pink is a romance novel by an author who was known for plaing Princess Leia in what films?
+Question 2: Bernard Dheran dubbed the character Count Dooku from what franchise?
+Answer: Star Wars
+
+Type: bridge , Level: medium
+Question 1: What American period drama television series created by Matthew Weiner has had episodes written by David Iverson?
+Question 2: Andre Jacquemetton is the producer of what drama television series created by Matthew Weiner?
+Answer: Mad Men
+
+Type: comparison , Level: easy
+Question 1: Who formed in Helsingborg in 1998, Eagle-Eye Cherry or The Sounds ?
+Question 2:  Which rock band, The Sounds or The Classic Crime, has been compared to new wave acts such as Blondie, The Cars, the Epoxies and Missing Persons?
+Answer: The Sounds
+
+Type: bridge , Level: medium
+Question 1: What movie starring Bill Stewart is based on an animated adaptation of a 1956 novel by Dodie Smith?
+Question 2: What film directed by Stephen Herek did an actor who appeared on Z-Cars and MacGyver also appear in?
+Answer: 101 Dalmatians
+
+Type: bridge , Level: medium
+Question 1: Kevin Quinn starred in a Disney channel series which was a spinoff of what show?
+Question 2: What Toy Story character is voiced by Joan Cusack?
+Answer: Jessie
+
+Type: bridge , Level: medium
+Question 1: "The Hunting Party" was produced by Mike Shinoda and Brad Delson. Who was the only other producer for Linkin Park's albums?
+Question 2: Who produced the album that "My Apocalypse" is a single on?
+Answer: Rick Rubin
+
+Type: comparison , Level: medium
+Question 1: Which is a type of fern, Adiantum or Hylomecon?
+Question 2: Which genus has more species Adiantum or Nasturtium ?
+Answer: Adiantum
+
+Type: bridge , Level: medium
+Question 1: What forms the western boundary of the county that WAID is licensed to?
+Question 2: What river is the river of  which Baron, Oklahoma is built on is a tributary of itself a tributary of?
+Answer: the Mississippi River
+
+Type: bridge , Level: medium
+Question 1: Who is Cameron Michelle Diaz-Madden's costar in the Ameican action comedy, Knight and Day?
+Question 2: Which Academy Award nominated actor stars in the 1985 American-British dark fantasy adventure film Legend?
+Answer: Tom Cruise
+
+Type: comparison , Level: medium
+Question 1: Which documentary  was directed in part by James Cameron, Aliens of the Deep or Earth?
+Question 2: Which was filmed in the 3D format, Portrait of Gina or Aliens of the Deep?
+Answer: Aliens of the Deep
+
+Type: bridge , Level: medium
+Question 1: What is a 2002 novel written by Alice Sebold?
+Question 2: What 2009 supernatural thriller was co-written by a New Zealand screenwriter and producer who had also worked on "The Hobbit?"
+Answer: The Lovely Bones
+
+Type: bridge , Level: medium
+Question 1: Where is the company who released Uno for Game Boy Color headquartered?
+Question 2: In what city and state is the company that produced the P.J. Sparkles doll headquartered?
+Answer: El Segundo, California
+
+Type: bridge , Level: medium
+Question 1: What the title of the first book written by the author of 'The Stone Gods'?
+Question 2: What was the first novel written by the author of the 1987 novel "The Passion"?
+Answer: Oranges Are Not the Only Fruit
+
+Type: bridge , Level: medium
+Question 1: Norbert Holm was arrested and later demoted because of his Chief of Operations association with a military theorist popularly known as what?
+Question 2: Devil's gardens was named by a man popularly known as what?
+Answer: the Desert Fox
+
+Type: comparison , Level: medium
+Question 1: Who was born earlier, Anna Seghers or Morgan Llywelyn?
+Question 2: who was born first,  T. H. White or Anna Seghers ?
+Answer: Anna Seghers
+
+Type: bridge , Level: medium
+Question 1: Who invented the gun where  The Blish Lock was first used?
+Question 2: Who invented Machine Gun Kelly's favorite weapon?
+Answer: John T. Thompson
+
+Type: bridge , Level: medium
+Question 1: How many people died in the event that killed Eve Meyer?
+Question 2: The aviation accident that Jacob Veldhuyzen van Zanten was involved in killed how many people?
+Answer: 583
+
+Type: comparison , Level: medium
+Question 1: Which is farther north, Lehigh Canal or New Orleans Outfall Canals?
+Question 2: Which canal, the Lehigh Canal or the Middlesex Canal, is in Eastern Pennsylvania?
+Answer: Lehigh Canal
+
+Type: bridge , Level: medium
+Question 1: In which year did the singer known for her hit single "Come Back and Shake Me" release her sixth album?
+Question 2: The 66th Primetime Emmy Awards were hosted by someone who was born in what year?
+Answer: 1973
+
+Type: comparison , Level: medium
+Question 1: Which of the following is a rock band led by singer and guitarist Bob Mould: Bracket or Sugar?
+Question 2: Which band was formed first, Fun or Sugar?
+Answer: Sugar
+
+Type: comparison , Level: medium
+Question 1: Which film came out first, Olympia or Greetings from Out Here ?
+Question 2: Which documentary was released first, Olympia or The Punk Singer?
+Answer: Olympia
+
+Type: bridge , Level: medium
+Question 1: In what ocean did the USS Cyclops disappear?
+Question 2: Doggerland was submerged by a tsunami formed in what ocean?
+Answer: North Atlantic Ocean
+
+Type: bridge , Level: medium
+Question 1: The online political cartoon in China called Hexie Farm is loosely based on which allegorical novella written by George Orwell?
+Question 2: Snowball is a character in what film released in 1999 by Hallmark Films and was shown on TNT?
+Answer: Animal Farm
+
+Type: bridge , Level: medium
+Question 1: István Javorek is a retired head strength and conditioning coach at college located in what city and state?
+Question 2: What city is the school associated with America's largest United Methodist congregation based in?
+Answer: Overland Park, Kansas
+
+Type: bridge , Level: medium
+Question 1: When did the Soviet composer of French language title L'amour des trois oranges die?
+Question 2: When was the Georgian-born Soviet revolutionary and political leader died who was Marshal of Poland by Joseph Stalin's order from 1945 until his death?
+Answer: 5 March 1953
+
+Type: comparison , Level: medium
+Question 1: Which mountain is higer Lupghar Sar or Shishapangma?
+Question 2: Which mountain is higher, Shishapangma or Momhil Sar?
+Answer: Shishapangma
+
+Type: bridge , Level: medium
+Question 1: What is the middle name of the man who directed Quay?
+Question 2: What is the middle name of Hila Plitmann's husband?
+Answer: Edward
+
+Type: bridge , Level: medium
+Question 1: Which animated Walt Disney Feature had original songs written by Elton John and scores composed by Nick Glennie-Smith?
+Question 2: In what 1994 film does Ernie Sabella voice an animated warthog? 
+Answer: The Lion King
+
+Type: bridge , Level: medium
+Question 1: What team holds the contract for the former team captain of the Union Dutchmen?
+Question 2: What hockey team is Wesley Walz the former assistant coach and has one Stanley Cup championship?
+Answer: Tampa Bay Lightning
+
+Type: bridge , Level: medium
+Question 1: Which of the following is a title that is responsible for the daily operations of the company: Chief Visionary Officer or Chief Operating Officer?
+Question 2: What position does Corey Sanders hold for the company that owns the hotel and casino located on the Las Vegas Strip at 3790 Las Vegas Boulevard South, in Paradise, Nevada?
+Answer: Chief Operating Officer
+
+Type: bridge , Level: medium
+Question 1: What band is Dimebag Darrell's brother best known for co-founding?
+Question 2: Walk Through Exits Only is a solo album by Phil Anselmo, former member of which heavy metal band?
+Answer: Pantera
+
+Type: bridge , Level: medium
+Question 1: The club song of the Adelaide Football Club is to the tune of the oldest official song in what?
+Question 2: Punchbowl Crater is an extinct volcanic tuff cone and the location of a memorial to honor men and women who served in wthat?
+Answer: the United States Armed Forces
+
+Type: bridge , Level: medium
+Question 1: Zach McGowan played in what 2009 American post-apocalyptic science fiction war film? 
+Question 2: Which post-apocalyptic film did Mathieu Raynault work on?
+Answer: Terminator Salvation
+
+Type: bridge , Level: medium
+Question 1: Who directed the film, for which Thomas Bangalter  supplied compositions as a solo artist ? 
+Question 2: Who directed both Carne in 1991 and I Stand Alone in 1998?
+Answer: Gaspar Noé
+
+Type: comparison , Level: medium
+Question 1: Which breed of dog is extinct, the Bracco Italiano or the St. John's water dog?
+Question 2: Between St. John's water dog and the Polish Hunting Dog which was known to be a landrace bred for a specific purpose? 
+Answer: St. John's water dog
+
+Type: bridge , Level: hard
+Question 1: Of the world-renowned sports personalities in the European football world, which one received the FIFA Golden Ball in 1994?
+Question 2: Which Brazilian politician was also FIFA World Player of the year, bypassing Dada Maravilha as one of the top scorers in the history of Brazilian football?
+Answer: Romário de Souza Faria
+
+Type: bridge , Level: medium
+Question 1: Which boy band that was formed in Orlando, Florida in 1995 was featured on the soundtrack to the film "Light It Up"?
+Question 2: Chris Kirkpatrick was a founding member of which famous American boy band?
+Answer: NSYNC
+
+Type: bridge , Level: easy
+Question 1: What is the name of the artist that played in Teddy Boy and born in 1975?
+Question 2: There is also a song from, which French house artist whose production style is very reminiscent of the electropop film soundtracks of the 1980s, called Pacific Coast Highway, from album Nightcall?
+Answer: Kavinsky
+
+Type: bridge , Level: medium
+Question 1: What year was the mother of Masako, Crown Princess of Japan born?
+Question 2: Operation Gothic Serpent had the mission of capturing a faction leader born in what year?
+Answer: 1934
+
+Type: bridge , Level: medium
+Question 1: Who is the owner of the company that operates Sears México?
+Question 2: Who is the Mexican business magnate, investor, and philanthropist that owns the historic building located in downtown Detroit, Michigan built in 1905?
+Answer: Carlos Slim
+
+Type: bridge , Level: medium
+Question 1: What river bounds the downtown area where WRKA studios are located?
+Question 2: What river is near both Indiana Army Ammunition Plant and Charlestown State Park?
+Answer: Ohio River
+
+Type: bridge , Level: medium
+Question 1: Lee Valley Leisure Complex is part of a 10000 acre 26 mile long linear park that runs through what part of greater London?
+Question 2: Güttingen is in a canton in which part of Switzerland?
+Answer: northeast
+
+Type: bridge , Level: medium
+Question 1: What star of "Fat Albert" is known for his role in Saturday Night Live's sketch, "What Up With That?"
+Question 2: Rock Dog featured the voice of which actor who got his start on "All That"?
+Answer: Kenan Thompson
+
+Type: bridge , Level: medium
+Question 1: Which Major League Baseball franchise held the 2011 All Star Game at their home stadium of Chase Field?
+Question 2: Geoff Blum played for what American professional baseball franchise, who play their home games at Chase Field?
+Answer: Arizona Diamondbacks
